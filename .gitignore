@@ -1,0 +1,85 @@
+# Pliki i katalogi, które mają być pomijane przez Git
+
+# Katalogi wirtualnych środowisk Pythona (np. virtualenv, venv, pipenv)
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Pliki zawierające hasła, klucze prywatne, itp.
+*.secret
+*.key
+
+# Pliki konfiguracyjne, które mogą różnić się dla różnych środowisk (np. development, production)
+*.cfg
+*.conf
+*.ini
+
+# Pliki logów
+*.log
+
+# Katalogi utworzone przez różne narzędzia
+.idea/
+.vscode/
+__pycache__/
+
+# Pliki generowane przez środowiska IDE lub edytory kodu
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+*.egg-info
+*.pyc
+
+# Katalogi generowane przez narzędzia do testowania
+htmlcov/
+.coverage
+.tox/
+
+# Katalogi i pliki zależności
+node_modules/
+yarn.lock
+package-lock.json
+*.sqlite3
+
+# Pliki związane z wersjonowaniem projektu
+*.bak
+*.swp
+*.cache
+*.orig
+
+# Pliki wygenerowane przez IDE
+.idea/
+*.iml
+*.pydevproject
+*.pyc
+
+# Pliki DS_Store związane z systemem macOS
+.DS_Store
+
+# Pliki Byte-compiled Python
+*.pyc
+__pycache__/
+
+# Katalogi utworzone przez Django
+/migrations/
+
+# Pliki konfiguracyjne środowiska
+.env
+.env.local
+.env.*.local
+.env.*.local.example
+
+# Pliki generowane przez narzędzie pipenv
+Pipfile.lock
+
+# Pliki wygenerowane przez pytest
+.pytest_cache/
+
+# Baza danych
+db.sqlite3
