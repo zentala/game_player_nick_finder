@@ -1,0 +1,41 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+    <title>{% block title %} Game Player Nick Finder {% endblock %}</title>
+</head>
+
+<body>
+    <div id="header">
+    {% block header %}
+    Game Player Nick Finder |
+    <a href="{% url 'index' %}">{% trans "Home" %}</a> |
+
+    {% if user.is_authenticated %}
+        {% trans "Logged in" %}: {{ user.username }}
+        (<a href="{% url 'logout' %}">{% trans "Log out" %}</a> |
+        <a href="{% url 'password_change' %}">{% trans "Change password" %}</a>)
+    {% else %}
+       <a href="{% url 'login' %}">{% trans "Log in" %}</a> 
+       or 
+       <a href="{% url 'django_registration_register' %}">{% trans "Register" %}</a>
+    {% endif %}
+    <hr />
+    {% endblock %}
+    </div>
+
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+
+    <div id="footer">
+    {% block footer %}
+        <hr />
+        &copy; Game Player Nick Finder 2023
+    {% endblock %}
+    </div>
+</body>
+
+</html>

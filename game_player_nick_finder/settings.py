@@ -1,25 +1,12 @@
 # game_player_nick_finder/game_player_nick_finder/settings.py
 # Ustawienia Django
 
-# Włącz ustawienie DEBUG na True tylko w trybie developerskim
-DEBUG = True
-
-# Zdefiniuj listę ALLOWED_HOSTS dla produkcji
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']  # Dodaj inne dozwolone hosty w przypadku wdrażania na serwerze produkcyjnym
-
-# Zdefiniuj URLConf dla Twojej aplikacji (np. nazwa_twojej_aplikacji.urls)
-ROOT_URLCONF = 'game_player_nick_finder.urls' 
-
-INSTALLED_APPS = [
-    # ...
-    'django.contrib.admin',  # Upewnij się, że ta linia jest włączona
-    # ...
-]
-
-# ...
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import os
+from dotenv import load_dotenv
+
+# Load ENVs from .env file
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,16 +16,23 @@ SECRET_KEY = 'your-secret-key'  # Domyślnie zazwyczaj 'django-insecure-SECRET_K
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Define the ALLOWED_HOSTS list for production
+# Add other allowed hosts when deploying to the production server
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']  
+
+# Sites
+SITE_ID = 1
 
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django_registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites'
 ]
 
 MIDDLEWARE = [
@@ -51,12 +45,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'game_player_nick_finder.urls'  # Domyślnie ustawiony na 'project_name.urls'
+# Define the URLConf for your application (e.g., your_app_name.urls)
+ROOT_URLCONF = 'game_player_nick_finder.urls'
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'app', 'templates')], # Dodaj tę linię
+        'DIRS': [os.path.join(BASE_DIR, 'app', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'game_player_nick_finder.wsgi.application'  # Domyślnie ustawiony na 'project_name.wsgi.application'
+WSGI_APPLICATION = 'game_player_nick_finder.wsgi.application'  # Default set to 'project_name.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -112,11 +108,33 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
+# Registraton and authorizaton
 
+# Set the session engine to use cookies
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-# Dodaj swoje ustawienia projektu Django
+# Additional session settings (optional)
+SESSION_COOKIE_SECURE = True  # Require a secure HTTPS connection for transmitting the session cookie
+SESSION_COOKIE_HTTPONLY = True  # Set the session cookies to be accessible only to the server (not accessible from the browser)
+SESSION_COOKIE_SAMESITE = 'Lax'  # Require that the session cookie is sent only with requests originating from the same site
+SESSION_COOKIE_AGE = 3600  # Optionally, you can set the age of the session cookies (in seconds), eg. set to one hour (3600 seconds)
+
+# Django Registration settings
+# Docs: https://django-registration.readthedocs.io/en/latest/settings.html
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+REGISTRATION_OPEN = True # is registration possible
+REGISTRATION_SALT = os.getenv('REGISTRATION_SALT', '')
+
+# E-mail server settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')

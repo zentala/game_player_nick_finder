@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Game Player Nick Finder</h1>
+<p>Tutaj znajdziesz starych znajomych z gier online.</p>
+<h2>Przykładowe dane:</h2>
+<ul>
+{% for player in data %}
+    <li>Nick: {{ player.nick }}, Gra: {{ player.game }}, Email: {{ player.email }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,3 +1,4 @@
 Django>=3.2,<4.0
-django-bootstrap5>=3.0.0  # Biblioteka dla Bootstrap 5 w Django
-django_registration==3.4
+django-bootstrap5>=23.0.0
+django-registration==3.4
+python-dotenv>=1.0.0
