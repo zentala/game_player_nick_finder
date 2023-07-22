@@ -25,6 +25,7 @@ SITE_ID = 1
 
 # Application definition
 INSTALLED_APPS = [
+    'app',
     'django.contrib.admin',
     'django_registration',
     'django.contrib.auth',
@@ -67,6 +68,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'game_player_nick_finder.wsgi.application'  # Default set to 'project_name.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -76,6 +78,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -94,6 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -114,24 +118,28 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Registraton and authorizaton
 
-# Set the session engine to use cookies
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# Session settings
+# Docs: https://docs.djangoproject.com/en/4.2/topics/http/sessions/
 
-# Additional session settings (optional)
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies' # Set the session engine to use cookies
 SESSION_COOKIE_SECURE = True  # Require a secure HTTPS connection for transmitting the session cookie
 SESSION_COOKIE_HTTPONLY = True  # Set the session cookies to be accessible only to the server (not accessible from the browser)
 SESSION_COOKIE_SAMESITE = 'Lax'  # Require that the session cookie is sent only with requests originating from the same site
-SESSION_COOKIE_AGE = 3600  # Optionally, you can set the age of the session cookies (in seconds), eg. set to one hour (3600 seconds)
+SESSION_COOKIE_AGE = 3600 # Optionally, you can set the age of the session cookies (in seconds), eg. set to one hour (3600 seconds)
+
 
 # Django Registration settings
 # Docs: https://django-registration.readthedocs.io/en/latest/settings.html
+
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 REGISTRATION_OPEN = True # is registration possible
 REGISTRATION_SALT = os.getenv('REGISTRATION_SALT', '')
 
+
 # E-mail server settings
+# Docs: https://docs.djangoproject.com/en/4.2/topics/email/
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))

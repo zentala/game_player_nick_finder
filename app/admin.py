@@ -1,5 +1,17 @@
-# game_player_nick_finder/app/admin.py
 from django.contrib import admin
-from .models import YourModel
+from .models import Account, Game
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 
-admin.site.register(YourModel)
+class AccountInline(admin.StackedInline):
+    model = Account
+    can_delete = False
+    verbose_name_plural = 'Accounts'
+
+class CustomizedUserAdmin (UserAdmin):
+    inlines = (AccountInline, )
+
+admin.site.unregister(User)
+admin.site.register(User, CustomizedUserAdmin)
+
+admin.site.register(Game)

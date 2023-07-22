@@ -6,7 +6,8 @@ from app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('accounts/profile/', views.AccountProfile.as_view(), name='account_profile'),
+    path('accounts/profile/', views.account_profile, name='account_profile'),
+    path('add/', views.add_game_and_character, name='add_game_and_character'),
 
     # Django Auth & Django Registration
     

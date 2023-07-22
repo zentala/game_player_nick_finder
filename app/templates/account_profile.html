@@ -2,6 +2,22 @@
 {% load i18n %}
 
 {% block content %}
-Account Profile Page
+  <h2>User Profile</h2>
+  <p>Username: {{ user.username }}</p>
+  <p>First Name: {{ user.first_name }}</p>
+  <p>Last Name: {{ user.last_name }}</p>
+  <p>Email: {{ user.email }}</p>
+  
+  {% if characters %}
+    <h3>Characters</h3>
+    <ul>
+      {% for character in characters %}
+        <li>{{ character.nickname }} ({{ character.game.name }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No characters found.</p>
+  {% endif %}
 
+  <a href="{% url 'add_game_and_character' %}">Add Game and Character</a>
 {% endblock %}
