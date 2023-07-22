@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Character Details</h1>
+<a href="{% url 'character_edit' character.user.username character.nickname %}">Edit</a>
+<p>User: {{ character.user }}</p>
+<p>Nickname: {{ character.nickname }}</p>
+<p>Description: {{ character.description }}</p>
+<!-- Add other fields as needed -->
+{% endblock %}

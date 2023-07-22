@@ -2,12 +2,21 @@
 from django.contrib import admin
 from django.urls import path, include
 from app import views
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('accounts/profile/', views.account_profile, name='account_profile'),
-    path('add/', views.add_game_and_character, name='add_game_and_character'),
+    path('accounts/profile/', AccountProfileView.as_view(), name='account_profile'),
+    path('characters/', CharacterListView.as_view(), name='character_list'),
+    path('character/add/', views.AddCharacterView.as_view(), name='add_character'),
+    path('character/<str:user>-<str:nickname>/', CharacterView.as_view(), name='character_detail'),
+    path('character/<str:user>-<str:nickname>/edit/', CharacterEditView.as_view(), name='character_edit'),
+    
+    path('games/', GameListView.as_view(), name='game_list'),
+    path('games/create/', GameCreateView.as_view(), name='game_create'),
+    path('games/<slug:slug>/', GameDetailView.as_view(), name='game_detail'),
+
 
     # Django Auth & Django Registration
     

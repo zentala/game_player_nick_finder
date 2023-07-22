@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>Character List</h1>
+    <a href="{% url 'add_character' %}">{% trans "Add character" %}</a>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+    <ul>
+        {% for character in characters %}
+            <li>
+                <a href="{% url 'character_detail' character.user.username character.nickname %}">
+                    {{ character.nickname }}
+                </a> 
+                - {% for game_info in character.get_games_info %}
+                {{ game_info.game.name }}
+                    {% if game_info.year_info %}
+                        ({{ game_info.year_info }})
+                    {% endif %}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                [ <a href="{% url 'character_edit' character.user.username character.nickname %}">Edit</a>]
+            </li>
+        {% endfor %}
+    </ul>
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}

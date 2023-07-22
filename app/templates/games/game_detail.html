@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>{{ game.name }}</h1>
+  <a href="{% url 'game_list' %}">Back to list</a>
+  {% if game.icon %}
+    <img src="{{ game.icon.url }}" alt="{{ game.name }} Icon">
+  {% endif %}
+{% endblock %}
