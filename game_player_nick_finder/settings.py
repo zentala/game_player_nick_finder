@@ -18,7 +18,7 @@ DEBUG = True
 
 # Define the ALLOWED_HOSTS list for production
 # Add other allowed hosts when deploying to the production server
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']  
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'gpnf.zentala.io']
 
 # Sites
 SITE_ID = 1
@@ -66,7 +66,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'game_player_nick_finder.wsgi.application'  # Default set to 'project_name.wsgi.application'
+WSGI_APPLICATION = 'game_player_nick_finder.wsgi.application'
 
 
 # Database

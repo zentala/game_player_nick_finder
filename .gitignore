@@ -83,3 +83,6 @@ Pipfile.lock
 
 # Baza danych
 db.sqlite3
+
+# PM2 local configuration
+ecosystem.config.js
