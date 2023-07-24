@@ -1,30 +1,61 @@
 {% extends "base.html" %}
+
+{% load crispy_forms_tags %}
 {% load i18n %}
 
 {% block content %}
-    <h1>Character List</h1>
-    <a href="{% url 'add_character' %}">{% trans "Add character" %}</a>
-    <form method="get">
-        {{ form.as_p }}
-        <button type="submit">Filter</button>
+    <h1>Character List <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a></h1>
+
+
+    <form method="get" class="row gy-2 gx-3 align-items-end">
+        <div class="col-auto form-group">
+            {{ form.nickname|as_crispy_field }}
+        </div>
+        <div class="col-auto form-group">
+            {{ form.game|as_crispy_field }}
+        </div>
+        <div class="col-auto form-group">
+            {{ form.year|as_crispy_field }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Filter</button>
+        </div>
     </form>
-    <ul>
-        {% for character in characters %}
-            <li>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nick</th>
+            <th scope="col">Games</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for character in characters %}
+          <tr>
+            <th scope="row">1</th>
+            <td>
                 <a href="{% url 'character_detail' character.user.username character.nickname %}">
                     {{ character.nickname }}
-                </a> 
-                - {% for game_info in character.get_games_info %}
-                {{ game_info.game.name }}
+                </a>
+            </td>
+            <td>
+                {% for game_info in character.get_games_info %}
+                    {{ game_info.game.name }}
                     {% if game_info.year_info %}
                         ({{ game_info.year_info }})
                     {% endif %}
                     {% if not forloop.last %}, {% endif %}
                 {% endfor %}
-                [ <a href="{% url 'character_edit' character.user.username character.nickname %}">Edit</a>]
-            </li>
-        {% endfor %}
-    </ul>
+            </td>
+            <td>
+                <a href="{% url 'character_edit' character.user.username character.nickname %}" class="btn btn-sm btn-secondary">Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% if is_paginated %}
         <div class="pagination">
             <span class="step-links">
@@ -44,4 +75,10 @@
             </span>
         </div>
     {% endif %}
+
+    <div class="h-100 col-6 p-5 mb-4 bg-body-tertiary rounded-3">
+        <h2>Can't find who you looking for?</h2>
+        <p>Add your Character info so they can find you when they visit GPNF!</p>
+        <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a>
+    </div>
 {% endblock %}

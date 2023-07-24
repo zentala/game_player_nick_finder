@@ -35,14 +35,14 @@ class UserEditForm(forms.ModelForm):
     )
 
 class CharacterFilterForm(forms.Form):
-    nickname = forms.CharField(max_length=100, required=False)
+    nickname = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'ShadowWarrior01'}))
     game = forms.ModelChoiceField(queryset=Game.objects.all(), empty_label='All Games', required=False)
-    year = forms.IntegerField(min_value=1900, max_value=2100, required=False)
+    year = forms.IntegerField(min_value=1900, max_value=2100, required=False, widget=forms.NumberInput(attrs={'placeholder': '2001'}))
 
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['name', 'icon']
+        fields = ['name', 'icon', 'desc']
 
 class GamePlayedForm(forms.ModelForm):
     class Meta:

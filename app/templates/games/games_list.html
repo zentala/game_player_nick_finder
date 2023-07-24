@@ -1,12 +1,43 @@
 {% extends "base.html" %}
+
 {% load static %}
 
 {% block content %}
-  <h1>Game List</h1>
-  <a href="{% url 'game_create' %}">Add Game</a>
-  <ul>
+  {% if messages %}
+    <div class="mt-4">
+      {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <h1>Game List <a href="{% url 'game_create' %}" role="button" class="btn btn-primary">Add Game</a></h1>
+  <p>Here is the list of games, sorted by popularity, that our users have been playing. Click on a game to see the list of characters that have played in it.</p>
+
+  <div class="row" data-masonry='{"percentPosition": true }' style="position: relative; height: 690px;">
     {% for game in games %}
-      <li><a href="{% url 'game_detail' game.slug %}">{{ game.name }}</a></li>
+    
+      <div class="col-sm-6 col-lg-4 mb-4" style="position: absolute; left: 0%; top: 0px;">
+        <div class="card">
+          {% if game.icon %}
+            <img class="card-img-top" src="{{ game.icon.url }}" alt="{{ game.name }}">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ game.name }}
+              <a href="{% url 'game_edit' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Edit</a>
+              <a href="{% url 'game_delete' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Delete</a>
+              <!-- <a href="{% url 'game_detail' game.slug %}" role="button" class="btn btn-primary btn-sm stretched-link">Characters</a> -->
+            </h5>
+            {% if game.desc %}
+              <p class="card-text">{{ game.desc }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    
     {% endfor %}
-  </ul>
+  </div>
 {% endblock %}

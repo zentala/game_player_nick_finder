@@ -1,40 +1,49 @@
 {% extends "base.html" %}
+
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block content %}
   <h2>User Profile</h2>
-  <p>Username: {{ user.username }}</p>
-  <p>First Name: {{ user.first_name }}</p>
-  <p>Last Name: {{ user.last_name }}</p>
-  <p>Email: {{ user.email }}</p>
-  
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p>
-      <label for="{{ form.first_name.id_for_label }}">First Name:</label>
-      {{ form.first_name }}
-    </p>
-    <p>
-      <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
-      {{ form.last_name }}
-    </p>
-    <button type="submit">Save Changes</button>
-  </form>
+  <div class="row">
+    <div class="col-lg-6">
+      <p>Username: {{ user.username }}</p>
+      <!-- <p>First Name: {{ user.first_name }}</p>
+      <p>Last Name: {{ user.last_name }}</p> -->
+      <p>Email: {{ user.email }}</p>
+      
+      <form method="post">
+        {% csrf_token %}
+        <!-- <p>
+          <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name:</label>
+          {{ form.first_name }}
+        </p>
+        <p>
+          <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+          {{ form.last_name }}
+        </p> -->
+        {{ form | crispy }}
 
-  {% if characters %}
-    <h3>Characters</h3>
-    <ul>
-      {% for character in characters %}
-        <li>
-          <a href="{% url 'character_detail' user=character.user.username nickname=character.nickname %}">
-            {{ character.nickname }} ({{ character.game.name }})
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No characters found.</p>
-  {% endif %}
-    <a href="{% url 'add_character' %}">Add Game and Character</a>
-  {% endblock %}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="col-lg-6">
+      <h3>Characters</h3>
+      {% if characters %}
+        <ul>
+          {% for character in characters %}
+            <li>
+              <a href="{% url 'character_detail' user=character.user.username nickname=character.nickname %}">
+                {{ character.nickname }} ({{ character.game.name }})
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No characters found.</p>
+      {% endif %}
+      <a href="{% url 'add_character' %}" class="btn btn-primary">Add Game and Character</a>
+    </div>
+  </div>
+{% endblock %}

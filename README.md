@@ -1,5 +1,7 @@
 # Game Player Nick Finder [![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress)
 
+Demo: https://gpnf.zentala.io/
+
 ## Overview
 Game Player Nick Finder is a web application written in Django, allowing users to search for their old online gaming friends based on their nicknames. Users can also register on the platform to be found by other players. Additionally, users can add their gaming characters from various games, define descriptions, and specify the date range when they played under a particular nickname. The application also features a messaging system and email notifications.
 
@@ -17,9 +19,10 @@ git clone https://github.com/zentala/game_player_nick_finder
 cd game_player_nick_finder
 ```
 
-### Step 2: Source venv
+### Step 2: Setup and activate venv
 
 ```bash 
+python -m venv venv # first time only
 source venv/bin/activate
 ```
 
@@ -53,8 +56,6 @@ python manage.py runserver
 ```
 
 The application should now be accessible at http://localhost:8000/
-
-My apologies for the oversight. Here's the section in markdown as you requested:
 
 ## Intallation and Deamonizing Application on Server
 1) Follow all steps for local installation and startup. Verify that the application is running at http://localhost:8000/.

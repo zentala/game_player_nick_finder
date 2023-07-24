@@ -11,26 +11,30 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, View, CreateView
+from django.views.generic import TemplateView, ListView, View, FormView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.db.models import Q
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet
 from .models import Game, Character, GamePlayed
 
-def index(request):
-    # Pobierz dane z pliku JSON
-    with open('example_data.json', 'r') as json_file:
-        data = json.load(json_file)
+class BaseViewMixin:
+    current_page = None
 
-    context = {'data': data}    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_page'] = self.current_page
+        return context
 
-    return render(request, 'index.html', context)
-
+class IndexView(BaseViewMixin, TemplateView):
+    current_page = 'home'
+    template_name = 'index.html'
 
 class AccountProfileView(LoginRequiredMixin, View):
+    template_name = 'profile'
     template_name = 'account_profile.html'
 
     def get(self, request):
@@ -72,7 +76,8 @@ class AccountProfileView(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context)
 
-class AddCharacterView(LoginRequiredMixin, View):
+class AddCharacterView(LoginRequiredMixin, BaseViewMixin, CreateView):
+    current_page = 'characters'
     template_name = 'characters/add_character.html'
     form_class = AddCharacterForm
 
@@ -99,9 +104,10 @@ class AddCharacterView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-class CharacterListView(ListView):
+class CharacterListView(BaseViewMixin, ListView):
     model = Character
     template_name = 'characters/character_list.html'
+    current_page = 'characters'
     context_object_name = 'characters'
     paginate_by = 10
 
@@ -131,7 +137,8 @@ class CharacterListView(ListView):
         context['form'] = CharacterFilterForm(self.request.GET)
         return context
     
-class CharacterView(DetailView):
+class CharacterView(BaseViewMixin, DetailView):
+    current_page = 'characters'
     model = Character
     template_name = 'characters/character_detail.html'
     context_object_name = 'character'
@@ -143,7 +150,8 @@ class CharacterView(DetailView):
         nickname = self.kwargs['nickname']
         return get_object_or_404(Character, user__username=user, nickname=nickname)
     
-class CharacterEditView(LoginRequiredMixin, View):
+class CharacterEditView(BaseViewMixin, LoginRequiredMixin, UpdateView):
+    current_page = 'characters'
     template_name = 'characters/add_character.html'  # Reuse the add_character.html template
 
     def get(self, request, user, nickname):
@@ -186,25 +194,55 @@ class CharacterEditView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
     
 
-class GameListView(ListView):
+class GameListView(BaseViewMixin, ListView):
+    current_page = 'games'
     model = Game
     template_name = 'games/games_list.html'
     context_object_name = 'games'
 
-class GameDetailView(DetailView):
+class GameDetailView(BaseViewMixin, DetailView):
+    current_page = 'games'
     model = Game
     template_name = 'games/game_detail.html'
     context_object_name = 'game'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
 
-class GameCreateView(CreateView):
+class GameFormViewMixin:
     model = Game
     template_name = 'games/game_form.html'
     form_class = GameForm
-    success_url = '/games/'  # URL to redirect after successful form submission
+    success_url = reverse_lazy('game_list') 
 
     def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Game created successfully!") 
         response = super().form_valid(form)
-        # Dodajemy dodatkową logikę po zapisaniu formularza, jeśli to konieczne
         return response
+    
+class GameCreateView(BaseViewMixin, GameFormViewMixin, FormView):
+    current_page = 'games'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'create'
+        return context
+
+class GameEditView(BaseViewMixin, GameFormViewMixin, UpdateView):
+    current_page = 'games'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'edit'
+        return context
+
+class GameDeleteView(BaseViewMixin, DeleteView):
+    current_page = 'games'
+    model = Game
+    template_name = 'games/game_confirm_delete.html'
+    success_url = '/games/'  # URL to redirect after successful deletion
+
+    def delete(self, request, *args, **kwargs):
+        game = self.get_object()
+        messages.success(request, f'The game "{game.name}" has been deleted successfully.')
+        return super().delete(request, *args, **kwargs)
