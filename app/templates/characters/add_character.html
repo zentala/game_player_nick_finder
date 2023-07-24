@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
   <h2>Add Game and Character</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form | crispy }}
     {{ formset.management_form }}
     {% for form in formset %}
         {{ form.as_table }}<br/>
     {% endfor %}
     {{ empty_form.as_p }}
-    <button type="submit">Add</button>
+    <button type="submit" class="btn btn-primary">Add</button>
   </form>
 {% endblock %}

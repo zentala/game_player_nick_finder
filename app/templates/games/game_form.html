@@ -1,11 +1,25 @@
 {% extends "base.html" %}
+
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-  <h1>Create Game</h1>
+  <h1>
+    {% if action == 'create' %}
+      Create Game
+    {% else %}
+      Edit Game
+    {% endif %}
+  </h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary">
+      {% if action == 'create' %}
+        Create
+      {% else %}
+        Edit
+      {% endif %}
+    </button>
   </form>
 {% endblock %}
