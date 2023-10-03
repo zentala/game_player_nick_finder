@@ -2,12 +2,13 @@
 from django.contrib import admin
 from django.urls import path, include
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView
 from django_registration.backends.one_step.views import RegistrationView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='index'),
+    path('about/', views.AboutView.as_view(), name='about'),
     path('accounts/profile/', AccountProfileView.as_view(), name='account_profile'),
     path('characters/', CharacterListView.as_view(), name='character_list'),
     path('character/add/', views.AddCharacterView.as_view(), name='add_character'),
@@ -22,8 +23,10 @@ urlpatterns = [
 
     # Django Auth & Django Registration
 
+    path('accounts/', include('allauth.urls')),
+
     # overwriting the default registration view; TODO not sure if this should be done this way
-    path('accounts/register/', RegistrationView.as_view(template_name='django_registration/registration_form.html'), name='django_registration_register'),
+    path('accounts/register/', CustomRegistrationView.as_view(), name='django_registration_register'),
 
     # Provided URLs are:
     # accounts/login/ [name='login']

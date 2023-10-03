@@ -26,6 +26,11 @@ SITE_ID = 1
 # Application definition
 INSTALLED_APPS = [
     'app',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'django.contrib.admin',
     'django_registration',
     'django.contrib.auth',
@@ -34,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'crispy_forms',
-    'crispy_bootstrap5',
+    # 'main.apps.MainConfig',
+    'allauth.socialaccount.providers.google', #for google auth
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -142,6 +147,30 @@ REGISTRATION_OPEN = True # is registration possible
 REGISTRATION_SALT = os.getenv('REGISTRATION_SALT', '')
 
 
+AUTHENTICATION_BACKENDS = (
+ #used for default signin such as loggin into admin panel
+ 'django.contrib.auth.backends.ModelBackend', 
+  
+ #used for social authentications
+ 'allauth.account.auth_backends.AuthenticationBackend',
+ )
+
+# LOGIN_REDIRECT_URL = '/tutorials'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+
+
 # E-mail server settings
 # Docs: https://docs.djangoproject.com/en/4.2/topics/email/
 
@@ -151,3 +180,4 @@ EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+

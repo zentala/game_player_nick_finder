@@ -1,14 +1,3 @@
-# # game_player_nick_finder/app/views.py
-# from django.shortcuts import render
-# from .models import YourModel
-
-# def your_view(request):
-#     # Dodaj logikę widoku
-#     objects = YourModel.objects.all()
-#     return render(request, 'app/index.html', {'objects': objects})
-
-import json
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -17,9 +6,13 @@ from django.views.generic import TemplateView, ListView, View, FormView, CreateV
 from django.views.generic.detail import DetailView
 from django.db.models import Q
 from django.urls import reverse, reverse_lazy
+from django_registration.backends.one_step.views import RegistrationView
 
-from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet
+from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet, CustomRegistrationForm
 from .models import Game, Character, GamePlayed
+
+
+
 
 class BaseViewMixin:
     current_page = None
@@ -29,9 +22,26 @@ class BaseViewMixin:
         context['current_page'] = self.current_page
         return context
 
+
+
+### Simple Views --------------------------------------
+
 class IndexView(BaseViewMixin, TemplateView):
     current_page = 'home'
     template_name = 'index.html'
+
+class AboutView(BaseViewMixin, TemplateView):
+    current_page = 'about'
+    template_name = 'about.html'
+
+
+
+### Registration --------------------------------------
+
+class CustomRegistrationView(RegistrationView):
+    form_class = CustomRegistrationForm
+    template_name = 'django_registration/registration_form.html'
+    current_page = 'register'
 
 class AccountProfileView(LoginRequiredMixin, View):
     template_name = 'profile'
@@ -75,6 +85,10 @@ class AccountProfileView(LoginRequiredMixin, View):
             'form': form,
         }
         return render(request, self.template_name, context)
+
+
+
+### Characters ----------------------------------------
 
 class AddCharacterView(LoginRequiredMixin, BaseViewMixin, CreateView):
     current_page = 'characters'
@@ -192,7 +206,10 @@ class CharacterEditView(BaseViewMixin, LoginRequiredMixin, UpdateView):
             'edit_mode': True,
         }
         return render(request, self.template_name, context)
-    
+
+
+
+### Games- --------------------------------------------    
 
 class GameListView(BaseViewMixin, ListView):
     current_page = 'games'

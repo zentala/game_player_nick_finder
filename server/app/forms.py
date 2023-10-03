@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import inlineformset_factory
+from django_registration.forms import RegistrationForm
 from .models import Account, Character, Game, GamePlayed
+from django.contrib.auth.models import User
 
 class AddCharacterForm(forms.ModelForm):
     class Meta:
@@ -17,6 +19,36 @@ class AddCharacterForm(forms.ModelForm):
     )
     description = forms.CharField(label='Description', widget=forms.Textarea, required=False)
     visibility = forms.BooleanField(label='Visibility', required=False)
+
+class UserForm(RegistrationForm):
+    class Meta(RegistrationForm.Meta):
+        model = User
+        fields = RegistrationForm.Meta.fields
+
+class AccountForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150, required=False)
+    last_name = forms.CharField(max_length=150, required=False)
+    birthday = forms.DateField(required=False)
+    facebook = forms.URLField(required=False)
+    twitch = forms.URLField(required=False)
+    gender = forms.ChoiceField(choices=[('MALE', 'MALE'),('FEMALE', 'FEMALE')], required=False)
+    class Meta:
+        model = Account
+        fields = ['birthday', 'facebook', 'twitch', 'gender']
+
+class CustomRegistrationForm(UserForm, AccountForm):
+    pass
+
+# class CustomRegistrationForm(RegistrationForm):
+#     birthday = forms.DateField(required=False)
+#     facebook = forms.URLField(required=False)
+#     twitch = forms.URLField(required=False)
+#     gender = forms.ChoiceField(choices=[('MALE', 'MALE'),('FEMALE', 'FEMALE')])
+
+#     class Meta(RegistrationForm.Meta):
+#         model = Account
+#         fields = RegistrationForm.Meta.fields + ['birthday', 'facebook', 'twitch', 'gender']
+
 
 class UserEditForm(forms.ModelForm):
     first_name = forms.CharField(max_length=150, required=False)

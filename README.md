@@ -22,6 +22,7 @@ cd game_player_nick_finder
 ### Step 2: Source venv
 
 ```bash 
+python -m venv venv
 source venv/bin/activate
 ```
 
