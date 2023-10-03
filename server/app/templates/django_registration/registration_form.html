@@ -8,50 +8,7 @@
   <h1>Register your account!</h1>
   <form method="post" action=".">
     {% csrf_token %}
-    <!-- {{ form | crispy }} -->
-    <form method="post" action=".">
-      {% csrf_token %}
-      <div class="row">
-          <div class="col-md-6 mb-3">
-              {{ form.username|as_crispy_field }}
-          </div>
-          <div class="col-md-3 mb-3">
-              {{ form.first_name|as_crispy_field }}
-          </div>
-          <div class="col-md-3 mb-3">
-              {{ form.last_name|as_crispy_field }}
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-6 mb-3">
-              {{ form.password1|as_crispy_field }}
-          </div>
-          <div class="col-md-6 mb-3">
-              {{ form.password2|as_crispy_field }}
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-6 mb-3">
-              {{ form.email|as_crispy_field }}
-          </div>
-          <div class="col-md-6 mb-3">
-              {{ form.birthday|as_crispy_field }}
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-6 mb-3">
-              {{ form.facebook|as_crispy_field }}
-          </div>
-          <div class="col-md-6 mb-3">
-              {{ form.twitch|as_crispy_field }}
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-12 mb-3">
-              {{ form.gender|as_crispy_field }}
-          </div>
-      </div>
-  
+    {{ form | crispy }}
 
     <input type="submit" value="{% trans 'Submit' %}" class="btn btn-primary btn-lg"/>
   </form>

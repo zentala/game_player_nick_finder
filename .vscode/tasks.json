@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Check Environment",
+        "type": "shell",
+        "command": "./.vscode/task_check_environment.sh",
+        "runOptions": { "runOn": "folderOpen" },
+        "presentation": {
+          "group": "Development Servers"
+        }
+      },
+      {
+        "label": "Setup Environment for Django Backend Server",
+        "type": "shell",
+        "command": "pipenv install",
+        "options": {
+          "cwd": "${workspaceFolder}/server"
+        },
+        "problemMatcher": [],
+        "dependsOn": ["Check Environment"],
+        "runOptions": { "runOn": "folderOpen" },
+        "presentation": {
+          "group": "Development Servers"
+        }
+      },
+      {
+        "label": "Run Django Backend Server",
+        "type": "shell",
+        "command": "pipenv",
+        "args": ["run", "python", "manage.py", "runserver"],
+        "options": {
+          "cwd": "${workspaceFolder}/server"
+        },
+        "problemMatcher": [],
+        "dependsOn": ["Setup Environment for Django Backend Server"],
+        "runOptions": { "runOn": "folderOpen" },
+        "presentation": {
+          "group": "Development Servers"
+        }
+      },
+      {
+        "label": "Setup Environment for React Client",
+        "type": "shell",
+        "command": "source ~/.nvm/nvm.sh && nvm use && npm install",
+        "options": {
+          "cwd": "${workspaceFolder}/client"
+        },
+        "problemMatcher": [],
+        "dependsOn": ["Check Environment"],
+        "runOptions": { "runOn": "folderOpen" },
+        "presentation": {
+          "group": "Development Servers"
+        }
+      },
+      {
+        "label": "Run React Dev Server",
+        "type": "shell",
+        "command": "npm",
+        "args": ["start"],
+        "options": {
+          "cwd": "${workspaceFolder}/client"
+        },
+        "problemMatcher": [],
+        "dependsOn": ["Setup Environment for React Client"],
+        "runOptions": { "runOn": "folderOpen" },
+        "presentation": {
+          "group": "Development Servers"
+        }
+      }
+    ]
+  }
+  

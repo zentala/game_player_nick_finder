@@ -42,6 +42,17 @@ class CustomRegistrationView(RegistrationView):
     form_class = CustomRegistrationForm
     template_name = 'django_registration/registration_form.html'
     current_page = 'register'
+class BaseViewMixin:
+    current_page = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_page'] = self.current_page
+        return context
+
+class IndexView(BaseViewMixin, TemplateView):
+    current_page = 'home'
+    template_name = 'index.html'
 
 class AccountProfileView(LoginRequiredMixin, View):
     template_name = 'profile'
