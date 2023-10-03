@@ -26,6 +26,9 @@ SITE_ID = 1
 # Application definition
 INSTALLED_APPS = [
     'app',
+    'corsheaders',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'django.contrib.admin',
     'django_registration',
     'django.contrib.auth',
@@ -34,14 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'crispy_forms',
-    'crispy_bootstrap5',
+    'rest_framework',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -151,3 +154,11 @@ EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+
+CORS_ALLOW_ALL_ORIGINS = True  # TODO for devs onlny
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}

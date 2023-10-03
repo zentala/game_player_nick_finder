@@ -10,6 +10,8 @@ django-registration = "*"
 django-crispy-forms = "*"
 pillow = "*"
 crispy-bootstrap5 = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
