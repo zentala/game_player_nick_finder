@@ -42,7 +42,7 @@
       {
         "label": "Setup Environment for React Client",
         "type": "shell",
-        "command": "source ~/.nvm/nvm.sh && nvm use && npm install",
+        "command": "source ~/.nvm/nvm.sh && nvm install && nvm use && npm install",
         "options": {
           "cwd": "${workspaceFolder}/client"
         },
@@ -70,4 +70,3 @@
       }
     ]
   }
-  
