@@ -42,12 +42,12 @@ Welcome to the "Game Player Nick Finder" - a unique platform to reconnect with y
 
 ## Code quality status
 
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=bugs)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=game_player_nick_finder&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=game_player_nick_finder) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=bugs)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
 
 ## 🤝 Join the Community!
 
