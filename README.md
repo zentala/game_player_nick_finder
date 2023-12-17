@@ -22,24 +22,6 @@ Welcome to the "Game Player Nick Finder" - a unique platform to reconnect with y
 | Marketing   | ![Google Analytics](https://img.shields.io/badge/-GoogleAnalytics-E37400?logo=googleanalytics&logoColor=white) |
 | IDE         | ![VSCode](https://img.shields.io/badge/-Visual%20Studio%20Code-007ACC?logo=visualstudiocode&logoColor=white) |
 
-## 🏗 Current & Planned App Architecture
-### Current Backend: [Django Full-Stack App in `server` Directory](https://github.com/zentala/game_player_nick_finder/tree/master/server)
-- Our current setup uses Django for server-side rendering, efficiently delivering static content and managing server-client interactions.
-- Django's ORM is integral for database interactions, while Django Views handle business logic and data presentation.
-
-#### Planned Transition to API-Driven Architecture
-- The next phase involves shifting to Django REST Framework for API endpoints creation, setting the stage for a more dynamic, interactive frontend.
-- These API endpoints will be consumed by a [Planned React.js Client](https://github.com/zentala/game_player_nick_finder/tree/master/client) for enhanced user experiences.
-
-### Planed initial [Future React.js Client in `client` directory](https://github.com/zentala/game_player_nick_finder/tree/master/client)
-- Contains the foundational setup for the future React.js application, awaiting development post-API integration.
-
-### Current Development Focus
-1) The immediate goal is to achieve MVP functionality, including character creation flows, friend search optimization, and user account panels for game and character management.
-2) Current priorities include contact information sharing, friend request features, and notification systems for new user additions.
-3) Long-term plans include implementing a user-to-user chat system.
-4) The React.js development is deferred for now, focusing instead on completing the business logic and core functionalities.
-
 ## Code quality status
 
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
@@ -63,3 +45,123 @@ Contribute to the "Game Player Nick Finder" project by:
 * Sharing your suggestions and reporting bugs in the [Issues](https://github.com/zentala/game_player_nick_finder/issues) section.
 
 Your input helps us evolve and improve the platform for the benefit of all gamers.
+
+## Installation and Running the Application Locally
+Before you proceed, ensure that your system has the following installed:
+* Python (version 3.6 or newer)
+* pip (Python package management tool) [sudo apt install python3-pip]
+* pipenv (Python packaging tool for virtual environments) [pip install pipenv]
+
+### Step 1: Clone the Repository
+Clone the repository to your local computer using the following git command:
+
+```bash
+git clone https://github.com/zentala/game_player_nick_finder
+cd game_player_nick_finder
+```
+
+### Step 2: Setup pipenv
+To set up the pipenv environment and install dependencies, run the following command:
+
+```bash
+pipenv install
+```
+
+This will create a `Pipfile` and `Pipfile.lock` if they don't exist and install all required dependencies.
+
+### Step 3: Activate pipenv Environment
+To activate the pipenv environment, use:
+
+```bash
+pipenv shell
+```
+
+### Step 4: Configure the Database
+The application uses SQLite as the default database, so there is no need to set up an additional database. You can simply perform the database migration:
+
+```bash
+python manage.py migrate
+```
+
+### Step 5: Create admin user
+```bash
+python manage.py createsuperuser
+```
+
+### Step 6: .env Configuration
+Before using certain features, such as email notifications, you need to configure the environment variables. First, make a copy of the `.env.example` file and rename it to `.env`. Then, update the values with the correct configurations for your environment.
+
+### Step 7: Run the Server
+To start the Django development server, run the following command:
+
+```bash
+python manage.py runserver
+```
+
+The application should now be accessible at http://localhost:8000/
+
+## Intallation and Deamonizing Application on Server
+1) Follow all steps for local installation and startup. Verify that the application is running at http://localhost:8000/.
+2) Copy `ecosystem.config.js.manage` or `ecosystem.config.js.wsgi` (recommended) into `ecosystem.config.js` and adjust paths in the configuration file.
+3) Daemonize the server using the command `pm2 start ecosystem.config.js`. Ensure you have PM2 installed. If not, you can install it using the command `npm install pm2 -g`.
+4) Configure the nginx server to handle requests under a specific domain and add an SSL Certificate. You can use Let's Encrypt for a free SSL certificate. Keep in mind that nginx configuration may vary depending on your operating system and specific requirements.
+
+## Options in manage.py
+
+`manage.py` is a script file in Django that allows you to manage the application and execute various commands. Here are several useful options provided by `manage.py`:
+
+### `flush`
+
+The `flush` command removes all data from the database while leaving the tables intact. This is useful during testing when you want to clear the database and start tests from a clean state.
+
+Example usage:
+```bash
+python manage.py flush
+```
+
+### `migrate`
+
+The `migrate` command executes database migrations. Migrations are a way to keep the database structure in sync with the data model in the application. It allows creating, modifying, and deleting tables and fields in the database based on changes in the models.
+
+Example usage:
+```bash
+python manage.py migrate
+```
+
+### `makemigrations`
+
+The `makemigrations` command is used to generate new migration files based on changes in the application's models. After making changes to the models, use this command to prepare new migrations before applying them with `migrate`.
+
+Example usage:
+```bash
+python manage.py makemigrations
+```
+
+### `shell`
+
+The `shell` command runs an interactive Python console with all Django models loaded. This allows for interactive data analysis and experimentation with database operations.
+
+Example usage:
+```bash
+python manage.py shell
+```
+
+### `createsuperuser`
+
+The `createsuperuser` command allows you to create a new superuser for the application. The superuser can log in to the Django admin panel and manage the application data.
+
+Example usage:
+```bash
+python manage.py createsuperuser
+```
+
+### Other Commands
+
+In addition to the ones mentioned above, there are many other commands available in `manage.py` that you can use for various purposes, such as managing users, generating reports, running tests, etc. To see a full list of commands and their descriptions, you can use the `help` command:
+
+```bash
+python manage.py help
+```
+
+Using this, you can get insights into the various options available in `manage.py` and how to use them to manage your Django application.
+

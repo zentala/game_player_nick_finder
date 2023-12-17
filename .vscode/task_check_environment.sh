@@ -22,19 +22,4 @@ if ! command -v pipenv &> /dev/null; then
   exit 1
 fi
 
-
-# Check for nvm
-source ~/.nvm/nvm.sh
-if ! command -v nvm &> /dev/null; then
-  echo "nvm is not installed."
-  exit 1
-fi
-
-
-# Check for npm
-if ! command -v npm &> /dev/null; then
-  echo "npm is not installed."
-  exit 1
-fi
-
 echo "Environment is ready."
