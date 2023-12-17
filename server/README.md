@@ -4,7 +4,7 @@
 Before you proceed, ensure that your system has the following installed:
 * Python (version 3.6 or newer)
 * pip (Python package management tool) [sudo apt install python3-pip]
-* evnv (virtual Python environment) [sudo apt install python3-venv]
+* pipenv (Python packaging tool for virtual environments) [pip install pipenv]
 
 ### Step 1: Clone the Repository
 Clone the repository to your local computer using the following git command:
@@ -14,18 +14,20 @@ git clone https://github.com/zentala/game_player_nick_finder
 cd game_player_nick_finder
 ```
 
-### Step 2: Setup and activate venv
-
-```bash 
-python -m venv venv # first time only
-source venv/bin/activate
-```
-
-### Step 3: Install Dependencies
-To install the required Python dependencies, run the following command:
+### Step 2: Setup pipenv
+To set up the pipenv environment and install dependencies, run the following command:
 
 ```bash
-pip install -r requirements.txt
+pipenv install
+```
+
+This will create a `Pipfile` and `Pipfile.lock` if they don't exist and install all required dependencies.
+
+### Step 3: Activate pipenv Environment
+To activate the pipenv environment, use:
+
+```bash
+pipenv shell
 ```
 
 ### Step 4: Configure the Database
