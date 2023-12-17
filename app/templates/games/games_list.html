@@ -12,32 +12,60 @@
       {% endfor %}
     </div>
   {% endif %}
-  <h1>Game List <a href="{% url 'game_create' %}" role="button" class="btn btn-primary">Add Game</a></h1>
-  <p>Here is the list of games, sorted by popularity, that our users have been playing. Click on a game to see the list of characters that have played in it.</p>
+  <!-- <h1>Game List <a href="{% url 'game_create' %}" role="button" class="btn btn-primary">Add Game</a></h1> -->
+  <!-- <p>Here is the list of games, sorted by popularity, that our users have been playing. Click on a game to see the list of characters that have played in it.</p> -->
+
+  <div class="container my-4">
+    <div class="row p-4 align-items-center rounded-3 border shadow-lg mb-2" style="background: #fff;">
+      <div class="col-xl-6 p-3 p-lg-5 pt-lg-5">
+        <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Discover Your Favorite Worlds</h1>
+        <p class="lead">Step into a universe of endless adventure. Click on any title to explore characters of players who are waiting for theirs old gamming friends.</p>
+      </div>
+      <div class="col-xl-6 pb-lg-3 overflow-hidden">
+          <img class="float-end" src="/static/images/games.png" alt="" width="500">
+      </div>
+    </div>
+  </div>
 
   <div class="row" data-masonry='{"percentPosition": true }' style="position: relative; height: 690px;">
     {% for game in games %}
-    
-      <div class="col-sm-6 col-lg-4 mb-4" style="position: absolute; left: 0%; top: 0px;">
+
+      <div class="col-sm-6 col-lg-4 col-xl-3 mb-4" style="position: absolute; left: 0%; top: 0px;">
         <div class="card">
-          {% if game.icon %}
-            <img class="card-img-top" src="{{ game.icon.url }}" alt="{{ game.name }}">
+          {% if game.img %}
+            <img class="card-img-top" src="{{ game.img }}" alt="{{ game.name }}">
           {% endif %}
+
 
           <div class="card-body">
             <h5 class="card-title">
               {{ game.name }}
+              {% if request.user.is_superuser %}
               <a href="{% url 'game_edit' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Edit</a>
               <a href="{% url 'game_delete' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Delete</a>
+              {% endif %}
               <!-- <a href="{% url 'game_detail' game.slug %}" role="button" class="btn btn-primary btn-sm stretched-link">Characters</a> -->
             </h5>
             {% if game.desc %}
               <p class="card-text">{{ game.desc }}</p>
             {% endif %}
           </div>
+          <div class="card-footer">
+            <p class="card-text"><small class="text-body-secondary">0 characters</small></p>
+          </div>
         </div>
       </div>
-    
+
     {% endfor %}
+
+    <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
+      <div class="card">
+        <div class="card-header pt-5 pb-5" style="border-bottom: 0;">
+          <h5 class="display-1 text-center text-body-secondary">+</h5>
+          <p class="text-center text-body-secondary">propose<br/>new game</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 {% endblock %}

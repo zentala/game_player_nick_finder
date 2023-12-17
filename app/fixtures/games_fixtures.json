@@ -6,6 +6,7 @@
             "name": "World of Warcraft",
             "desc": "A leading MMORPG known for its rich lore and expansive world, offering players endless adventures.",
             "slug": "world-of-warcraft",
+            "img": "https://blz-contentstack-images.akamaized.net/v3/assets/bltf408a0557f4e4998/blt49ecf5a649fbaf0c/6526c909c9cf4e07ce162d24/10.0_Dragonflight_BrowsingCard_960x540_enUS.jpg",
             "category": 1
         }
     },
@@ -16,6 +17,7 @@
             "name": "Final Fantasy XIV",
             "desc": "A fantasy MMORPG with a focus on storytelling and community, offering a deeply engaging world.",
             "slug": "final-fantasy-xiv",
+            "img": "https://lds-img.finalfantasyxiv.com/promo/h/p/mL1Br70BPlcTGOX0tyg4D0P6t0.jpg",
             "category": 1
         }
     },
@@ -26,6 +28,7 @@
             "name": "The Elder Scrolls Online",
             "desc": "An MMORPG set in the Elder Scrolls universe, featuring a vast world and freedom in gameplay.",
             "slug": "the-elder-scrolls-online",
+            "img": "https://cdn1.epicgames.com/offer/27aa2ebdcda14b3bb8a669aab73ca55f/EGS_TheElderScrollsOnline_ZeniMaxOnlineStudios_S1_2560x1440-c6c2917d1d80ae3c0e6d78b92445496b",
             "category": 1
         }
     },
@@ -36,6 +39,7 @@
             "name": "Fortnite",
             "desc": "A popular battle royale game that combines fast-paced action with strategic building elements.",
             "slug": "fortnite",
+            "img": "https://cdn2.unrealengine.com/fortnite-og-social-1920x1080-a5adda66fab9.jpg",
             "category": 2
         }
     },
@@ -46,6 +50,7 @@
             "name": "Apex Legends",
             "desc": "A high-adrenaline battle royale set in the Titanfall universe, known for its dynamic gameplay and unique characters.",
             "slug": "apex-legends",
+            "img": "https://media.contentapi.ea.com/content/dam/apex-legends/images/2022/07/apex-featured-image-hunted-season.jpg.adapt.crop191x100.1200w.jpg",
             "category": 2
         }
     },
@@ -56,6 +61,7 @@
             "name": "Minecraft",
             "desc": "A sandbox game that revolutionized gaming with its creative and building aspects, appealing to all ages.",
             "slug": "minecraft",
+            "img": "https://gaming-cdn.com/images/products/442/616x353/minecraft-java-bedrock-edition-pc-game-cover.jpg",
             "category": 3
         }
     },
@@ -66,6 +72,7 @@
             "name": "ARK: Survival Evolved",
             "desc": "A survival game where players tame dinosaurs, build bases, and explore a mysterious island.",
             "slug": "ark-survival-evolved",
+            "img": "https://cdn1.epicgames.com/ark/offer/EGS_ARKSurvivalEvolved_StudioWildcard_S1-2560x1440-c316afb7c33a9dfb892eef6b99169e43.jpg",
             "category": 3
         }
     },
@@ -76,6 +83,7 @@
             "name": "League of Legends",
             "desc": "One of the most popular MOBAs, known for its competitive gameplay and diverse champion roster.",
             "slug": "league-of-legends",
+            "img": "https://gaming.komputronik.pl/wp-content/uploads/2023/06/LoL-wymagania.jpg",
             "category": 4
         }
     },
@@ -86,6 +94,7 @@
             "name": "Dota 2",
             "desc": "A complex and strategic MOBA with deep mechanics and a high skill ceiling, offering intense team battles.",
             "slug": "dota-2",
+            "img": "https://sm.ign.com/ign_pl/screenshot/default/dota-2-official_dn8k.jpg",
             "category": 4
         }
     },
@@ -96,6 +105,7 @@
             "name": "Among Us",
             "desc": "A social deduction game where players work together while trying to identify the impostors among them.",
             "slug": "among-us",
+            "img": "https://cdn.boop.pl/uploads/2020/12/067tg-743x387.jpg",
             "category": 5
         }
     },
@@ -106,6 +116,7 @@
             "name": "Roblox",
             "desc": "A platform that allows users to create and play games designed by other users, fostering a strong creative community.",
             "slug": "roblox",
+            "img": "https://static.muve.pl/data/Muve_PL_RP/roblox-ludziki.jpg",
             "category": 5
         }
     },
@@ -116,6 +127,7 @@
             "name": "FIFA 21",
             "desc": "The latest in the FIFA series, offering realistic soccer simulation with various teams and leagues.",
             "slug": "fifa-21",
+            "img": "https://bi.im-g.pl/im/4b/f7/18/z26181195AMP,FIFA-21.jpg",
             "category": 6
         }
     },
@@ -126,6 +138,7 @@
             "name": "Rocket League",
             "desc": "A unique sports game that combines soccer with cars, known for its fast-paced and exciting gameplay.",
             "slug": "rocket-league",
+            "img": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/H2x1_NSwitchDS_RocketLeague.jpg",
             "category": 6
         }
     },
@@ -136,6 +149,7 @@
             "name": "Magic: The Gathering Arena",
             "desc": "A digital version of the popular card game, offering the same depth and strategy as the physical game.",
             "slug": "magic-the-gathering-arena",
+            "img": "https://i.ytimg.com/vi/JR-MP2ZZOz0/maxresdefault.jpg",
             "category": 7
         }
     },
@@ -146,6 +160,7 @@
             "name": "Tabletop Simulator",
             "desc": "A sandbox that allows players to create and play tabletop games in a virtual environment.",
             "slug": "tabletop-simulator",
+            "img": "https://cdn.akamai.steamstatic.com/steam/apps/286160/capsule_616x353.jpg",
             "category": 7
         }
     }

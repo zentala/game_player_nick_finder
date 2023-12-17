@@ -26,7 +26,7 @@ class Game(models.Model):
     icon = models.ImageField(upload_to='icons/', blank=True)
     desc = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
     category = models.ForeignKey(GameCategory, on_delete=models.CASCADE, related_name='games')
-
+    img = models.URLField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

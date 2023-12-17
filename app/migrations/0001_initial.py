@@ -81,6 +81,7 @@ class Migration(migrations.Migration):
                 ('icon', models.ImageField(blank=True, upload_to='icons/')),
                 ('desc', models.TextField(blank=True, validators=[django.core.validators.MaxLengthValidator(1000)])),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='games', to='app.gamecategory')),
+                ('img', models.URLField(blank=True))
             ],
         ),
         migrations.CreateModel(
