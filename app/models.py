@@ -6,12 +6,26 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
+class GameCategory(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
+    description = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
 class Game(models.Model):
     # slug = models.SlugField(max_length=100)
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     icon = models.ImageField(upload_to='icons/', blank=True)
     desc = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
+    category = models.ForeignKey(GameCategory, on_delete=models.CASCADE, related_name='games')
 
 
     def save(self, *args, **kwargs):
@@ -29,7 +43,7 @@ class Account(models.Model):
     facebook = models.URLField(blank=True)
     twitch = models.URLField(blank=True)
     gender = models.CharField(
-        max_length=6, 
+        max_length=6,
         choices=[('MALE', 'MALE'),('FEMALE', 'FEMALE')]
     )
 
@@ -62,7 +76,7 @@ class Character(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.nickname}"
-    
+
 
 class GamePlayed(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
@@ -100,7 +114,7 @@ class Friend(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.friend.username}"
-    
+
 class FriendRequest(models.Model):
     sender = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='received_friend_requests')
@@ -118,7 +132,7 @@ class Message(models.Model):
 
     def __str__(self):
         return self.subject
-    
+
 class EmailNotification(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     subject = models.CharField(max_length=200)

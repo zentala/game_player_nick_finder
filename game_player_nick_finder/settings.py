@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'allauth.account.middleware.AccountMiddleware'
 ]
 
 # Define the URLConf for your application (e.g., your_app_name.urls)
@@ -152,8 +153,8 @@ REGISTRATION_SALT = os.getenv('REGISTRATION_SALT', '')
 
 AUTHENTICATION_BACKENDS = (
  #used for default signin such as loggin into admin panel
- 'django.contrib.auth.backends.ModelBackend', 
-  
+ 'django.contrib.auth.backends.ModelBackend',
+
  #used for social authentications
  'allauth.account.auth_backends.AuthenticationBackend',
  )

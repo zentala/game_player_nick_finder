@@ -1,0 +1,152 @@
+[
+    {
+        "model": "app.game",
+        "pk": 1,
+        "fields": {
+            "name": "World of Warcraft",
+            "desc": "A leading MMORPG known for its rich lore and expansive world, offering players endless adventures.",
+            "slug": "world-of-warcraft",
+            "category": 1
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 2,
+        "fields": {
+            "name": "Final Fantasy XIV",
+            "desc": "A fantasy MMORPG with a focus on storytelling and community, offering a deeply engaging world.",
+            "slug": "final-fantasy-xiv",
+            "category": 1
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 3,
+        "fields": {
+            "name": "The Elder Scrolls Online",
+            "desc": "An MMORPG set in the Elder Scrolls universe, featuring a vast world and freedom in gameplay.",
+            "slug": "the-elder-scrolls-online",
+            "category": 1
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 4,
+        "fields": {
+            "name": "Fortnite",
+            "desc": "A popular battle royale game that combines fast-paced action with strategic building elements.",
+            "slug": "fortnite",
+            "category": 2
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 5,
+        "fields": {
+            "name": "Apex Legends",
+            "desc": "A high-adrenaline battle royale set in the Titanfall universe, known for its dynamic gameplay and unique characters.",
+            "slug": "apex-legends",
+            "category": 2
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 6,
+        "fields": {
+            "name": "Minecraft",
+            "desc": "A sandbox game that revolutionized gaming with its creative and building aspects, appealing to all ages.",
+            "slug": "minecraft",
+            "category": 3
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 7,
+        "fields": {
+            "name": "ARK: Survival Evolved",
+            "desc": "A survival game where players tame dinosaurs, build bases, and explore a mysterious island.",
+            "slug": "ark-survival-evolved",
+            "category": 3
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 8,
+        "fields": {
+            "name": "League of Legends",
+            "desc": "One of the most popular MOBAs, known for its competitive gameplay and diverse champion roster.",
+            "slug": "league-of-legends",
+            "category": 4
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 9,
+        "fields": {
+            "name": "Dota 2",
+            "desc": "A complex and strategic MOBA with deep mechanics and a high skill ceiling, offering intense team battles.",
+            "slug": "dota-2",
+            "category": 4
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 10,
+        "fields": {
+            "name": "Among Us",
+            "desc": "A social deduction game where players work together while trying to identify the impostors among them.",
+            "slug": "among-us",
+            "category": 5
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 11,
+        "fields": {
+            "name": "Roblox",
+            "desc": "A platform that allows users to create and play games designed by other users, fostering a strong creative community.",
+            "slug": "roblox",
+            "category": 5
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 12,
+        "fields": {
+            "name": "FIFA 21",
+            "desc": "The latest in the FIFA series, offering realistic soccer simulation with various teams and leagues.",
+            "slug": "fifa-21",
+            "category": 6
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 13,
+        "fields": {
+            "name": "Rocket League",
+            "desc": "A unique sports game that combines soccer with cars, known for its fast-paced and exciting gameplay.",
+            "slug": "rocket-league",
+            "category": 6
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 14,
+        "fields": {
+            "name": "Magic: The Gathering Arena",
+            "desc": "A digital version of the popular card game, offering the same depth and strategy as the physical game.",
+            "slug": "magic-the-gathering-arena",
+            "category": 7
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 15,
+        "fields": {
+            "name": "Tabletop Simulator",
+            "desc": "A sandbox that allows players to create and play tabletop games in a virtual environment.",
+            "slug": "tabletop-simulator",
+            "category": 7
+        }
+    }
+]

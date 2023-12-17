@@ -46,13 +46,13 @@ Contribute to the "Game Player Nick Finder" project by:
 
 Your input helps us evolve and improve the platform for the benefit of all gamers.
 
-## Installation and Running the Application Locally
+### Installation and Running the Application Locally
 Before you proceed, ensure that your system has the following installed:
 * Python (version 3.6 or newer)
 * pip (Python package management tool) [sudo apt install python3-pip]
 * pipenv (Python packaging tool for virtual environments) [pip install pipenv]
 
-### Step 1: Clone the Repository
+#### Step 1: Clone the Repository
 Clone the repository to your local computer using the following git command:
 
 ```bash
@@ -60,7 +60,7 @@ git clone https://github.com/zentala/game_player_nick_finder
 cd game_player_nick_finder
 ```
 
-### Step 2: Setup pipenv
+#### Step 2: Setup pipenv
 To set up the pipenv environment and install dependencies, run the following command:
 
 ```bash
@@ -69,29 +69,35 @@ pipenv install
 
 This will create a `Pipfile` and `Pipfile.lock` if they don't exist and install all required dependencies.
 
-### Step 3: Activate pipenv Environment
+#### Step 3: Activate pipenv Environment
 To activate the pipenv environment, use:
 
 ```bash
 pipenv shell
 ```
 
-### Step 4: Configure the Database
+#### Step 4: Configure the Database
 The application uses SQLite as the default database, so there is no need to set up an additional database. You can simply perform the database migration:
 
 ```bash
 python manage.py migrate
 ```
 
-### Step 5: Create admin user
+#### Step 5: Create admin user
 ```bash
 python manage.py createsuperuser
 ```
 
-### Step 6: .env Configuration
+#### Step 6: Apply fixtures
+```bash
+python manage.py loaddata app/fixtures/categories_fixtures.json
+python manage.py loaddata app/fixtures/games_fixtures.json
+```
+
+#### Step 7: .env Configuration
 Before using certain features, such as email notifications, you need to configure the environment variables. First, make a copy of the `.env.example` file and rename it to `.env`. Then, update the values with the correct configurations for your environment.
 
-### Step 7: Run the Server
+#### Step 8: Run the Server
 To start the Django development server, run the following command:
 
 ```bash
@@ -100,17 +106,17 @@ python manage.py runserver
 
 The application should now be accessible at http://localhost:8000/
 
-## Intallation and Deamonizing Application on Server
+### Intallation and Deamonizing Application on Server
 1) Follow all steps for local installation and startup. Verify that the application is running at http://localhost:8000/.
 2) Copy `ecosystem.config.js.manage` or `ecosystem.config.js.wsgi` (recommended) into `ecosystem.config.js` and adjust paths in the configuration file.
 3) Daemonize the server using the command `pm2 start ecosystem.config.js`. Ensure you have PM2 installed. If not, you can install it using the command `npm install pm2 -g`.
 4) Configure the nginx server to handle requests under a specific domain and add an SSL Certificate. You can use Let's Encrypt for a free SSL certificate. Keep in mind that nginx configuration may vary depending on your operating system and specific requirements.
 
-## Options in manage.py
+### Options in manage.py
 
 `manage.py` is a script file in Django that allows you to manage the application and execute various commands. Here are several useful options provided by `manage.py`:
 
-### `flush`
+#### `flush`
 
 The `flush` command removes all data from the database while leaving the tables intact. This is useful during testing when you want to clear the database and start tests from a clean state.
 
@@ -119,7 +125,7 @@ Example usage:
 python manage.py flush
 ```
 
-### `migrate`
+#### `migrate`
 
 The `migrate` command executes database migrations. Migrations are a way to keep the database structure in sync with the data model in the application. It allows creating, modifying, and deleting tables and fields in the database based on changes in the models.
 
@@ -128,7 +134,7 @@ Example usage:
 python manage.py migrate
 ```
 
-### `makemigrations`
+#### `makemigrations`
 
 The `makemigrations` command is used to generate new migration files based on changes in the application's models. After making changes to the models, use this command to prepare new migrations before applying them with `migrate`.
 
@@ -137,7 +143,7 @@ Example usage:
 python manage.py makemigrations
 ```
 
-### `shell`
+#### `shell`
 
 The `shell` command runs an interactive Python console with all Django models loaded. This allows for interactive data analysis and experimentation with database operations.
 
@@ -146,7 +152,7 @@ Example usage:
 python manage.py shell
 ```
 
-### `createsuperuser`
+#### `createsuperuser`
 
 The `createsuperuser` command allows you to create a new superuser for the application. The superuser can log in to the Django admin panel and manage the application data.
 
@@ -155,7 +161,7 @@ Example usage:
 python manage.py createsuperuser
 ```
 
-### Other Commands
+#### Other Commands
 
 In addition to the ones mentioned above, there are many other commands available in `manage.py` that you can use for various purposes, such as managing users, generating reports, running tests, etc. To see a full list of commands and their descriptions, you can use the `help` command:
 
