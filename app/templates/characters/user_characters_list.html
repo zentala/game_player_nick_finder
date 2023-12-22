@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+
+dsads
+
+{% for character in object_list %}
+    <h3>{{ character.nickname }}</h3>
+    <p>Gry w które grałem jako ta postać:</p>
+    <ul>
+        {% for game in character.games.all %}
+            <li>{{ game.name }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
+{% endblock %}

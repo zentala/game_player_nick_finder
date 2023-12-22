@@ -5,13 +5,17 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
+def create_superuser(apps, schema_editor):
+    User = apps.get_model('auth', 'User')
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'zentala@gmail.com', 'pass123')
 
 class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL)
     ]
 
     operations = [
@@ -110,4 +114,5 @@ class Migration(migrations.Migration):
                 ('sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sent_messages', to='app.account')),
             ],
         ),
+		# migrations.RunPython(create_superuser),
     ]

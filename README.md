@@ -17,7 +17,6 @@ Welcome to the "Game Player Nick Finder" - a unique platform to reconnect with y
 | Front-end   | ![Bootstrap](https://img.shields.io/badge/-Bootstrap-563D7C?logo=bootstrap&logoColor=white) &nbsp; ![CSS3](https://img.shields.io/badge/-CSS3-1572B6?logo=css3&logoColor=white) |
 | Back-end    | ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white) &nbsp; ![Django](https://img.shields.io/badge/-Django-092E20?logo=django&logoColor=white) |
 | Environment | ![Dotenv](https://img.shields.io/badge/-Dotenv-000000?logo=dotenv&logoColor=white) &nbsp; ![PM2](https://img.shields.io/badge/-PM2-2B037A?logo=pm2&logoColor=white) |
-| DevOps      | ![GitHub Actions](https://img.shields.io/badge/-GitHubActions-2088FF?logo=githubactions&logoColor=white) |
 | DBs         | ![SQLite](https://img.shields.io/badge/-SQLite-003B57?logo=sqlite&logoColor=white) |
 | Marketing   | ![Google Analytics](https://img.shields.io/badge/-GoogleAnalytics-E37400?logo=googleanalytics&logoColor=white) |
 | IDE         | ![VSCode](https://img.shields.io/badge/-Visual%20Studio%20Code-007ACC?logo=visualstudiocode&logoColor=white) |

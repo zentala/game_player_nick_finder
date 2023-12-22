@@ -4,81 +4,172 @@
 {% load i18n %}
 
 {% block content %}
-    <h1>Character List <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a></h1>
-
-
-    <form method="get" class="row gy-2 gx-3 align-items-end">
-        <div class="col-auto form-group">
-            {{ form.nickname|as_crispy_field }}
+  {% if messages %}
+    <div class="mt-4">
+      {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
         </div>
-        <div class="col-auto form-group">
-            {{ form.game|as_crispy_field }}
-        </div>
-        <div class="col-auto form-group">
-            {{ form.year|as_crispy_field }}
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Filter</button>
-        </div>
-    </form>
-
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nick</th>
-            <th scope="col">Games</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for character in characters %}
-          <tr>
-            <th scope="row">1</th>
-            <td>
-                <a href="{% url 'character_detail' character.user.username character.nickname %}">
-                    {{ character.nickname }}
-                </a>
-            </td>
-            <td>
-                {% for game_info in character.get_games_info %}
-                    {{ game_info.game.name }}
-                    {% if game_info.year_info %}
-                        ({{ game_info.year_info }})
-                    {% endif %}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-                <a href="{% url 'character_edit' character.user.username character.nickname %}" class="btn btn-sm btn-secondary">Edit</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% if is_paginated %}
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-    {% endif %}
-
-    <div class="h-100 col-6 p-5 mb-4 bg-body-tertiary rounded-3">
-        <h2>Can't find who you looking for?</h2>
-        <p>Add your Character info so they can find you when they visit GPNF!</p>
-        <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a>
+      {% endfor %}
     </div>
+  {% endif %}
+<!-- <h1>Character List <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a></h1> -->
+<div class="container my-4">
+
+
+	<div class="row" >
+		<div class="col-12 rounded-3 border shadow-lg mb-4" style="background: #fff; overflow: hidden;">
+			<div class="row p-4 p-lg-5 align-items-center " >
+				<div class="col-xl-6 p-3 p-lg-5 pt-lg-5">
+					<h1 class="display-4 fw-bold lh-1">Reconnect with Your Friends</h1>
+					<p class="lead">Traverse the world of our character database and rediscover your old gaming comrades. Enter
+						a nickname, choose a game, and specify the year to quickly find your old gaming buddies.</p>
+				</div>
+				<div class="col-xl-6 overflow-hidden">
+					<img class="float-end" src="https://static.zentala.io/gpnf/place.webp" alt="" width="500">
+				</div>
+			</div>
+			<!-- <div class="row p-3 p-lg-5 pt-lg-3 border-top" style="z-index: 2; background: #fefefe;">
+				<form method="get" id="filter-form"
+					class="row align-items-end gy-2 gx-3">
+					<div class="col-auto form-group">
+						{{ form.nickname|as_crispy_field }}
+					</div>
+					<div class="col-auto form-group">
+						{{ form.game|as_crispy_field }}
+					</div>
+					<div class="col-auto form-group">
+						{{ form.year|as_crispy_field }}
+					</div>
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary mb-3">Filter</button>
+					</div>
+				</form>
+			</div> -->
+		</div>
+	</div>
+
+	<div class="row rounded-3 border shadow-lg mb-4" style="z-index: 3; overflow: hidden;">
+		<div class="col-12 p-3 p-lg-5 pt-lg-4 pb-lg-3 border-bottom" style="z-index: 2; background: #fafafa;">
+			<form method="get" id="filter-form"
+				class="row align-items-end gy-2 gx-3">
+				<div class="col-auto form-group">
+					{{ form.nickname|as_crispy_field }}
+				</div>
+				<div class="col-auto form-group">
+					{{ form.game|as_crispy_field }}
+				</div>
+				<div class="col-auto form-group">
+					{{ form.year|as_crispy_field }}
+				</div>
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary mb-3">Filter</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-12 p-3 p-lg-5 pt-lg-4">
+		<table class="table ">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Nick</th>
+					<th scope="col">Games</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if characters %}
+					{% for character in characters %}
+					<tr>
+						<th scope="row">1</th>
+						<td>
+							<a href="{% url 'character_detail' character.user.username character.nickname %}">
+								{{ character.nickname }}
+							</a>
+						</td>
+						<td>
+							{% for game_info in character.get_games_info %}
+							{{ game_info.game.name }}
+							{% if game_info.year_info %}
+							({{ game_info.year_info }})
+							{% endif %}
+							{% if not forloop.last %}, {% endif %}
+							{% endfor %}
+						</td>
+						<td>
+							<a href="{% url 'character_edit' character.user.username character.nickname %}"
+								class="btn btn-sm btn-secondary">Edit</a>
+						</td>
+					</tr>
+					{% endfor %}
+				{% else %}
+					<tr>
+						<td colspan="4" class="text-center p-3 p-lg-5">
+							<p class="">
+							<strong>No characters found matching your criteria.</strong><br>
+							Try typing a part of the nickname or removing the date to broaden your search criteria.
+							</p>
+						</td>
+					</tr>
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+	</div>
+	{% if is_paginated %}
+	<div class="pagination">
+		<span class="step-links">
+			{% if page_obj.has_previous %}
+			<a href="?page=1">&laquo; first</a>
+			<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+			{% endif %}
+
+			<span class="current">
+				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+			</span>
+
+			{% if page_obj.has_next %}
+			<a href="?page={{ page_obj.next_page_number }}">next</a>
+			<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+			{% endif %}
+		</span>
+	</div>
+	{% endif %}
+
+</div>
+
+	<div class="row mb-5">
+		<div class="col-12 text-center">
+			<div class="p-3 p-lg-5 align-items-center rounded-3 mb-4 h-100" style="z-index: 4;">
+				<h1 class="display-4 mt-4 mb-4 fw-bold">Can't find who you're looking for?</h1>
+				<h2></h2>
+				<p class="lead">Add your character's information so others can find you when they visit Game Player Nick Finder!</p>
+				<a href="{% url 'add_character' %}" role="button" class="btn btn-primary btn-lg">{% trans "Add new character" %}</a>
+			</div>
+		</div>
+	</div>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const form = document.getElementById('filter-form');
+		const gameSelect = document.querySelector('select[name="game"]');
+
+		form.addEventListener('submit', function (event) {
+			event.preventDefault();
+			const gameSlug = gameSelect.options[gameSelect.selectedIndex].getAttribute('data-slug');
+			const nickname = document.querySelector('input[name="nickname"]').value;
+			const year = document.querySelector('input[name="year"]').value;
+
+			let url = '/characters/';
+			if (gameSlug) {
+				url += `${gameSlug}/`;
+			}
+			url += `?nickname=${encodeURIComponent(nickname)}&game=${gameSelect.value}&year=${encodeURIComponent(year)}`;
+
+			window.location.href = url;
+		});
+	});
+</script>
+
 {% endblock %}

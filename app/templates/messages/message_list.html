@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% trans "Your Messages" %}</h2>
+    <div class="list-group">
+        {% for message in messages %}
+        <div class="list-group-item flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ message.subject }}</h5>
+                <small>{{ message.sent_date }}</small>
+            </div>
+            <p class="mb-1">{{ message.content|truncatechars:100 }}</p>
+            <small>{% trans "From" %}: {{ message.sender.user.username }}</small>
+        </div>
+        {% empty %}
+        <p>{% trans "No messages." %}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

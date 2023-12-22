@@ -2,11 +2,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView
-from django_registration.backends.one_step.views import RegistrationView
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View,  PlayedGamesListView, UserCharactersListView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
+# from django.contrib.auth.views import LoginView
+from django.contrib.auth import views as auth_views
+
 from app import api_views
 
 router = DefaultRouter()
@@ -20,10 +21,12 @@ urlpatterns = [
     path('about/', views.AboutView.as_view(), name='about'),
     path('accounts/profile/', AccountProfileView.as_view(), name='account_profile'),
     path('characters/', CharacterListView.as_view(), name='character_list'),
+	path('characters/<slug:game_slug>/', CharacterListView.as_view(), name='character_list'),
     path('character/add/', views.AddCharacterView.as_view(), name='add_character'),
     path('character/<str:user>-<str:nickname>/', CharacterView.as_view(), name='character_detail'),
     path('character/<str:user>-<str:nickname>/edit/', CharacterEditView.as_view(), name='character_edit'),
-    
+
+
     path('games/', GameListView.as_view(), name='game_list'),
     path('games/create/', GameCreateView.as_view(), name='game_create'),
     path('games/<slug:slug>/', GameDetailView.as_view(), name='game_detail'),
@@ -31,12 +34,21 @@ urlpatterns = [
     path('games/<slug:slug>/delete/', GameDeleteView.as_view(), name='game_delete'),
 
     # Django Auth & Django Registration
-
     path('accounts/', include('allauth.urls')),
 
     # overwriting the default registration view; TODO not sure if this should be done this way
-    path('accounts/register/', CustomRegistrationView.as_view(), name='django_registration_register'),
+    # path('accounts/register/', CustomRegistrationView.as_view(), name='django_registration_register'),
     # path('accounts/register/', RegistrationView.as_view(template_name='django_registration/registration_form.html'), name='django_registration_register'),
+
+	path('register/step1/', RegistrationStep1View.as_view(), name='register_step1'),
+    path('register/step2/', RegistrationStep2View.as_view(), name='register_step2'),
+    path('register/step3/', RegistrationStep3View.as_view(), name='register_step3'),
+    path('register/step4/', RegistrationStep4View.as_view(), name='register_step4'),
+
+    # path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'), # rmme
+
+    path('account/played-games/', PlayedGamesListView.as_view(), name='acccount_played_games_list'),
+    path('account/characters/', UserCharactersListView.as_view(), name='acccount_characters_list'),
 
     # Provided URLs are:
     # accounts/login/ [name='login']
@@ -48,11 +60,13 @@ urlpatterns = [
     # accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
     # accounts/reset/done/ [name='password_reset_complete']
 
-    # Choose one between those two: 
+    # Choose one between those two:
     path('accounts/', include('django_registration.backends.one_step.urls')), # no email verification:
     # path('accounts/', include('django_registration.backends.activation.urls')), # with email verification
 
     path('accounts/', include('django.contrib.auth.urls')),
+
+    path('messages/', MessageListView.as_view(), name='message_list'),
 
     path('api/v1/', include(router.urls)),
 ]

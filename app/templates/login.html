@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- Treść strony logowania -->
+<div class="login-container">
+    <form method="post">
+        {% csrf_token %}
+        <!-- Pola formularza logowania -->
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <button type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        /* Twój CSS dla kontenera logowania */
+    }
+</style>
+{% endblock %}

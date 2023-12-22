@@ -2,143 +2,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <title>{% block title %} Game Player Nick Finder {% endblock %}</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <!-- <link rel="stylesheet" href="{{ STATIC_URL }}style.css" /> -->
-
-  <meta name="theme-color" content="#fafafa">
-</head>
+{% include 'base_head.html' %}
 
 <body>
 
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="/">Game Player Nick Finder</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link {% if current_page == 'home' %}active{% endif %}" href="{% url 'index' %}">{% trans "Home" %}</a></li>
-          <li class="nav-item"><a class="nav-link {% if current_page == 'characters' %}active{% endif %}" href="{% url 'character_list' %}">{% trans "Characters" %}</a></li>
-          <li class="nav-item"><a class="nav-link {% if current_page == 'games' %}active{% endif %}" href="{% url 'game_list' %}">{% trans "Games" %}</a></li>
-        </ul>
-        <ul class="navbar-nav mb-2 mb-lg-0 d-flex">
-          {% if user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" data-popper-placement="bottom-end">
-              <li><a class="dropdown-item" href="{% url 'account_profile' %}">{% trans "Profile" %}</a></li>
-              <li><a class="dropdown-item" href="{% url 'password_change' %}">{% trans "Change password" %}</a></li>
-              {% if user.is_superuser %}
-                <li><a class="dropdown-item" href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
-              {% endif %}
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> {% trans "Log out" %}</a></li>
-            </ul>
-          </li>
-          {% else %}
-          <li class="nav-item align-items-center d-flex">
-            <a href="{% url 'login' %}" class="nav-link"><i class="bi bi-box-arrow-in-left"></i> {% trans "Log in" %}</a>
-            or
-            <a href="{% url 'django_registration_register' %}" class="nav-link">{% trans "Register" %}</a>
-          </li>
-          {% endif %}
-        </ul>
-        <!-- <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form> -->
-      </div>
-    </div>
-  </nav>
 
   <div id="header">
     {% block header %}
-
+      {% include 'base_navbar.html' %}
     {% endblock %}
   </div>
 
   <div class="container">
-    {% block content %}{% endblock %}
+    {% block body %}
+      {% if messages %}
+      <div>
+        <strong>{% trans "Messages:" %}</strong>
+        <ul>
+          {% for message in messages %}
+            <li>{{message}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% block content %}
+      {% endblock %}
+    {% endblock %}
+
+    {% block extra_body %}
+    {% endblock %}
   </div>
 
   {% block footer %}
-  <div class="container">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-      <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 <a href="/" class="nav-link d-inline">Game Player Nick
-          Finder</a></p>
-
-      <!-- <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-          </a> -->
-
-      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#twitter" />
-            </svg></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#instagram" />
-            </svg></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#facebook" />
-            </svg></a></li>
-      </ul>
-
-      <ul class="nav col-md-4 justify-content-end">
-        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li> -->
-        <li class="nav-item">
-          <a href="https://github.com/zentala/game_player_nick_finder" target="_blank" class="nav-link px-2 text-body-secondary">
-            <i class="bi bi-github"></i>
-            GitHub
-          </a>
-        </li>
-        <li class="nav-item"><a class="nav-link px-2 text-body-secondary {% if current_page == 'about' %}active{% endif %}" href="{% url 'about' %}">{% trans "About" %}</a></li>
-        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li> -->
-        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li> -->
-      </ul>
-    </footer>
-  </div>
+    {% include 'base_footer.html' %}
   {% endblock %}
 
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
-    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D"
-    crossorigin="anonymous" async></script>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QQQ5G5388X"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-QQQ5G5388X');
-  </script>
+  {% include 'base_scripts.html' %}
 
 </body>
 

@@ -1,0 +1,51 @@
+{% load i18n %}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/">Game Player Nick Finder</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link {% if current_page == 'home' %}active{% endif %}" href="{% url 'index' %}">{% trans "Home" %}</a></li>
+          <li class="nav-item"><a class="nav-link {% if current_page == 'characters' %}active{% endif %}" href="{% url 'character_list' %}">{% trans "Characters" %}</a></li>
+          <li class="nav-item"><a class="nav-link {% if current_page == 'games' %}active{% endif %}" href="{% url 'game_list' %}">{% trans "Games" %}</a></li>
+        </ul>
+        <ul class="navbar-nav mb-2 mb-lg-0 d-flex">
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" data-popper-placement="bottom-end">
+              <li><a class="dropdown-item" href="{% url 'account_profile' %}">{% trans "Profile" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'acccount_played_games_list' %}">{% trans "My games" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'acccount_characters_list' %}">{% trans "My characters" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'message_list' %}">{% trans "Messages" %} <span class="badge rounded-pill bg-danger">0</span></a></li>
+              <li><a class="dropdown-item" href="{% url 'password_change' %}">{% trans "Change password" %}</a></li>
+              {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
+              {% endif %}
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> {% trans "Log out" %}</a></li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item align-items-center d-flex">
+            <a href="{% url 'login' %}" class="nav-link"><i class="bi bi-box-arrow-in-left"></i> {% trans "Log in" %}</a>
+            or
+            <a href="{% url 'account_signup' %}" class="nav-link">{% trans "Register" %}</a>
+          </li>
+          {% endif %}
+        </ul>
+        <!-- <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+      </div>
+    </div>
+  </nav>

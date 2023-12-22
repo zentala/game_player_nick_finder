@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 px-1 text-body-secondary my-4 border-top" style="border-color: #eee !important">
+      <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 <a href="/" class="nav-link d-inline">Game Player Nick
+          Finder</a></p>
+
+      <!-- <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+          </a> -->
+
+      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+              <use xlink:href="#twitter" />
+            </svg></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+              <use xlink:href="#instagram" />
+            </svg></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24">
+              <use xlink:href="#facebook" />
+            </svg></a></li>
+      </ul>
+
+      <ul class="nav col-md-4 justify-content-end">
+        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li> -->
+        <li class="nav-item">
+          <a href="https://github.com/zentala/game_player_nick_finder" target="_blank" class="nav-link px-2 text-body-secondary">
+            <i class="bi bi-github"></i>
+            GitHub
+          </a>
+        </li>
+        <!-- <li class="nav-item"><a class="nav-link px-2 text-body-secondary {% if current_page == 'about' %}active{% endif %}" href="{% url 'about' %}">{% trans "About" %}</a></li> -->
+        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li> -->
+        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li> -->
+      </ul>
+    </footer>
+  </div>

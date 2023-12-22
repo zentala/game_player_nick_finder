@@ -20,7 +20,6 @@ __pycache__/
 
 # Katalogi utworzone przez różne narzędzia
 .idea/
-.vscode/
 __pycache__/
 
 # Pliki generowane przez środowiska IDE lub edytory kodu
@@ -74,9 +73,6 @@ __pycache__/
 .env.local
 .env.*.local
 .env.*.local.example
-
-# Pliki generowane przez narzędzie pipenv
-Pipfile.lock
 
 # Pliki wygenerowane przez pytest
 .pytest_cache/
