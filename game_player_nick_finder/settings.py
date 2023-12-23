@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 # Define the URLConf for your application (e.g., your_app_name.urls)
@@ -195,3 +195,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://gpnf.zentala.io',
+]
+
+SESSION_COOKIE_DOMAIN = '.zentala.io'
