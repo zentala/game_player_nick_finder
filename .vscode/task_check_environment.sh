@@ -1,25 +1,28 @@
 #!/bin/bash
 
-# Check for Python
-if ! command -v python &> /dev/null; then
-  echo "Python is not installed."
-  exit 1
+# Check Python3/Python
+if command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &> /dev/null; then
+    PYTHON_CMD="python"
+else
+    echo "Neither Python3 nor Python is installed."
+    exit 1
 fi
 
 # Check Python version
-python_version=$(python3 -c 'import sys; print(sys.version_info.major, sys.version_info.minor)')
+python_version=$($PYTHON_CMD -c 'import sys; print(sys.version_info.major, sys.version_info.minor)')
 read -r major minor <<< "$python_version"
 
 if [[ "$major" -lt 3 || ("$major" -eq 3 && "$minor" -lt 8) ]]; then
-  echo "You need Python 3.8 or higher."
-  exit 1
+    echo "Python 3.8 or newer is required."
+    exit 1
 fi
 
-
-# Check for pipenv
+# Check pipenv
 if ! command -v pipenv &> /dev/null; then
-  echo "pipenv is not installed."
-  exit 1
+    echo "pipenv is not installed."
+    exit 1
 fi
 
 echo "Environment is ready."

@@ -1,43 +1,43 @@
 {
-    "version": "2.0.0",
-    "tasks": [
+  "version": "2.0.0",
+  "tasks": [
       {
-        "label": "Check Environment",
-        "type": "shell",
-        "command": "./.vscode/task_check_environment.sh",
-        "runOptions": { "runOn": "folderOpen" },
-        "presentation": {
-          "group": "Django"
-        }
+          "label": "Check Environment",
+          "type": "shell",
+          "command": "./.vscode/task_check_environment.sh",
+          "runOptions": { "runOn": "folderOpen" },
+          "presentation": {
+              "group": "Django"
+          }
       },
       {
-        "label": "Setup Environment for Django",
-        "type": "shell",
-        "command": "pipenv install",
-        "options": {
-          "cwd": "${workspaceFolder}/server"
-        },
-        "problemMatcher": [],
-        "dependsOn": ["Check Environment"],
-        "runOptions": { "runOn": "folderOpen" },
-        "presentation": {
-          "group": "Django"
-        }
+          "label": "Setup Environment for Django",
+          "type": "shell",
+          "command": "pipenv install",
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "dependsOn": ["Check Environment"],
+          "runOptions": { "runOn": "folderOpen" },
+          "presentation": {
+              "group": "Django"
+          }
       },
       {
-        "label": "Run Django Server",
-        "type": "shell",
-        "command": "pipenv",
-        "args": ["run", "python", "manage.py", "runserver"],
-        "options": {
-          "cwd": "${workspaceFolder}/server"
-        },
-        "problemMatcher": [],
-        "dependsOn": ["Setup Environment for Django Backend Server"],
-        "runOptions": { "runOn": "folderOpen" },
-        "presentation": {
-          "group": "Django"
-        }
+          "label": "Run Django Server",
+          "type": "shell",
+          "command": "pipenv",
+          "args": ["run", "python", "manage.py", "runserver"],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "dependsOn": ["Setup Environment for Django"],
+          "runOptions": { "runOn": "folderOpen" },
+          "presentation": {
+              "group": "Django"
+          }
       }
-    ]
-  }
+  ]
+}

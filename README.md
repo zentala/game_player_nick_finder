@@ -48,8 +48,16 @@ Your input helps us evolve and improve the platform for the benefit of all gamer
 ### Installation and Running the Application Locally
 Before you proceed, ensure that your system has the following installed:
 * Python (version 3.6 or newer)
-* pip (Python package management tool) [sudo apt install python3-pip]
-* pipenv (Python packaging tool for virtual environments) [pip install pipenv]
+* pip (Python package management tool):
+```bash
+sudo apt install python3-pip
+```
+* pipenv (Python packaging tool for virtual environments):
+```bash
+sudo apt install pipenv
+````
+* pyenv (Python version manager):
+    * [Installation instruction](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
 
 #### Step 1: Clone the Repository
 Clone the repository to your local computer using the following git command:
