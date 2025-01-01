@@ -138,11 +138,14 @@ STATIC_URL = '/static/'
 # Docs: https://docs.djangoproject.com/en/4.2/topics/http/sessions/
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies' # Set the session engine to use cookies
-SESSION_COOKIE_SECURE = True  # Require a secure HTTPS connection for transmitting the session cookie
+SESSION_COOKIE_SECURE = False  # Set to True in production
 SESSION_COOKIE_HTTPONLY = True  # Set the session cookies to be accessible only to the server (not accessible from the browser)
 SESSION_COOKIE_SAMESITE = 'Lax'  # Require that the session cookie is sent only with requests originating from the same site
 SESSION_COOKIE_AGE = 3600 # Optionally, you can set the age of the session cookies (in seconds), eg. set to one hour (3600 seconds)
 
+# Login settings
+LOGIN_REDIRECT_URL = '/'  # Redirect to homepage after login
+LOGIN_URL = '/accounts/login/'  # Login page URL
 
 # Django Registration settings
 # Docs: https://django-registration.readthedocs.io/en/latest/settings.html
@@ -200,4 +203,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://gpnf.zentala.io',
 ]
 
-SESSION_COOKIE_DOMAIN = '.zentala.io'
+# SESSION_COOKIE_DOMAIN = '.zentala.io'  # Enable only in production
+
+# Dodaj ustawienie do włączania/wyłączania mocków
+ENABLE_MOCK_MESSAGES = True

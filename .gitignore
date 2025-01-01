@@ -82,3 +82,12 @@ db.sqlite3
 
 # PM2 local configuration
 ecosystem.config.js
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Example environment files can be committed
+!.env.local.example
+!.env.production.example

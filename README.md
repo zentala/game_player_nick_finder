@@ -30,6 +30,8 @@ Welcome to the "Game Player Nick Finder" - a unique platform to reconnect with y
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder) [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=zentala_game_player_nick_finder&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=zentala_game_player_nick_finder)
 
+Detailes App Stack: Python 3.10, Django + DRF, SQLite, Bootstrap 5, Django Templates, Gunicorn, django-allauth, django-crispy-forms, python-dotenv, PM2
+
 ## 🤝 Join the Community!
 
 ### 👾 ...of Old Forgotten Gaming Friends
@@ -87,6 +89,7 @@ pipenv shell
 The application uses SQLite as the default database, so there is no need to set up an additional database. You can simply perform the database migration:
 
 ```bash
+python manage.py migrate sites
 python manage.py migrate
 ```
 

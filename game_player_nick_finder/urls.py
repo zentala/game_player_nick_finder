@@ -69,4 +69,7 @@ urlpatterns = [
     path('messages/', MessageListView.as_view(), name='message_list'),
 
     path('api/v1/', include(router.urls)),
+
+	path('ui-demo/', views.ui_demo_view, name='ui_demo'),
+
 ]

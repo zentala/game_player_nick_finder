@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.urls import reverse, reverse_lazy
 from django_registration.backends.one_step.views import RegistrationView
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet, CustomRegistrationForm, UserForm
 from .models import Game, Character, GamePlayed, Message
@@ -375,3 +376,16 @@ class UserCharactersListView(ListView):
 
     def get_queryset(self):
         return Character.objects.filter(user=self.request.user).prefetch_related('games')
+
+### Mocked Messages ---------------------------------
+def ui_demo_view(request):
+    if settings.ENABLE_MOCK_MESSAGES:
+        # Dodaj przykładowe wiadomości
+        messages.debug(request, "This is a debug message.")
+        messages.success(request, "This is a success message.")
+        messages.error(request, "This is an error message.")
+        messages.warning(request, "This is a warning message.")
+        messages.info(request, "This is an info message.")
+
+    # Renderuj stronę z wiadomościami
+    return render(request, 'base.html')

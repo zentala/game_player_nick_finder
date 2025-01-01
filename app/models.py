@@ -51,10 +51,10 @@ class Account(models.Model):
         return self.user.username
 
 class Character(models.Model):
-    # user = models.ForeignKey(Account, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, db_index=True)
-    games = models.ManyToManyField(Game, through='GamePlayed')
-    nickname = models.TextField(validators=[MaxLengthValidator(100)])
+    game = models.ForeignKey(Game, on_delete=models.CASCADE) # related_name='characters'
+    nickname = models.CharField(max_length=100)
+    avatar = models.ImageField(upload_to='avatars/', blank=True)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
     visibility = models.BooleanField()
 
@@ -75,7 +75,7 @@ class Character(models.Model):
         return game_info
 
     def __str__(self):
-        return f"{self.user} - {self.nickname}"
+        return f"{self.user.username} - {self.nickname} in {self.game.name}"
 
 
 class GamePlayed(models.Model):

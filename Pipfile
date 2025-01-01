@@ -4,16 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
-python-dotenv = "*"
-django-registration = "*"
-django-crispy-forms = "*"
-pillow = "*"
 crispy-bootstrap5 = "*"
-djangorestframework = "*"
-django-cors-headers = "*"
+django = "*"
 django-allauth = "*"
+django-cors-headers = "*"
+django-crispy-forms = "*"
+django-registration = "*"
+django-widget-tweaks = "*"
+djangorestframework = "*"
 gunicorn = "*"
+pillow = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

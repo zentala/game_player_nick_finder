@@ -1,20 +1,22 @@
 {% extends "base.html" %}
-
-{% load crispy_forms_tags %}
-{% load i18n %}
+{% load crispy_forms_tags i18n %}
 
 {% block content %}
 
-dsads
+<div class="container mt-4">
+    <h2>{% trans "Characters" %}</h2>
 
-{% for character in object_list %}
+    {% if object_list %} {% for character in object_list %}
     <h3>{{ character.nickname }}</h3>
-    <p>Gry w które grałem jako ta postać:</p>
+    <p>Games I played as this character:</p>
     <ul>
         {% for game in character.games.all %}
-            <li>{{ game.name }}</li>
+        <li>{{ game.name }}</li>
         {% endfor %}
     </ul>
-{% endfor %}
+    {% endfor %} {% else %}
+    <p>No characters found.</p>
+    {% endif %}
+</div>
 
 {% endblock %}
