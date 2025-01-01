@@ -130,3 +130,6 @@ REST_FRAMEWORK = {
 
 # Dodaj ustawienie do włączania/wyłączania mocków
 ENABLE_MOCK_MESSAGES = True
+
+# Custom User Model
+AUTH_USER_MODEL = 'app.CustomUser'

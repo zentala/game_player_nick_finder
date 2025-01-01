@@ -13,7 +13,6 @@ from app import api_views
 router = DefaultRouter()
 router.register(r'games', api_views.GameViewSet)
 router.register(r'characters', api_views.CharacterViewSet)
-router.register(r'accounts', api_views.AccountViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

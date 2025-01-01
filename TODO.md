@@ -1,4 +1,4 @@
-1) import 
+1) import
 https://en.wikipedia.org/wiki/List_of_massively_multiplayer_online_games
 https://en.wikipedia.org/wiki/List_of_massively_multiplayer_online_role-playing_games
 https://en.wikipedia.org/wiki/List_of_massively_multiplayer_online_turn-based_strategy_games
@@ -12,3 +12,8 @@ a na koncu wybierasz czas grani (zakres)
 a pozniej jeszczli jeszcze chcesz to  mozesz sobie dodac nicki osob jakich szukasz
 
 4) strona about
+
+* favicon
+* avatar from gravatar next to username in navbar
+* first name if avaliable in navbar
+* zmiana koloru primary na inny z tego domyslnego niebieskiego

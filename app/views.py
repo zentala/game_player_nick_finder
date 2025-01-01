@@ -9,9 +9,10 @@ from django.urls import reverse, reverse_lazy
 from django_registration.backends.one_step.views import RegistrationView
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet, CustomRegistrationForm, UserForm
-from .models import Game, Character, GamePlayed, Message
+from .models import Game, Character, GamePlayed, Message, CustomUser
 
 
 
@@ -109,17 +110,32 @@ class IndexView(BaseViewMixin, TemplateView):
 	template_name = 'index.html'
 
 class AccountProfileView(LoginRequiredMixin, View):
-	template_name = 'profile'
 	template_name = 'account_profile.html'
 
 	def get(self, request):
-		user = request.user
+		# Force loading the user from database using username
+		User = get_user_model()
+		user = User.objects.get(username=request.user.username)
+
+		print(f"User type after loading: {type(user)}")  # Debug line
+		print(f"User ID: {user.id}")       # Debug line
+		print(f"User fields: {dir(user)}")  # Debug line
+		print(f"Is CustomUser: {isinstance(user, CustomUser)}")  # Debug line
+		print(f"User model: {User}")  # Debug line
+		print(f"Has birthday: {'birthday' in dir(user)}")  # Debug line
+		print(f"Birthday value: {getattr(user, 'birthday', None)}")  # Debug line
+
 		characters = Character.objects.filter(user=user)
+
 		initial_data = {
 			'first_name': user.first_name,
 			'last_name': user.last_name,
+			'birthday': getattr(user, 'birthday', None),
+			'facebook': getattr(user, 'facebook', ''),
+			'twitch': getattr(user, 'twitch', ''),
+			'gender': getattr(user, 'gender', ''),
 		}
-		form = UserEditForm(instance=user.account, initial=initial_data)
+		form = UserEditForm(instance=user, initial=initial_data)
 		context = {
 			'user': user,
 			'characters': characters,
@@ -128,22 +144,16 @@ class AccountProfileView(LoginRequiredMixin, View):
 		return render(request, self.template_name, context)
 
 	def post(self, request):
-		user = request.user
+		User = get_user_model()
+		user = User.objects.get(username=request.user.username)
 		characters = Character.objects.filter(user=user)
-		form = UserEditForm(request.POST, instance=user.account)
+		form = UserEditForm(request.POST, instance=user)
 
 		if form.is_valid():
-			form.save()
-			# Get the updated first name and last name from the form
-			first_name = form.cleaned_data['first_name']
-			last_name = form.cleaned_data['last_name']
-			# Update the user's first name and last name
-			user.first_name = first_name
-			user.last_name = last_name
-			user.save()
+			user = form.save()
+			messages.success(request, 'Profile updated successfully!')
 			return redirect('account_profile')
 
-		# If the form is not valid, render the template with the form and other context data
 		context = {
 			'user': user,
 			'characters': characters,
@@ -359,7 +369,7 @@ class MessageListView(LoginRequiredMixin, ListView):
     paginate_by = 10  # Opcjonalnie, jeśli chcesz paginację
 
     def get_queryset(self):
-        return Message.objects.filter(receiver=self.request.user.account).order_by('-sent_date')
+        return Message.objects.filter(receiver=self.request.user).order_by('-sent_date')
 
 ### Played Games --------------------------------------
 class PlayedGamesListView(ListView):

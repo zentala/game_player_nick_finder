@@ -20,5 +20,30 @@
     .login-container {
         /* Twój CSS dla kontenera logowania */
     }
+
+    .gravatar {
+        background-color: #ccc; /* Szare tło */
+        border-radius: 50%; /* Zaokrąglone rogi */
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        object-fit: cover; /* Dopasowanie obrazka */
+        position: relative;
+    }
+
+    .gravatar::before {
+        content: "\f007"; /* Ikona użytkownika */
+        font-family: "Bootstrap Icons"; /* Upewnij się, że Bootstrap Icons jest załadowany */
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
 </style>
 {% endblock %}

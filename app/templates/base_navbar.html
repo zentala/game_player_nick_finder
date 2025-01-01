@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load gravatar_tags %}
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
@@ -16,8 +17,9 @@
         <ul class="navbar-nav mb-2 mb-lg-0 d-flex">
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ user.username }}
+            <a class="nav-link dropdown-toggle d-flex align-items-center fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {% include 'components/avatar.html' %}
+              <span class="ms-2">{{ user.first_name|default:user.username }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" data-popper-placement="bottom-end">
               <li><a class="dropdown-item" href="{% url 'account_profile' %}">{% trans "Profile" %}</a></li>

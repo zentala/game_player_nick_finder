@@ -1,4 +1,11 @@
 {
   // ...
+  "terminal.integrated.profiles.linux": {
+    "Pipenv": {
+      "path": "/usr/bin/zsh",
+      "args": ["-c", "pipenv shell; exec zsh"],
+      "icon": "terminal"
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "Pipenv"
 }
-   
