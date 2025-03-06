@@ -1,22 +1,137 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>{% trans "Your Messages" %}</h2>
-    <div class="list-group">
-        {% for message in messages %}
-        <div class="list-group-item flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ message.subject }}</h5>
-                <small>{{ message.sent_date }}</small>
-            </div>
-            <p class="mb-1">{{ message.content|truncatechars:100 }}</p>
-            <small>{% trans "From" %}: {{ message.sender.user.username }}</small>
+    {% if error_message %}
+        <div class="alert alert-warning">
+            {{ error_message }}
+            <a href="{% url 'add_character' %}" class="btn btn-primary btn-sm ml-3">Create Character</a>
         </div>
-        {% empty %}
-        <p>{% trans "No messages." %}</p>
-        {% endfor %}
-    </div>
+    {% else %}
+        {% if receiver_character or thread_id %}
+            {# Chat View #}
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        {% if receiver_character %}
+                            {% trans "Chat with" %} {{ receiver_character.nickname }} ({{ receiver_character.game.name }})
+                        {% else %}
+                            {% trans "Chat" %}
+                        {% endif %}
+                    </h5>
+                    <a href="{% url 'message_list' %}" class="btn btn-light btn-sm">{% trans "Back to Conversations" %}</a>
+                </div>
+
+                <div class="card-body chat-messages" style="height: 60vh; overflow-y: auto;">
+                    <div class="messages-container">
+                        {% for message in messages %}
+                            <div class="message mb-3 {% if message.sender_character.user == user %}text-end{% endif %}">
+                                <div class="message-bubble d-inline-block p-2 rounded {% if message.sender_character.user == user %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
+                                    <small class="message-sender">{{ message.sender_character.nickname }}</small>
+                                    <div class="message-content">{{ message.content }}</div>
+                                    <small class="message-time text-muted {% if message.sender_character.user == user %}text-white-50{% endif %}">
+                                        {{ message.sent_date|date:"H:i" }}
+                                    </small>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-center text-muted">{% trans "Start the conversation!" %}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <form method="post" action="{% url 'send_message' %}{% if receiver_character %}?character={{ receiver_character.id }}{% elif thread_id %}?thread_id={{ thread_id }}{% endif %}" class="message-form">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            {{ form.content }}
+                            <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            {# Conversations List View #}
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{% trans "Your Characters' Conversations" %}</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for message in messages %}
+                        <a href="{% url 'message_list' %}?{% if message.sender_character.user == user %}character={{ message.receiver_character.id }}{% else %}character={{ message.sender_character.id }}{% endif %}"
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">
+                                        {% if message.sender_character.user == user %}
+                                            {{ message.sender_character.nickname }} → {{ message.receiver_character.nickname }}
+                                        {% else %}
+                                            {{ message.sender_character.nickname }} → {{ message.receiver_character.nickname }}
+                                        {% endif %}
+                                        <small class="text-muted">({{ message.sender_character.game.name }})</small>
+                                    </h6>
+                                    <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
+                                </div>
+                                <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div class="list-group-item text-center text-muted">
+                            {% trans "No conversations yet." %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 </div>
+
+<style>
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-bubble {
+    border-radius: 15px;
+    margin: 2px 0;
+}
+
+.message-sender {
+    display: block;
+    font-size: 0.8em;
+    margin-bottom: 2px;
+}
+
+.chat-input {
+    border-radius: 20px;
+    padding: 8px 15px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Przewiń do ostatniej wiadomości
+    const chatMessages = document.querySelector('.chat-messages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Auto-resize textarea
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    }
+});
+</script>
 {% endblock %}

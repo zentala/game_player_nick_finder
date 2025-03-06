@@ -85,42 +85,18 @@ class Game(models.Model):
         return self.name
 
 class Character(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, db_index=True)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE) # related_name='characters'
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=100)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
-    visibility = models.BooleanField()
-
-    def get_games_info(self):
-        game_info = []
-        played_games = GamePlayed.objects.filter(character=self)
-        for game in played_games:
-            info = {'game': game.game}
-            if game.year_started is not None and game.year_ended is not None:
-                info['year_info'] = f'{game.year_started}-{game.year_ended}'
-            elif game.year_started is not None:
-                info['year_info'] = f'{game.year_started}-'
-            elif game.year_ended is not None:
-                info['year_info'] = f'-{game.year_ended}'
-            else:
-                info['year_info'] = ''
-            game_info.append(info)
-        return game_info
-
-    def __str__(self):
-        return f"{self.user.username} - {self.nickname} in {self.game.name}"
-
-
-class GamePlayed(models.Model):
-    character = models.ForeignKey(Character, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     year_started = models.PositiveIntegerField(
         null=True,
         blank=True,
         validators=[
-            MinValueValidator(1900),  # Minimalny rok (zmień wartość na odpowiednią)
-            MaxValueValidator(2099),  # Maksymalny rok (zmień wartość na odpowiednią)
+            MinValueValidator(1900),
+            MaxValueValidator(2099),
         ],
         help_text="Started year in format YYYY.",
     )
@@ -128,19 +104,32 @@ class GamePlayed(models.Model):
         null=True,
         blank=True,
         validators=[
-            MinValueValidator(1900),  # Minimalny rok (zmień wartość na odpowiednią)
-            MaxValueValidator(2099),  # Maksymalny rok (zmień wartość na odpowiednią)
+            MinValueValidator(1900),
+            MaxValueValidator(2099),
         ],
         help_text="Ended year in format YYYY.",
     )
 
     def __str__(self):
-        if self.year_ended is None:
-            return f"{self.character} - {self.game} - {self.year_started}"
-        else:
-            return f"{self.character} - {self.game} - {self.year_started} to {self.year_ended}"
+        return f"{self.user.username} - {self.nickname} in {self.game.name}"
 
+    def get_games_info(self):
+        year_info = ""
+        if self.year_started:
+            if self.year_ended:
+                year_info = f"{self.year_started}-{self.year_ended}"
+            else:
+                year_info = f"{self.year_started}-present"
+        return [{'game': self.game, 'year_info': year_info}]
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = uuid.uuid4()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        # Zapewnia, że kombinacja (user, nickname, game) jest unikalna
+        unique_together = ('user', 'nickname', 'game')
 
 class Friend(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='friends')
@@ -158,14 +147,17 @@ class FriendRequest(models.Model):
         return f"{self.sender} -> {self.receiver}"
 
 class Message(models.Model):
-    sender = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='sent_messages')
-    receiver = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='received_messages')
-    subject = models.CharField(max_length=200)
+    sender_character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='sent_messages', null=True)
+    receiver_character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='received_messages', null=True)
     content = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True)
+    thread_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
     def __str__(self):
-        return self.subject
+        return f"{self.sender_character.nickname} -> {self.receiver_character.nickname} ({self.sent_date})"
+
+    class Meta:
+        ordering = ['sent_date']  # chronologiczne sortowanie wiadomości
 
 class EmailNotification(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)

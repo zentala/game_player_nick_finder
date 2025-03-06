@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block content %}
 
-<div class="container mt-4">
-    <h2>{% trans "Character Details" %}</h2>
-    <a
-        href="{% url 'character_edit' character.user.username character.nickname %}"
-        >Edit</a
-    >
-    <p>User: {{ character.user }}</p>
-    <p>Nickname: {{ character.nickname }}</p>
-    <p>Description: {{ character.description }}</p>
-    <!-- Add other fields as needed -->
-</div>
+{% block content %}
+  {% include "containers/default.html" %}
 {% endblock %}

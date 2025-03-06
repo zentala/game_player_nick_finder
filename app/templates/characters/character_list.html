@@ -73,7 +73,7 @@
 				<tr>
 					<th scope="col">#</th>
 					<th scope="col">Nick</th>
-					<th scope="col">Games</th>
+					<th scope="col">Game</th>
 					<th scope="col">Action</th>
 				</tr>
 			</thead>
@@ -81,7 +81,7 @@
 				{% if characters %}
 					{% for character in characters %}
 					<tr>
-						<th scope="row">1</th>
+						<th scope="row">{{ forloop.counter }}</th>
 						<td>
 							<a href="{% url 'character_detail' character.user.username character.nickname %}">
 								{{ character.nickname }}
@@ -93,7 +93,6 @@
 							{% if game_info.year_info %}
 							({{ game_info.year_info }})
 							{% endif %}
-							{% if not forloop.last %}, {% endif %}
 							{% endfor %}
 						</td>
 						<td>

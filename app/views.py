@@ -10,9 +10,10 @@ from django_registration.backends.one_step.views import RegistrationView
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db import models
 
-from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, GamePlayedFormSet, CustomRegistrationForm, UserForm
-from .models import Game, Character, GamePlayed, Message, CustomUser
+from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, CustomRegistrationForm, UserForm, MessageForm
+from .models import Game, Character, Message, CustomUser, GameCategory
 
 
 
@@ -45,13 +46,6 @@ class CustomRegistrationView(RegistrationView):
 	form_class = CustomRegistrationForm
 	template_name = 'django_registration/registration_form.html'
 	current_page = 'register'
-class BaseViewMixin:
-	current_page = None
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['current_page'] = self.current_page
-		return context
 
 class RegistrationStep1View(BaseViewMixin, FormView):
 	form_class = UserForm  # Twój formularz dla kroku 1
@@ -165,31 +159,19 @@ class AccountProfileView(LoginRequiredMixin, View):
 
 ### Characters ----------------------------------------
 
-class AddCharacterView(LoginRequiredMixin, BaseViewMixin, CreateView):
-	current_page = 'characters'
-	template_name = 'characters/add_character.html'
+class AddCharacterView(LoginRequiredMixin, CreateView):
+	model = Character
 	form_class = AddCharacterForm
+	template_name = 'characters/add_character.html'
+	success_url = reverse_lazy('character_list')
 
-	def get(self, request):
-		form = self.form_class(initial={'visibility': True})
-		return render(request, self.template_name, {'form': form})
-
-	def post(self, request):
-		form = self.form_class(request.POST)
+	def post(self, request, *args, **kwargs):
+		form = self.form_class(request.POST, request.FILES)
 		if form.is_valid():
-			nickname = form.cleaned_data['nickname']
-			description = form.cleaned_data['description']
-			visibility = form.cleaned_data['visibility']
-			games = form.cleaned_data['games']
-
-			character = Character.objects.create(user=request.user, nickname=nickname,
-												 description=description, visibility=visibility)
-
-			for game in games:
-				GamePlayed.objects.create(character=character, game=game)
-
-			return redirect('account_profile')
-
+			character = form.save(commit=False)
+			character.user = request.user
+			character.save()
+			return redirect(self.success_url)
 		return render(request, self.template_name, {'form': form})
 
 
@@ -204,18 +186,22 @@ class CharacterListView(BaseViewMixin, ListView):
 		form = CharacterFilterForm(self.request.GET)
 		game_slug = self.kwargs.get('game_slug')  # Pobieranie sluga gry z URL
 
+		queryset = Character.objects.select_related('user', 'game').all()
+
 		if form.is_valid():
 			game = form.cleaned_data.get('game') or game_slug
 			year = form.cleaned_data['year']
 			nickname = form.cleaned_data['nickname']
-			queryset = Character.objects.all()
 
 			if game:
-				queryset = queryset.filter(gameplayed__game__slug=game)  # Filtrowanie na podstawie sluga
+				if isinstance(game, str):  # jeśli dostaliśmy slug
+					queryset = queryset.filter(game__slug=game)
+				else:  # jeśli dostaliśmy obiekt Game
+					queryset = queryset.filter(game=game)
 
 			if year is not None:
 				queryset = queryset.filter(
-					Q(gameplayed__year_started__lte=year) & (Q(gameplayed__year_ended__gte=year) | Q(gameplayed__year_ended__isnull=True))
+					Q(year_started__lte=year) & (Q(year_ended__gte=year) | Q(year_ended__isnull=True))
 				)
 
 			if nickname:
@@ -225,9 +211,9 @@ class CharacterListView(BaseViewMixin, ListView):
 
 		elif game_slug:
 			# Filtrowanie tylko na podstawie sluga, gdy formularz nie jest prawidłowy
-			return Character.objects.filter(gameplayed__game__slug=game_slug)
+			return queryset.filter(game__slug=game_slug)
 
-		return Character.objects.none()
+		return queryset
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -261,48 +247,37 @@ class CharacterView(BaseViewMixin, DetailView):
 		nickname = self.kwargs['nickname']
 		return get_object_or_404(Character, user__username=user, nickname=nickname)
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		character = self.get_object()
+		context['title'] = character.nickname
+		context['content_template'] = 'characters/character_detail_content.html'
+		return context
+
 class CharacterEditView(BaseViewMixin, LoginRequiredMixin, UpdateView):
 	current_page = 'characters'
-	template_name = 'characters/add_character.html'  # Reuse the add_character.html template
+	template_name = 'characters/add_character.html'
+	model = Character
+	form_class = AddCharacterForm
 
-	def get(self, request, user, nickname):
-		character = get_object_or_404(Character, user__username=user, nickname=nickname)
-		form = AddCharacterForm(instance=character)
-		formset = GamePlayedFormSet(instance=character)
-		empty_form = GamePlayedFormSet(instance=character).empty_form
+	def get_object(self):
+		user = self.kwargs['user']
+		nickname = self.kwargs['nickname']
+		return get_object_or_404(Character, user__username=user, nickname=nickname)
 
-		context = {
-			'form': form,
-			'formset': formset,
-			'empty_form': empty_form,
-			'edit_mode': True,
-		}
-		return render(request, self.template_name, context)
+	def post(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		form = self.form_class(request.POST, request.FILES, instance=self.object)
+		if form.is_valid():
+			form.save()
+			return redirect(self.get_success_url())
+		return render(request, self.template_name, {'form': form})
 
-	def post(self, request, user, nickname):
-		character = get_object_or_404(Character, user__username=user, nickname=nickname)
-		form = AddCharacterForm(request.POST, instance=character)
-		formset = GamePlayedFormSet(request.POST, instance=character)
-
-		if form.is_valid() and formset.is_valid():
-			character = form.save()
-
-			# Save game played instances
-			for form in formset:
-				game_played = form.save(commit=False)
-				game_played.character = character
-				game_played.save()
-
-			return redirect(reverse('character_detail', args=[user, nickname]))
-
-		# If the form is not valid, render the template with the form and other context data
-		context = {
-			'form': form,
-			'formset': formset,
-			'empty_form': GamePlayedFormSet(instance=character).empty_form,
-			'edit_mode': True,
-		}
-		return render(request, self.template_name, context)
+	def get_success_url(self):
+		return reverse('character_detail', kwargs={
+			'user': self.object.user.username,
+			'nickname': self.object.nickname
+		})
 
 
 
@@ -366,26 +341,71 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     context_object_name = 'messages'
     template_name = 'messages/message_list.html'
-    paginate_by = 10  # Opcjonalnie, jeśli chcesz paginację
+    paginate_by = 50
 
     def get_queryset(self):
-        return Message.objects.filter(receiver=self.request.user).order_by('-sent_date')
+        thread_id = self.request.GET.get('thread_id')
+        receiver_character_id = self.request.GET.get('character')
+        user_characters = Character.objects.filter(user=self.request.user)
 
-### Played Games --------------------------------------
-class PlayedGamesListView(ListView):
-    model = GamePlayed
-    template_name = 'games/played_games_list.html'
+        if thread_id:
+            # Jeśli mamy thread_id, pobierz wszystkie wiadomości z tej konwersacji
+            return Message.objects.filter(thread_id=thread_id)
+        elif receiver_character_id:
+            # Jeśli mamy character_id, znajdź lub utwórz nowy wątek
+            try:
+                receiver_character = Character.objects.get(id=receiver_character_id)
+                # Znajdź istniejący wątek
+                existing_thread = Message.objects.filter(
+                    models.Q(sender_character__in=user_characters, receiver_character=receiver_character) |
+                    models.Q(receiver_character__in=user_characters, sender_character=receiver_character)
+                ).values_list('thread_id', flat=True).first()
 
-    def get_queryset(self):
-        return GamePlayed.objects.filter(character__user=self.request.user).select_related('game')
+                if existing_thread:
+                    return Message.objects.filter(thread_id=existing_thread)
+                else:
+                    return Message.objects.none()
+            except Character.DoesNotExist:
+                return Message.objects.none()
+        else:
+            # Pobierz wszystkie wiadomości dla wszystkich postaci użytkownika
+            return Message.objects.filter(
+                models.Q(sender_character__in=user_characters) |
+                models.Q(receiver_character__in=user_characters)
+            ).order_by('-sent_date')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        receiver_character_id = self.request.GET.get('character')
+        thread_id = self.request.GET.get('thread_id')
+        user_characters = Character.objects.filter(user=self.request.user)
+
+        if not user_characters.exists():
+            context['error_message'] = "You need to create a character first to send messages."
+            return context
+
+        if receiver_character_id:
+            try:
+                receiver_character = Character.objects.get(id=receiver_character_id)
+                context['receiver_character'] = receiver_character
+                context['form'] = MessageForm(
+                    user=self.request.user,
+                    initial={'receiver_character': receiver_character}
+                )
+            except Character.DoesNotExist:
+                pass
+        elif thread_id:
+            context['thread_id'] = thread_id
+            context['form'] = MessageForm(user=self.request.user)
+
+        return context
 
 class UserCharactersListView(ListView):
     model = Character
     template_name = 'characters/user_characters_list.html'
 
     def get_queryset(self):
-        return Character.objects.filter(user=self.request.user).prefetch_related('games')
+        return Character.objects.filter(user=self.request.user)
 
 ### Mocked Messages ---------------------------------
 def ui_demo_view(request):
@@ -399,3 +419,55 @@ def ui_demo_view(request):
 
     # Renderuj stronę z wiadomościami
     return render(request, 'base.html')
+
+class SendMessageView(LoginRequiredMixin, FormView):
+    template_name = 'messages/send_message.html'
+    form_class = MessageForm
+    success_url = reverse_lazy('message_list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+
+        # Dodaj initial data jeśli mamy character_id w URL
+        character_id = self.request.GET.get('character')
+        if character_id:
+            try:
+                receiver_character = Character.objects.get(id=character_id)
+                if not kwargs.get('initial'):
+                    kwargs['initial'] = {}
+                kwargs['initial']['receiver_character'] = receiver_character
+            except Character.DoesNotExist:
+                pass
+
+        return kwargs
+
+    def form_valid(self, form):
+        message = form.save(commit=False)
+        user_characters = Character.objects.filter(user=self.request.user)
+
+        if not user_characters.exists():
+            messages.error(self.request, "You need to create a character first to send messages.")
+            return redirect('character_list')
+
+        # Użyj postaci, która pasuje do gry odbiorcy
+        receiver_character = form.cleaned_data['receiver_character']
+        matching_character = user_characters.filter(game=receiver_character.game).first()
+
+        if not matching_character:
+            messages.error(self.request, "You need to have a character in the same game to send messages.")
+            return redirect('character_list')
+
+        message.sender_character = matching_character
+        thread_id = self.request.GET.get('thread_id')
+
+        if thread_id:
+            message.thread_id = thread_id
+
+        message.save()
+
+        # Przekieruj z powrotem do konwersacji
+        if thread_id:
+            return redirect(f'{reverse("message_list")}?thread_id={message.thread_id}')
+        else:
+            return redirect(f'{reverse("message_list")}?character={message.receiver_character.id}')

@@ -32,21 +32,22 @@
     {% for game in games %}
 
       <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
-        <div class="card">
+        <div class="card position-relative">
+          {% if request.user.is_staff or request.user.is_superuser %}
+            <div class="position-absolute end-0 top-0 p-2" style="z-index: 2;">
+              <a href="{% url 'game_edit' game.slug %}" role="button" class="btn btn-dark btn-sm opacity-75">Edit</a>
+              <a href="{% url 'game_delete' game.slug %}" role="button" class="btn btn-dark btn-sm opacity-75">Delete</a>
+            </div>
+          {% endif %}
           {% if game.img %}
             <img class="card-img-top" src="{{ game.img }}" alt="{{ game.name }}">
           {% endif %}
 
-          <a href="{% url 'character_list' game.slug %}" role="button" class="stretched-link"></a>
+          <a href="{% url 'character_list' game.slug %}" class="stretched-link"></a>
 
           <div class="card-body">
             <h5 class="card-title">
               {{ game.name }}
-              {% if request.user.is_superuser %}
-              <a href="{% url 'game_edit' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Edit</a>
-              <a href="{% url 'game_delete' game.slug %}" role="button" class="btn btn-outline-secondary btn-sm">Delete</a>
-              {% endif %}
-              <!-- <a href="{% url 'game_detail' game.slug %}" role="button" class="btn btn-primary btn-sm stretched-link">Characters</a> -->
             </h5>
             {% if game.desc %}
               <p class="card-text">{{ game.desc }}</p>

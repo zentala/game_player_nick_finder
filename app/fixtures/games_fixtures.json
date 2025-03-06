@@ -163,5 +163,27 @@
             "img": "https://static.zentala.io/gpnf/tabletop-simulator.webp",
             "category": 7
         }
+    },
+    {
+        "model": "app.game",
+        "pk": 16,
+        "fields": {
+            "name": "Agar.io",
+            "desc": "A massively multiplayer online action game where players control cells in a petri dish.",
+            "slug": "agar-io",
+            "img": "https://static.zentala.io/gpnf/agar-io.webp",
+            "category": 5
+        }
+    },
+    {
+        "model": "app.game",
+        "pk": 17,
+        "fields": {
+            "name": "Cossacks",
+            "desc": "A historical real-time strategy game series set in the 17th and 18th centuries.",
+            "slug": "cossacks",
+            "img": "https://static.zentala.io/gpnf/cossacks.webp",
+            "category": 4
+        }
     }
 ]

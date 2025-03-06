@@ -1,0 +1,152 @@
+[
+  {
+    "model": "app.customuser",
+    "pk": "550e8400-e29b-41d4-a716-446655440000",
+    "fields": {
+      "password": "pbkdf2_sha256$600000$gHmMKz6yGPvqYBqEBmxkzP$KgqH+XHO6/tU0vh4eTp3uFB6EP8E+HNAVaVMxJUAyYY=",
+      "last_login": "2024-03-06T12:00:00Z",
+      "is_superuser": false,
+      "username": "oldschool_gamer",
+      "first_name": "John",
+      "last_name": "Smith",
+      "email": "john@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-01T10:00:00Z",
+      "birthday": "1990-01-15",
+      "facebook": "https://facebook.com/oldschool_gamer",
+      "twitch": "https://twitch.tv/oldschool_gamer",
+      "gender": "MALE",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.customuser",
+    "pk": "550e8400-e29b-41d4-a716-446655440001",
+    "fields": {
+      "password": "pbkdf2_sha256$600000$gHmMKz6yGPvqYBqEBmxkzP$KgqH+XHO6/tU0vh4eTp3uFB6EP8E+HNAVaVMxJUAyYY=",
+      "last_login": "2024-03-06T12:00:00Z",
+      "is_superuser": false,
+      "username": "pro_gamer_girl",
+      "first_name": "Alice",
+      "last_name": "Johnson",
+      "email": "alice@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-02T10:00:00Z",
+      "birthday": "1995-05-20",
+      "facebook": "https://facebook.com/pro_gamer_girl",
+      "twitch": "https://twitch.tv/pro_gamer_girl",
+      "gender": "FEMALE",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.customuser",
+    "pk": "550e8400-e29b-41d4-a716-446655440002",
+    "fields": {
+      "password": "pbkdf2_sha256$870000$RWPAQpVPll9Qr5oLsVw9UE$pHw1ulh3xhTzzyLyeCiVx3ECQh+7Npf7zoZW42JGzsc=",
+      "last_login": "2024-03-06T12:00:00Z",
+      "is_superuser": true,
+      "username": "zentala",
+      "first_name": "Pawel",
+      "last_name": "Zentala",
+      "email": "zentala@gmail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-01-01T10:00:00Z",
+      "birthday": "1990-12-19",
+      "facebook": "https://facebook.com/zentala",
+      "twitch": "https://twitch.tv/zentala",
+      "gender": "MALE",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440000",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440000",
+      "game": 1,
+      "nickname": "DragonSlayer2000",
+      "description": "Level 60 Paladin, specializing in PvP combat",
+      "year_started": 2008,
+      "year_ended": 2012
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440001",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440000",
+      "game": 2,
+      "nickname": "ShadowHunter",
+      "description": "Rogue class, specializing in stealth missions",
+      "year_started": 2010,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440002",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440001",
+      "game": 1,
+      "nickname": "HealingMaster",
+      "description": "High-level healer, experienced in raid content",
+      "year_started": 2009,
+      "year_ended": 2015
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440003",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440001",
+      "game": 3,
+      "nickname": "SpeedRunner",
+      "description": "Speed running expert, multiple world records",
+      "year_started": 2015,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440004",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440002",
+      "game": 17,
+      "nickname": "Papa32",
+      "description": "Strategy game enthusiast, specializing in economic development",
+      "year_started": 2016,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440005",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440002",
+      "game": 16,
+      "nickname": "PolandMafia*",
+      "description": "Agressive player, often in top 10",
+      "year_started": 2018,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440006",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440002",
+      "game": 16,
+      "nickname": "PL 4yo",
+      "description": "Casual player, enjoying the game since 2022",
+      "year_started": 2022,
+      "year_ended": null
+    }
+  }
+]

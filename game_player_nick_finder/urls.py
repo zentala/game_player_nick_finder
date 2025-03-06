@@ -1,8 +1,10 @@
 # game_player_nick_finder/game_player_nick_finder/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View,  PlayedGamesListView, UserCharactersListView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
 # from django.contrib.auth.views import LoginView
@@ -46,8 +48,7 @@ urlpatterns = [
 
     # path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'), # rmme
 
-    path('account/played-games/', PlayedGamesListView.as_view(), name='acccount_played_games_list'),
-    path('account/characters/', UserCharactersListView.as_view(), name='acccount_characters_list'),
+    path('account/characters/', UserCharactersListView.as_view(), name='account_characters_list'),
 
     # Provided URLs are:
     # accounts/login/ [name='login']
@@ -66,9 +67,13 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     path('messages/', MessageListView.as_view(), name='message_list'),
+    path('messages/send/', SendMessageView.as_view(), name='send_message'),
 
     path('api/v1/', include(router.urls)),
 
 	path('ui-demo/', views.ui_demo_view, name='ui_demo'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

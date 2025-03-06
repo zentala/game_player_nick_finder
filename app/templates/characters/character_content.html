@@ -1,0 +1,19 @@
+{% load i18n %}
+
+{% if character.avatar %}
+<div class="text-center mb-4">
+    <img src="{{ character.avatar.url }}" alt="{{ character.nickname }}'s avatar" class="img-fluid rounded" style="max-width: 200px">
+</div>
+{% endif %}
+
+<table class="min-w-full">
+    <!-- Zawartość tabeli -->
+</table>
+
+{% if user.is_authenticated and user != character.user %}
+<div class="mt-4 text-center">
+    <a href="{% url 'send_message' %}?character={{ character.id }}" class="btn btn-primary">
+        <i class="bi bi-envelope"></i> {% trans "Send Message to Character" %}
+    </a>
+</div>
+{% endif %}
