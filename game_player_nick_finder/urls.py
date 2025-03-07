@@ -74,6 +74,10 @@ urlpatterns = [
 
 	path('ui-demo/', views.ui_demo_view, name='ui_demo'),
 
+    path('propose-game/', views.propose_game, name='propose_game'),
+    path('proposed-games/', views.proposed_games_list, name='proposed_games_list'),
+    path('proposed-games/vote/<int:game_id>/', views.vote_for_game, name='vote_for_game'),
+
 ]
 
 if settings.DEBUG:

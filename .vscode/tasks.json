@@ -38,6 +38,19 @@
           "presentation": {
               "group": "Django"
           }
+      },
+      {
+          "label": "Start Django Server",
+          "type": "shell",
+          "command": "./start_django.sh",
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "runOptions": { "runOn": "folderOpen" },
+          "presentation": {
+              "group": "Django"
+          }
       }
   ]
 }

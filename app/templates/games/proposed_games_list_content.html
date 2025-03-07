@@ -1,0 +1,63 @@
+{% load i18n %}
+{% load app_extras %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8">
+    <div class="mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-3">{% trans "Proposed Games" %}</h4>
+          <p class="text-muted">{% trans "Vote for games you'd like to see added to our platform." %}</p>
+        </div>
+        {% if user.is_authenticated %}
+          <a href="{% url 'propose_game' %}" class="btn btn-primary">{% trans "Propose New Game" %}</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if proposed_games %}
+      <div class="list-group">
+        {% for game in proposed_games %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h5 class="mb-1">{{ game.name }}</h5>
+                <p class="mb-1 text-muted">{{ game.description }}</p>
+                <small>{% trans "Proposed by" %} {{ game.created_by.username }} | {{ game.created_at|date }}</small>
+              </div>
+              <div class="d-flex align-items-center">
+                <span class="badge bg-primary rounded-pill me-3">{{ game.votes_count }} {% trans "votes" %}</span>
+                {% if user.is_authenticated %}
+                  {% if not game|has_voted:user %}
+                    <form method="post" action="{% url 'vote_for_game' game.id %}" class="m-0">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-primary btn-sm">{% trans "Vote" %}</button>
+                    </form>
+                  {% else %}
+                    <span class="badge bg-success">{% trans "Voted" %}</span>
+                  {% endif %}
+                  {% if game.status == 'PUBLISHED' %}
+                    <span class="badge bg-success ms-2">{% trans "Published" %}</span>
+                  {% else %}
+                    <span class="badge bg-secondary ms-2">{{ game.votes_required|sub:game.votes_count }} {% trans "votes needed" %}</span>
+                  {% endif %}
+                {% else %}
+                  <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-primary btn-sm">{% trans "Login to Vote" %}</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <p class="text-muted mb-3">{% trans "No game proposals yet." %}</p>
+        {% if user.is_authenticated %}
+          <a href="{% url 'propose_game' %}" class="btn btn-primary">{% trans "Be the first to propose a game!" %}</a>
+        {% else %}
+          <a href="{% url 'login' %}?next={% url 'propose_game' %}" class="btn btn-primary">{% trans "Login to propose a game" %}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

@@ -10,6 +10,9 @@ import uuid
 import random
 import string
 from django.urls import reverse
+from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone
+import json
 
 # replace User model with CustomUser
 class CustomUser(AbstractUser):
@@ -71,13 +74,40 @@ class GameCategory(models.Model):
         return self.title
 
 class Game(models.Model):
-    # slug = models.SlugField(max_length=100)
+    STATUS_CHOICES = [
+        ('PROPOSED', 'Proposed'),
+        ('PUBLISHED', 'Published'),
+        ('ARCHIVED', 'Archived'),
+    ]
+
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     icon = models.ImageField(upload_to='icons/', blank=True)
     desc = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
     category = models.ForeignKey(GameCategory, on_delete=models.CASCADE, related_name='games')
     img = models.URLField(blank=True)
+
+    # Nowe pola
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PROPOSED')
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, related_name='proposed_games')
+    created_at = models.DateTimeField(auto_now_add=True)
+    published_at = models.DateTimeField(null=True, blank=True)
+    votes_count = models.IntegerField(default=0)
+    votes_required = models.IntegerField(default=10)  # próg głosów potrzebny do publikacji
+    tags = models.TextField(blank=True, default='[]')  # Przechowujemy tagi jako JSON
+
+    @property
+    def tags_list(self):
+        """Zwraca listę tagów"""
+        try:
+            return json.loads(self.tags)
+        except (json.JSONDecodeError, TypeError):
+            return []
+
+    @tags_list.setter
+    def tags_list(self, value):
+        """Ustawia listę tagów"""
+        self.tags = json.dumps(list(set(value)))
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -86,6 +116,47 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
+
+    def add_vote(self, user):
+        """Dodaje głos użytkownika"""
+        if not self.has_user_voted(user):
+            Vote.objects.create(user=user, game=self)
+            self.votes_count = Vote.objects.filter(game=self).count()
+            if self.votes_count >= self.votes_required and self.status == 'PROPOSED':
+                self.status = 'PUBLISHED'
+                self.published_at = timezone.now()
+            self.save()
+            return True
+        return False
+
+    def remove_vote(self, user):
+        """Usuwa głos użytkownika"""
+        vote = Vote.objects.filter(user=user, game=self).first()
+        if vote:
+            vote.delete()
+            self.votes_count = Vote.objects.filter(game=self).count()
+            if self.votes_count < self.votes_required and self.status == 'PUBLISHED':
+                self.status = 'PROPOSED'
+                self.published_at = None
+            self.save()
+            return True
+        return False
+
+    def has_user_voted(self, user):
+        """Sprawdza czy użytkownik już głosował"""
+        return Vote.objects.filter(user=user, game=self).exists()
+
+    def add_tag(self, tag):
+        """Dodaje tag do gry"""
+        if isinstance(self.tags, list):
+            if tag not in self.tags:
+                self.tags.append(tag)
+                self.save()
+        else:  # dla SQLite
+            tags = set(self.tags.split(',')) if self.tags else set()
+            tags.add(tag)
+            self.tags = ','.join(tags)
+            self.save()
 
 class Character(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
@@ -184,3 +255,22 @@ class EmailNotification(models.Model):
 
     def __str__(self):
         return self.subject
+
+class ProposedGame(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    votes = models.IntegerField(default=0)
+    is_approved = models.BooleanField(default=False)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class Vote(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'game')

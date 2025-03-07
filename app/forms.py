@@ -1,6 +1,6 @@
 from django import forms
 from django_registration.forms import RegistrationForm
-from .models import Character, Game, CustomUser, Message
+from .models import Character, Game, CustomUser, Message, ProposedGame
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -158,3 +158,8 @@ class MessageForm(forms.ModelForm):
             raise forms.ValidationError("Please select a character recipient.")
 
         return cleaned_data
+
+class ProposedGameForm(forms.ModelForm):
+    class Meta:
+        model = ProposedGame
+        fields = ['name', 'description']

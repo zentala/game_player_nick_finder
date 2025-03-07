@@ -68,12 +68,25 @@
     {% endfor %}
 
     <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
-      <div class="card">
-        <div class="card-header pt-5 pb-5" style="border-bottom: 0;">
-          <h5 class="display-1 text-center text-body-secondary">+</h5>
-          <p class="text-center text-body-secondary">propose<br/>new game</p>
-        </div>
-      </div>
+      {% if user.is_authenticated %}
+        <a href="{% url 'propose_game' %}" class="text-decoration-none">
+          <div class="card">
+            <div class="card-header pt-5 pb-5" style="border-bottom: 0;">
+              <h5 class="display-1 text-center text-body-secondary">+</h5>
+              <p class="text-center text-body-secondary">{% trans "propose" %}<br/>{% trans "new game" %}</p>
+            </div>
+          </div>
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'propose_game' %}" class="text-decoration-none">
+          <div class="card">
+            <div class="card-header pt-5 pb-5" style="border-bottom: 0;">
+              <h5 class="display-1 text-center text-body-secondary">+</h5>
+              <p class="text-center text-body-secondary">{% trans "login to" %}<br/>{% trans "propose game" %}</p>
+            </div>
+          </div>
+        </a>
+      {% endif %}
     </div>
 
   </div>

@@ -7,7 +7,13 @@
             "desc": "A leading MMORPG known for its rich lore and expansive world, offering players endless adventures.",
             "slug": "world-of-warcraft",
             "img": "https://static.zentala.io/gpnf/world-of-warcraft.webp",
-            "category": 1
+            "category": 1,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -18,7 +24,13 @@
             "desc": "A fantasy MMORPG with a focus on storytelling and community, offering a deeply engaging world.",
             "slug": "final-fantasy-xiv",
             "img": "https://static.zentala.io/gpnf/final-fantasy-xiv.webp",
-            "category": 1
+            "category": 1,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -29,7 +41,13 @@
             "desc": "An MMORPG set in the Elder Scrolls universe, featuring a vast world and freedom in gameplay.",
             "slug": "the-elder-scrolls-online",
             "img": "https://static.zentala.io/gpnf/the-elder-scrolls-online.webp",
-            "category": 1
+            "category": 1,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -40,7 +58,13 @@
             "desc": "A popular battle royale game that combines fast-paced action with strategic building elements.",
             "slug": "fortnite",
             "img": "https://static.zentala.io/gpnf/fortnite.webp",
-            "category": 2
+            "category": 2,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -51,7 +75,13 @@
             "desc": "A high-adrenaline battle royale set in the Titanfall universe, known for its dynamic gameplay and unique characters.",
             "slug": "apex-legends",
             "img": "https://static.zentala.io/gpnf/apex-legends.webp",
-            "category": 2
+            "category": 2,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -62,7 +92,13 @@
             "desc": "A sandbox game that revolutionized gaming with its creative and building aspects, appealing to all ages.",
             "slug": "minecraft",
             "img": "https://static.zentala.io/gpnf/minecraft.webp",
-            "category": 3
+            "category": 3,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -73,7 +109,13 @@
             "desc": "A survival game where players tame dinosaurs, build bases, and explore a mysterious island.",
             "slug": "ark-survival-evolved",
             "img": "https://static.zentala.io/gpnf/ark-survival-evolved.webp",
-            "category": 3
+            "category": 3,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -84,7 +126,13 @@
             "desc": "One of the most popular MOBAs, known for its competitive gameplay and diverse champion roster.",
             "slug": "league-of-legends",
             "img": "https://static.zentala.io/gpnf/league-of-legends.webp",
-            "category": 4
+            "category": 4,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -95,7 +143,13 @@
             "desc": "A complex and strategic MOBA with deep mechanics and a high skill ceiling, offering intense team battles.",
             "slug": "dota-2",
             "img": "https://static.zentala.io/gpnf/dota-2.webp",
-            "category": 4
+            "category": 4,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -106,7 +160,13 @@
             "desc": "A social deduction game where players work together while trying to identify the impostors among them.",
             "slug": "among-us",
             "img": "https://static.zentala.io/gpnf/among-us.webp",
-            "category": 5
+            "category": 5,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -117,7 +177,13 @@
             "desc": "A platform that allows users to create and play games designed by other users, fostering a strong creative community.",
             "slug": "roblox",
             "img": "https://static.zentala.io/gpnf/roblox.webp",
-            "category": 5
+            "category": 5,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -128,7 +194,13 @@
             "desc": "The latest in the FIFA series, offering realistic soccer simulation with various teams and leagues.",
             "slug": "fifa-21",
             "img": "https://static.zentala.io/gpnf/fifa-21.webp",
-            "category": 6
+            "category": 6,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -139,7 +211,13 @@
             "desc": "A unique sports game that combines soccer with cars, known for its fast-paced and exciting gameplay.",
             "slug": "rocket-league",
             "img": "https://static.zentala.io/gpnf/rocket-league.webp",
-            "category": 6
+            "category": 6,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -150,7 +228,13 @@
             "desc": "A digital version of the popular card game, offering the same depth and strategy as the physical game.",
             "slug": "magic-the-gathering-arena",
             "img": "https://static.zentala.io/gpnf/magic-the-gathering-arena.webp",
-            "category": 7
+            "category": 7,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -161,7 +245,13 @@
             "desc": "A sandbox that allows players to create and play tabletop games in a virtual environment.",
             "slug": "tabletop-simulator",
             "img": "https://static.zentala.io/gpnf/tabletop-simulator.webp",
-            "category": 7
+            "category": 7,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -172,7 +262,13 @@
             "desc": "A massively multiplayer online action game where players control cells in a petri dish.",
             "slug": "agar-io",
             "img": "https://static.zentala.io/gpnf/agar-io.webp",
-            "category": 5
+            "category": 5,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     },
     {
@@ -183,7 +279,13 @@
             "desc": "A historical real-time strategy game series set in the 17th and 18th centuries.",
             "slug": "cossacks",
             "img": "https://static.zentala.io/gpnf/cossacks.webp",
-            "category": 4
+            "category": 4,
+            "status": "PUBLISHED",
+            "created_at": "2024-03-20T00:00:00Z",
+            "published_at": "2024-03-20T00:00:00Z",
+            "votes_count": 0,
+            "votes_required": 10,
+            "tags": "[]"
         }
     }
 ]

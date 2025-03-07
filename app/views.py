@@ -13,9 +13,10 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
+from django.db import IntegrityError
 
-from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, CustomRegistrationForm, UserForm, MessageForm
-from .models import Game, Character, Message, CustomUser, GameCategory
+from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, CustomRegistrationForm, UserForm, MessageForm, ProposedGameForm
+from .models import Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote
 
 
 
@@ -794,3 +795,66 @@ class SendMessageView(LoginRequiredMixin, FormView):
             redirect_url += f"&thread_id={message.thread_id}"
 
         return redirect(redirect_url)
+
+@login_required
+def propose_game(request):
+    if request.method == 'POST':
+        form = ProposedGameForm(request.POST)
+        if form.is_valid():
+            proposed_game = form.save(commit=False)
+            proposed_game.created_by = request.user
+            proposed_game.save()
+            messages.success(request, _("Your game proposal has been submitted successfully!"))
+            return redirect('proposed_games_list')
+    else:
+        form = ProposedGameForm()
+
+    context = {
+        'form': form,
+        'title': _('Propose a New Game'),
+        'content_template': 'games/propose_game_content.html',
+        'back_url': reverse('game_list'),
+        'back_label': _('Back to Games')
+    }
+    return render(request, 'games/propose_game.html', context)
+
+def proposed_games_list(request):
+    proposed_games = ProposedGame.objects.all().order_by('-votes').prefetch_related('vote_set')
+    context = {
+        'proposed_games': proposed_games,
+        'title': _('Proposed Games'),
+        'content_template': 'games/proposed_games_list_content.html',
+        'back_url': reverse('game_list'),
+        'back_label': _('Back to Games'),
+        'show_action': True,
+        'action_url': reverse('propose_game'),
+        'action_label': _('Propose New Game')
+    }
+    return render(request, 'games/proposed_games_list.html', context)
+
+@login_required
+def vote_for_game(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    action = request.POST.get('action', 'vote')
+
+    if action == 'vote':
+        if game.add_vote(request.user):
+            messages.success(request, _("Your vote has been counted!"))
+        else:
+            messages.error(request, _("You have already voted for this game!"))
+    elif action == 'unvote':
+        if game.remove_vote(request.user):
+            messages.success(request, _("Your vote has been removed!"))
+        else:
+            messages.error(request, _("You haven't voted for this game!"))
+
+    return HttpResponseRedirect(reverse('proposed_games_list'))
+
+def check_approved_games():
+    threshold = 10  # Można zmienić na dynamiczny próg
+    proposed_games = ProposedGame.objects.filter(is_approved=False)
+    for game in proposed_games:
+        if game.votes >= threshold:
+            game.is_approved = True
+            game.save()
+            # Tutaj można dodać logikę do przeniesienia gry do listy gier
