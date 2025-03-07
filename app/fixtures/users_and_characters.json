@@ -66,6 +66,28 @@
     }
   },
   {
+    "model": "app.customuser",
+    "pk": "550e8400-e29b-41d4-a716-446655440003",
+    "fields": {
+      "password": "pbkdf2_sha256$600000$gHmMKz6yGPvqYBqEBmxkzP$KgqH+XHO6/tU0vh4eTp3uFB6EP8E+HNAVaVMxJUAyYY=",
+      "last_login": "2024-03-06T12:00:00Z",
+      "is_superuser": false,
+      "username": "casual_bob",
+      "first_name": "Bob",
+      "last_name": "Wilson",
+      "email": "bob@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-03T10:00:00Z",
+      "birthday": "2000-03-15",
+      "facebook": "",
+      "twitch": "",
+      "gender": "MALE",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
     "model": "app.character",
     "pk": "66de8400-e29b-41d4-a716-446655440000",
     "fields": {
@@ -154,6 +176,111 @@
       "description": "Casual player, enjoying the game since 2022",
       "year_started": 2022,
       "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440007",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440002",
+      "game": 1,
+      "nickname": "Zentaur",
+      "hash_id": "3Nm7Kp9Qw4",
+      "description": "Night Elf Druid, healing since vanilla WoW",
+      "year_started": 2004,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440008",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440002",
+      "game": 3,
+      "nickname": "ZenMage",
+      "hash_id": "8Rt4Yx2Vn5",
+      "description": "High Elf Sorcerer, master of elemental magic",
+      "year_started": 2014,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "66de8400-e29b-41d4-a716-446655440009",
+    "fields": {
+      "user": "550e8400-e29b-41d4-a716-446655440003",
+      "game": 16,
+      "nickname": "BobTheBlob",
+      "hash_id": "6Ws9Ht5Jm2",
+      "description": "Just having fun eating smaller cells",
+      "year_started": 2020,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 1,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440007",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440002",
+      "content": "Hey HealingMaster! I remember you from the old Molten Core raids. Still healing these days?",
+      "sent_date": "2024-03-20T10:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440000"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 2,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440002",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440007",
+      "content": "Zentaur! Those were the days! I actually stopped playing in 2015, but I miss the raid healing.",
+      "sent_date": "2024-03-20T10:05:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440000"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 3,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440009",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440005",
+      "content": "Hey PolandMafia*! Nice moves in that last game. You almost got me!",
+      "sent_date": "2024-03-20T11:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440001"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 4,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440005",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440009",
+      "content": "Thanks BobTheBlob! Yeah, that was a close one. Let's team up next time!",
+      "sent_date": "2024-03-20T11:05:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440001"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 5,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440008",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440003",
+      "content": "Hi SpeedRunner! Saw your amazing speedrun yesterday. Any tips for a beginner?",
+      "sent_date": "2024-03-20T12:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440002"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 6,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440003",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440008",
+      "content": "Thanks ZenMage! Sure, I can show you some basic tricks. When are you usually online?",
+      "sent_date": "2024-03-20T12:05:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440002"
     }
   }
 ]

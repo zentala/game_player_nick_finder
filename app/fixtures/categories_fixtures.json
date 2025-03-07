@@ -3,63 +3,63 @@
         "model": "app.gamecategory",
         "pk": 1,
         "fields": {
-            "title": "MMORPGs",
-            "slug": "mmorpgs",
-            "description": "Massively multiplayer online role-playing games where players can explore vast worlds, complete quests, and connect with a large community of gamers."
+            "title": "MMORPG",
+            "slug": "mmorpg",
+            "description": "Massively Multiplayer Online Role-Playing Games"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 2,
         "fields": {
-            "title": "Action and Shooters",
-            "slug": "action-shooters",
-            "description": "Fast-paced action and shooter games that offer intense gameplay, strategic team play, and competitive multiplayer experiences."
+            "title": "Battle Royale",
+            "slug": "battle-royale",
+            "description": "Last player/team standing games"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 3,
         "fields": {
-            "title": "Survival and Sandbox",
-            "slug": "survival-sandbox",
-            "description": "Survival and sandbox games that challenge players to explore, build, and survive in open-world environments, often with multiplayer support."
+            "title": "Survival",
+            "slug": "survival",
+            "description": "Games focused on resource gathering and survival"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 4,
         "fields": {
-            "title": "Strategy and MOBA",
-            "slug": "strategy-moba",
-            "description": "Strategic and multiplayer online battle arena games that require tactical thinking, team coordination, and in-depth game knowledge."
+            "title": "Strategy",
+            "slug": "strategy",
+            "description": "Real-time and turn-based strategy games"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 5,
         "fields": {
-            "title": "Adventure and Social",
-            "slug": "adventure-social",
-            "description": "Adventure and social games that focus on storytelling, exploration, and building connections with other players."
+            "title": "Casual",
+            "slug": "casual",
+            "description": "Easy to pick up and play games"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 6,
         "fields": {
-            "title": "Sports and Racing",
-            "slug": "sports-racing",
-            "description": "Competitive sports and racing games that simulate real-world sports, offering both single-player and multiplayer experiences."
+            "title": "Sports",
+            "slug": "sports",
+            "description": "Traditional and e-sports games"
         }
     },
     {
         "model": "app.gamecategory",
         "pk": 7,
         "fields": {
-            "title": "Card and Board Games",
-            "slug": "card-board-games",
-            "description": "Digital card and board games that recreate the magic of tabletop gaming in an online environment."
+            "title": "Card & Board",
+            "slug": "card-and-board",
+            "description": "Digital versions of card and board games"
         }
     }
 ]
