@@ -1,75 +1,39 @@
 {% load i18n %}
 
 <div class="character-details">
-    <div class="row">
-        <div class="col-md-8">
-            <h2 class="mb-4">{{ character.nickname }}</h2>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tbody>
+                    {% if character.description %}
+                    <tr>
+                        <th class="w-25">{% trans "Description" %}</th>
+                        <td>{{ character.description }}</td>
+                    </tr>
+                    {% endif %}
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Player Information</h5>
-                    <p class="card-text">
-                        <strong>Player:</strong> {{ character.user.username }}<br>
-                    </p>
-                </div>
-            </div>
-
-            {% if character.description %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Description</h5>
-                    <p class="card-text">{{ character.description }}</p>
-                </div>
-            </div>
-            {% endif %}
-
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Games</h5>
-                    {% if character.game %}
-                        <div class="mb-2">
-                            <a href="{% url 'game_detail' slug=character.game.slug %}" class="text-decoration-none">
+                    <tr>
+                        <th>{% trans "Game" %}</th>
+                        <td>
+                            <a href="{% url 'game_players' slug=character.game.slug %}" class="text-decoration-none">
                                 {{ character.game.name }}
                             </a>
 
-                            <!-- Debug info for game year_started and year_ended -->
-                            <div style="background-color: #f8f9fa; padding: 5px; margin: 5px 0; border: 1px solid #ddd;">
-                                <p><strong>Debug years info:</strong></p>
-                                <ul>
-                                    <li>year_started: {{ character.year_started|default:"Not set" }}</li>
-                                    <li>year_ended: {{ character.year_ended|default:"Not set" }}</li>
-                                    <li>Is year_started empty? {% if character.year_started %}No{% else %}Yes{% endif %}</li>
-                                    <li>Is year_ended empty? {% if character.year_ended %}No{% else %}Yes{% endif %}</li>
-                                </ul>
-                            </div>
-
                             {% if character.year_started or character.year_ended %}
-                                <div class="text-muted small">
+                                <span class="text-muted ms-2">
                                     {% if character.year_started and character.year_ended %}
-                                        Played from {{ character.year_started }} to {{ character.year_ended }}
+                                        ({% trans "Played from" %} {{ character.year_started }} {% trans "to" %} {{ character.year_ended }})
                                     {% elif character.year_started %}
-                                        Playing since {{ character.year_started }}
+                                        ({% trans "Playing since" %} {{ character.year_started }})
                                     {% elif character.year_ended %}
-                                        Played until {{ character.year_ended }}
+                                        ({% trans "Played until" %} {{ character.year_ended }})
                                     {% endif %}
-                                </div>
+                                </span>
                             {% endif %}
-                        </div>
-                    {% else %}
-                        <p class="card-text">No games associated with this character yet.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            {% if user == character.user %}
-                <div class="d-grid gap-2 mb-4">
-                    <a href="{% url 'character_edit' user=character.user.username nickname=character.nickname %}" class="btn btn-primary">
-                        Edit Character
-                    </a>
-                </div>
-            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

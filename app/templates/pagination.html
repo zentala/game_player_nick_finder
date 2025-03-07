@@ -1,0 +1,49 @@
+{% load i18n %}
+
+{% if is_paginated %}
+<nav aria-label="{% trans 'Page navigation' %}" class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="{% trans 'First' %}">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="visually-hidden">{% trans "First" %}</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="{% trans 'Previous' %}">
+          <span aria-hidden="true">&lsaquo;</span>
+          <span class="visually-hidden">{% trans "Previous" %}</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="{% trans 'Next' %}">
+          <span aria-hidden="true">&rsaquo;</span>
+          <span class="visually-hidden">{% trans "Next" %}</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="{% trans 'Last' %}">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="visually-hidden">{% trans "Last" %}</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

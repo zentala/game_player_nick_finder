@@ -95,8 +95,23 @@ class UserEditForm(forms.ModelForm):
 
 class CharacterFilterForm(forms.Form):
     nickname = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': ''}))
-    game = forms.ModelChoiceField(queryset=Game.objects.all(), empty_label='All Games', required=False)
-    year = forms.IntegerField(min_value=1900, max_value=2100, required=False, widget=forms.NumberInput(attrs={'placeholder': '2001'}))
+    game = forms.ModelChoiceField(
+        queryset=Game.objects.all(),
+        empty_label='All Games',
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    year = forms.IntegerField(
+        min_value=1900,
+        max_value=2100,
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': '2000'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Upewnij się, że nie modyfikujemy struktury krotek w choices
+        self.game_slugs = {str(game.id): game.slug for game in Game.objects.all()}
 
 class GameForm(forms.ModelForm):
     class Meta:

@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<div class="game-form">
+  <h4 class="mb-4">{{ form_title }}</h4>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">{% trans "Save Game" %}</button>
+    </div>
+  </form>
+</div>

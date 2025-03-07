@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
 # from django.contrib.auth.views import LoginView
@@ -22,15 +22,16 @@ urlpatterns = [
     path('about/', views.AboutView.as_view(), name='about'),
     path('accounts/profile/', AccountProfileView.as_view(), name='account_profile'),
     path('characters/', CharacterListView.as_view(), name='character_list'),
-	path('characters/<slug:game_slug>/', CharacterListView.as_view(), name='character_list'),
+	path('characters/<slug:game_slug>/', CharacterListView.as_view(), name='character_list_by_game'),
     path('character/add/', views.AddCharacterView.as_view(), name='add_character'),
-    path('character/<str:user>-<str:nickname>/', CharacterView.as_view(), name='character_detail'),
-    path('character/<str:user>-<str:nickname>/edit/', CharacterEditView.as_view(), name='character_edit'),
+    path('character/<str:nickname>-<str:hash_id>/', CharacterView.as_view(), name='character_detail'),
+    path('character/<str:nickname>-<str:hash_id>/edit/', CharacterEditView.as_view(), name='character_edit'),
 
 
     path('games/', GameListView.as_view(), name='game_list'),
     path('games/create/', GameCreateView.as_view(), name='game_create'),
     path('games/<slug:slug>/', GameDetailView.as_view(), name='game_detail'),
+    path('games/<slug:slug>/players/', GamePlayersView.as_view(), name='game_players'),
     path('games/<slug:slug>/edit/', GameEditView.as_view(), name='game_edit'),
     path('games/<slug:slug>/delete/', GameDeleteView.as_view(), name='game_delete'),
 

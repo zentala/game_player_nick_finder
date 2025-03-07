@@ -57,7 +57,7 @@ sudo apt install python3-pip
 * pipenv (Python packaging tool for virtual environments):
 ```bash
 sudo apt install pipenv
-````
+```
 * pyenv (Python version manager):
     * [Installation instruction](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
 
@@ -180,4 +180,180 @@ python manage.py help
 ```
 
 Using this, you can get insights into the various options available in `manage.py` and how to use them to manage your Django application.
+
+## Project Status
+
+Current development stage: **Alpha**
+- ✅ Basic models and views
+- ✅ User authentication
+- ✅ Character management
+- ✅ Game listings
+- 🔄 UI refinement
+- ❌ Search functionality
+- ❌ Friend system
+- ❌ API completion
+
+## Tech Stack
+
+- Django 5.1.4
+- Bootstrap 5
+- SQLite (development) / PostgreSQL (production)
+- Django Rest Framework
+
+## Development Setup
+
+### Prerequisites
+
+- Python 3.10+
+- pipenv
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/game_player_nick_finder.git
+   cd game_player_nick_finder
+   ```
+
+2. Set up the virtual environment
+   ```bash
+   pipenv install
+   pipenv shell
+   ```
+
+3. Set up the database
+   ```bash
+   python manage.py migrate
+   ```
+
+4. Create a superuser
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+5. Run the development server
+   ```bash
+   python manage.py runserver
+   ```
+
+## Database Management
+
+### Loading Fixtures
+
+The project contains the following fixtures for development:
+- `app/fixtures/categories_fixtures.json` - Game categories
+- `app/fixtures/games_fixtures.json` - Game definitions
+- `app/fixtures/users_and_characters.json` - Sample users and their characters
+
+Load them in the correct order:
+
+```bash
+# Load in this exact order to maintain data integrity
+python manage.py loaddata app/fixtures/categories_fixtures.json
+python manage.py loaddata app/fixtures/games_fixtures.json
+python manage.py loaddata app/fixtures/users_and_characters.json
+```
+
+### Database Reset
+
+If you need to reset the database completely:
+
+```bash
+# Remove migrations
+rm app/migrations/000*.py
+
+# Remove database
+rm db.sqlite3
+
+# Create new migrations
+python manage.py makemigrations
+
+# Apply migrations
+python manage.py migrate
+
+# Load fixtures
+python manage.py loaddata app/fixtures/categories_fixtures.json
+python manage.py loaddata app/fixtures/games_fixtures.json
+python manage.py loaddata app/fixtures/users_and_characters.json
+
+# Create superuser
+python manage.py createsuperuser
+```
+
+## Project Structure
+
+- `app/` - Main application code
+  - `models.py` - Database models (User, Character, Game, etc.)
+  - `views.py` - View controllers
+  - `forms.py` - Form definitions
+  - `api_views.py` - API endpoints
+  - `templates/` - HTML templates
+  - `fixtures/` - Sample data for development
+  - `migrations/` - Database migrations
+
+- `game_player_nick_finder/` - Project configuration
+  - `settings.py` - Django settings
+  - `urls.py` - URL routing
+
+## Key URLs
+
+- `/` - Home page
+- `/accounts/profile/` - User profile
+- `/characters/` - Character list
+- `/character/add/` - Add new character
+- `/character/<nickname>-<hash_id>/` - Character details
+- `/games/` - Games list
+- `/admin/` - Admin panel
+
+## Development Guidelines
+
+- Follow PEP 8 for Python code
+- Use Django's class-based views when possible
+- Add docstrings to all functions and classes
+- Create unit tests for all new features
+- Keep the database schema in sync with models
+
+## Common Tasks
+
+### Adding a New Model
+
+1. Define the model in `app/models.py`
+2. Create and run migrations
+3. Update admin registration if needed
+4. Create relevant views and templates
+
+### Creating New Fixtures
+
+```bash
+# Export data from a specific model
+python manage.py dumpdata app.ModelName --indent 4 > app/fixtures/model_fixtures.json
+
+# Export data from multiple related models
+python manage.py dumpdata app.ModelOne app.ModelTwo --indent 4 > app/fixtures/related_fixtures.json
+```
+
+## Troubleshooting
+
+### Migration Issues
+
+If you encounter migration issues, try:
+```bash
+python manage.py migrate --fake
+```
+
+Or reset the database completely following the steps in the "Database Reset" section.
+
+### Template Rendering Issues
+
+Check for:
+1. Missing context variables
+2. Incorrect URL patterns
+3. Missing template files
+
+## Contributing
+
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Push to the branch (`git push origin feature/amazing-feature`)
+4. Open a Pull Request
 

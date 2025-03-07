@@ -72,6 +72,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440000",
       "game": 1,
       "nickname": "DragonSlayer2000",
+      "hash_id": "Xdj3dDuAA5",
       "description": "Level 60 Paladin, specializing in PvP combat",
       "year_started": 2008,
       "year_ended": 2012
@@ -84,6 +85,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440000",
       "game": 2,
       "nickname": "ShadowHunter",
+      "hash_id": "7Bkm9FpQ2s",
       "description": "Rogue class, specializing in stealth missions",
       "year_started": 2010,
       "year_ended": null
@@ -96,6 +98,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440001",
       "game": 1,
       "nickname": "HealingMaster",
+      "hash_id": "L4pRt6Ej8N",
       "description": "High-level healer, experienced in raid content",
       "year_started": 2009,
       "year_ended": 2015
@@ -108,6 +111,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440001",
       "game": 3,
       "nickname": "SpeedRunner",
+      "hash_id": "9ZqYx3Rw2D",
       "description": "Speed running expert, multiple world records",
       "year_started": 2015,
       "year_ended": null
@@ -120,6 +124,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440002",
       "game": 17,
       "nickname": "Papa32",
+      "hash_id": "5Hg7JkL3P9",
       "description": "Strategy game enthusiast, specializing in economic development",
       "year_started": 2016,
       "year_ended": null
@@ -132,6 +137,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440002",
       "game": 16,
       "nickname": "PolandMafia*",
+      "hash_id": "1Aq8Sw3De5",
       "description": "Agressive player, often in top 10",
       "year_started": 2018,
       "year_ended": null
@@ -144,6 +150,7 @@
       "user": "550e8400-e29b-41d4-a716-446655440002",
       "game": 16,
       "nickname": "PL 4yo",
+      "hash_id": "2Vf4Tg6Yh8",
       "description": "Casual player, enjoying the game since 2022",
       "year_started": 2022,
       "year_ended": null

@@ -24,6 +24,15 @@
                     <a href="{% url 'message_list' %}" class="btn btn-light btn-sm">{% trans "Back to Conversations" %}</a>
                 </div>
 
+                {% if no_matching_characters %}
+                <div class="alert alert-warning m-3">
+                    <h5 class="alert-heading">{% trans "Cannot send message" %}</h5>
+                    <p>{% trans "You don't have any characters in" %} <strong>{{ receiver_character.game.name }}</strong>.</p>
+                    <hr>
+                    <a href="{{ create_character_url }}" class="btn btn-primary">{% trans "Create a character" %}</a>
+                </div>
+                {% endif %}
+
                 <div class="card-body chat-messages" style="height: 60vh; overflow-y: auto;">
                     <div class="messages-container">
                         {% for message in messages %}
@@ -43,12 +52,38 @@
                 </div>
 
                 <div class="card-footer">
-                    <form method="post" action="{% url 'send_message' %}{% if receiver_character %}?character={{ receiver_character.id }}{% elif thread_id %}?thread_id={{ thread_id }}{% endif %}" class="message-form">
+                    <form method="post" class="message-form">
                         {% csrf_token %}
                         <div class="input-group">
                             {{ form.content }}
-                            <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
+                            {% if receiver_character %}
+                                <input type="hidden" name="receiver_character" value="{{ receiver_character.id }}">
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">{% trans "Send" %} <i class="bi bi-send"></i></button>
                         </div>
+
+                        {% if matching_characters.count > 1 %}
+                        <div class="mt-2 d-flex align-items-center">
+                            <label class="me-2 text-muted">{% trans "Send as:" %}</label>
+                            <div class="sender-selector">
+                                {% for character in matching_characters %}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="sender_character"
+                                        id="sender_{{ character.id }}" value="{{ character.id }}"
+                                        {% if sender_character.id == character.id or forloop.first and not sender_character %}checked{% endif %}>
+                                    <label class="form-check-label" for="sender_{{ character.id }}">
+                                        {{ character.nickname }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% elif sender_character %}
+                        <input type="hidden" name="sender_character" value="{{ sender_character.id }}">
+                        <div class="mt-2 text-muted small">
+                            <i class="bi bi-person-circle"></i> {% trans "Sending as" %} <strong>{{ sender_character.nickname }}</strong>
+                        </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -60,23 +95,43 @@
                 </div>
                 <div class="list-group list-group-flush">
                     {% for message in messages %}
-                        <a href="{% url 'message_list' %}?{% if message.sender_character.user == user %}character={{ message.receiver_character.id }}{% else %}character={{ message.sender_character.id }}{% endif %}"
-                           class="list-group-item list-group-item-action">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1">
-                                        {% if message.sender_character.user == user %}
-                                            {{ message.sender_character.nickname }} → {{ message.receiver_character.nickname }}
-                                        {% else %}
-                                            {{ message.sender_character.nickname }} → {{ message.receiver_character.nickname }}
-                                        {% endif %}
-                                        <small class="text-muted">({{ message.sender_character.game.name }})</small>
-                                    </h6>
-                                    <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
-                                </div>
-                                <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
-                            </div>
-                        </a>
+                        {% if message.sender_character.user == user %}
+                            {% with other_character=message.receiver_character %}
+                                <a href="{% url 'message_list' %}?character={{ other_character.id }}"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <span class="text-primary">{{ message.sender_character.nickname }}</span>
+                                                <i class="bi bi-arrow-right"></i>
+                                                <span class="text-success">{{ other_character.nickname }}</span>
+                                                <small class="text-muted">({{ other_character.game.name }})</small>
+                                            </h6>
+                                            <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
+                                        </div>
+                                        <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
+                                    </div>
+                                </a>
+                            {% endwith %}
+                        {% else %}
+                            {% with other_character=message.sender_character %}
+                                <a href="{% url 'message_list' %}?character={{ other_character.id }}"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <span class="text-success">{{ other_character.nickname }}</span>
+                                                <i class="bi bi-arrow-right"></i>
+                                                <span class="text-primary">{{ message.receiver_character.nickname }}</span>
+                                                <small class="text-muted">({{ other_character.game.name }})</small>
+                                            </h6>
+                                            <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
+                                        </div>
+                                        <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
+                                    </div>
+                                </a>
+                            {% endwith %}
+                        {% endif %}
                     {% empty %}
                         <div class="list-group-item text-center text-muted">
                             {% trans "No conversations yet." %}
@@ -92,27 +147,54 @@
 .chat-messages {
     display: flex;
     flex-direction: column;
+    background-color: #f8f9fa;
 }
 
 .messages-container {
     display: flex;
     flex-direction: column;
+    padding: 15px;
 }
 
 .message-bubble {
     border-radius: 15px;
     margin: 2px 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    padding: 8px 12px !important;
 }
 
 .message-sender {
     display: block;
     font-size: 0.8em;
-    margin-bottom: 2px;
+    font-weight: bold;
+    margin-bottom: 4px;
 }
 
-.chat-input {
+.message-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message-time {
+    display: block;
+    font-size: 0.75em;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.form-control {
     border-radius: 20px;
     padding: 8px 15px;
+}
+
+.input-group .btn {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
 }
 </style>
 
@@ -127,9 +209,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-resize textarea
     const textarea = document.querySelector('textarea');
     if (textarea) {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
+        // Ustaw minimalną wysokość
+        textarea.style.height = '38px';
+
+        // Dostosuj wysokość do zawartości
+        const adjustHeight = function() {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        };
+
+        // Wywołaj dostosowanie przy wpisywaniu
+        textarea.addEventListener('input', adjustHeight);
+
+        // Dostosuj początkowo
+        adjustHeight();
+
+        // Ustaw focus na textarea
+        textarea.focus();
+
+        // Wysyłanie wiadomości po naciśnięciu Enter (bez Shift)
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.form.submit();
+            }
         });
     }
 });

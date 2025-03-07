@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load i18n %}
+{% load app_extras %}
 
 {% block content %}
   {% if messages %}
@@ -43,7 +45,7 @@
             <img class="card-img-top" src="{{ game.img }}" alt="{{ game.name }}">
           {% endif %}
 
-          <a href="{% url 'character_list' game.slug %}" class="stretched-link"></a>
+          <a href="{% url 'character_list_by_game' game_slug=game.slug %}" class="stretched-link"></a>
 
           <div class="card-body">
             <h5 class="card-title">
@@ -54,7 +56,11 @@
             {% endif %}
           </div>
           <div class="card-footer">
-            <p class="card-text"><small class="text-body-secondary">0 characters</small></p>
+            <p class="card-text"><small class="text-body-secondary">
+              {% with count=characters_count|get_item:game.id|default:0 %}
+                {{ count }} {% if count == 1 %}{% trans "character" %}{% else %}{% trans "characters" %}{% endif %}
+              {% endwith %}
+            </small></p>
           </div>
         </div>
       </div>

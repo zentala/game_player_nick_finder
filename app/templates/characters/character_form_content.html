@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<div class="character-form">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">
+        {% if form.instance.pk %}
+          {% trans "Save Changes" %}
+        {% else %}
+          {% trans "Create Character" %}
+        {% endif %}
+      </button>
+    </div>
+  </form>
+</div>

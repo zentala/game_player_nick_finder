@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<div class="game-players">
+  <h4 class="mb-3">{{ game.name }} {% trans "Players" %}</h4>
+
+  {% if characters %}
+    <div class="list-group mb-4">
+      {% for character in characters %}
+        <div class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+              <a href="{% url 'character_detail' nickname=character.nickname hash_id=character.hash_id %}" class="text-decoration-none">
+                {{ character.nickname }}
+              </a>
+              <small class="text-muted ms-2">({{ character.user.username }})</small>
+            </h5>
+
+            {% if character.year_started or character.year_ended %}
+              <span class="text-muted">
+                {% if character.year_started and character.year_ended %}
+                  {{ character.year_started }} - {{ character.year_ended }}
+                {% elif character.year_started %}
+                  {% trans "since" %} {{ character.year_started }}
+                {% elif character.year_ended %}
+                  {% trans "until" %} {{ character.year_ended }}
+                {% endif %}
+              </span>
+            {% endif %}
+          </div>
+
+          {% if character.description %}
+            <p class="mb-1">{{ character.description|truncatechars:150 }}</p>
+          {% endif %}
+
+          {% if user.is_authenticated %}
+            <div class="mt-2">
+              <a href="{% url 'message_list' %}?character={{ character.id }}" class="btn btn-sm btn-outline-info">
+                {% trans "Send Message" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% include "pagination.html" %}
+
+  {% else %}
+    <div class="alert alert-info">
+      {% trans "No players found for this game." %}
+    </div>
+  {% endif %}
+</div>

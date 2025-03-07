@@ -13,46 +13,41 @@
       {% endfor %}
     </div>
   {% endif %}
-<!-- <h1>Character List <a href="{% url 'add_character' %}" role="button" class="btn btn-primary">{% trans "Add character" %}</a></h1> -->
+
 <div class="container my-4">
-
-
-	<div class="row" >
+	<div class="row">
 		<div class="col-12 rounded-3 border shadow-lg mb-4" style="background: #fff; overflow: hidden;">
-			<div class="row p-4 p-lg-5 align-items-center " >
+			<div class="row p-4 p-lg-5 align-items-center">
 				<div class="col-xl-6 p-3 p-lg-5 pt-lg-5">
-					<h1 class="display-4 fw-bold lh-1">Reconnect with Your Friends</h1>
-					<p class="lead">Traverse the world of our character database and rediscover your old gaming comrades. Enter
-						a nickname, choose a game, and specify the year to quickly find your old gaming buddies.</p>
+					{% if game %}
+						<h1 class="display-4 fw-bold lh-1">Reconnect with Friends from {{ game.name }}</h1>
+						<p class="lead">
+							{% if game.desc %}
+								{{ game.desc|truncatechars:200 }}
+							{% else %}
+								Find your old gaming buddies who played {{ game.name }}. Enter a nickname and year to search for specific players.
+							{% endif %}
+						</p>
+					{% else %}
+						<h1 class="display-4 fw-bold lh-1">Reconnect with Your Friends</h1>
+						<p class="lead">Traverse the world of our character database and rediscover your old gaming comrades. Enter
+							a nickname, choose a game, and specify the year to quickly find your old gaming buddies.</p>
+					{% endif %}
 				</div>
 				<div class="col-xl-6 overflow-hidden">
-					<img class="float-end" src="https://static.zentala.io/gpnf/place.webp" alt="" width="500">
+					{% if game and game.img %}
+						<img class="float-end" src="{{ game.img }}" alt="{{ game.name }}" width="500">
+					{% else %}
+						<img class="float-end" src="https://static.zentala.io/gpnf/place.webp" alt="" width="500">
+					{% endif %}
 				</div>
 			</div>
-			<!-- <div class="row p-3 p-lg-5 pt-lg-3 border-top" style="z-index: 2; background: #fefefe;">
-				<form method="get" id="filter-form"
-					class="row align-items-end gy-2 gx-3">
-					<div class="col-auto form-group">
-						{{ form.nickname|as_crispy_field }}
-					</div>
-					<div class="col-auto form-group">
-						{{ form.game|as_crispy_field }}
-					</div>
-					<div class="col-auto form-group">
-						{{ form.year|as_crispy_field }}
-					</div>
-					<div class="col-auto">
-						<button type="submit" class="btn btn-primary mb-3">Filter</button>
-					</div>
-				</form>
-			</div> -->
 		</div>
 	</div>
 
 	<div class="row rounded-3 border shadow-lg mb-4" style="z-index: 3; overflow: hidden;">
 		<div class="col-12 p-3 p-lg-5 pt-lg-4 pb-lg-3 border-bottom" style="z-index: 2; background: #fafafa;">
-			<form method="get" id="filter-form"
-				class="row align-items-end gy-2 gx-3">
+			<form method="get" id="filter-form" class="row align-items-end gy-2 gx-3">
 				<div class="col-auto form-group">
 					{{ form.nickname|as_crispy_field }}
 				</div>
@@ -63,50 +58,93 @@
 					{{ form.year|as_crispy_field }}
 				</div>
 				<div class="col-auto">
-					<button type="submit" class="btn btn-primary mb-3">Filter</button>
+					<button type="submit" class="btn btn-primary mb-3">{% trans "Search" %}</button>
+					{% if request.GET.nickname or request.GET.game or request.GET.year or game_slug %}
+						<a href="{% url 'character_list' %}" class="btn btn-outline-secondary mb-3">{% trans "Clear" %}</a>
+					{% endif %}
 				</div>
 			</form>
 		</div>
 		<div class="col-12 p-3 p-lg-5 pt-lg-4">
-		<table class="table ">
+		<table class="table">
 			<thead>
 				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Nick</th>
-					<th scope="col">Game</th>
-					<th scope="col">Action</th>
+					<th scope="col" class="text-center" style="width: 50px">#</th>
+					{% if has_avatars %}<th scope="col" style="width: 60px">{% trans "Avatar" %}</th>{% endif %}
+					<th scope="col">{% trans "Nick" %}</th>
+					<th scope="col">{% trans "Game" %}</th>
+					<th scope="col">{% trans "Period" %}</th>
+					<th scope="col" class="text-end">{% trans "Actions" %}</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% if characters %}
 					{% for character in characters %}
-					<tr>
-						<th scope="row">{{ forloop.counter }}</th>
+					<tr {% if request.GET.game and character.game.id|stringformat:"s" == request.GET.game or game_slug == character.game.slug %}class="filtered-row"{% endif %}>
+						<th scope="row" class="text-center">{{ forloop.counter }}</th>
+						{% if has_avatars %}
 						<td>
-							<a href="{% url 'character_detail' character.user.username character.nickname %}">
+							{% if character.avatar %}
+								<img src="{{ character.avatar.url }}" alt="{{ character.nickname }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+							{% endif %}
+						</td>
+						{% endif %}
+						<td>
+							<a href="{% url 'character_detail' nickname=character.nickname hash_id=character.hash_id %}" class="text-decoration-none">
 								{{ character.nickname }}
 							</a>
 						</td>
-						<td>
-							{% for game_info in character.get_games_info %}
-							{{ game_info.game.name }}
-							{% if game_info.year_info %}
-							({{ game_info.year_info }})
-							{% endif %}
-							{% endfor %}
+						<td {% if request.GET.game and character.game.id|stringformat:"s" == request.GET.game or game_slug == character.game.slug %}class="filtered-cell"{% endif %}>
+							<a href="{% url 'character_list_by_game' game_slug=character.game.slug %}" class="text-decoration-none">
+								{{ character.game.name }}
+							</a>
 						</td>
 						<td>
-							<a href="{% url 'character_edit' character.user.username character.nickname %}"
-								class="btn btn-sm btn-secondary">Edit</a>
+							{% if character.year_started or character.year_ended %}
+								{% if character.year_started and character.year_ended %}
+									{{ character.year_started }} - {{ character.year_ended }}
+								{% elif character.year_started %}
+									{% trans "since" %} {{ character.year_started }}
+								{% elif character.year_ended %}
+									{% trans "until" %} {{ character.year_ended }}
+								{% endif %}
+							{% else %}
+								<span class="text-muted">-</span>
+							{% endif %}
+						</td>
+						<td class="text-end">
+							{% if user.is_authenticated and user != character.user %}
+								<a href="{% url 'message_list' %}?character={{ character.id }}" class="btn btn-sm btn-primary">
+									<i class="bi bi-chat-dots"></i>
+									{% trans "Message" %}
+								</a>
+							{% elif not user.is_authenticated %}
+								<button class="btn btn-sm btn-primary" disabled title="{% trans 'Login to send messages' %}">
+									<i class="bi bi-chat-dots"></i>
+									{% trans "Message" %}
+								</button>
+							{% endif %}
+
+							{% if user == character.user %}
+								<a href="{% url 'character_edit' nickname=character.nickname hash_id=character.hash_id %}" class="btn btn-sm btn-primary">
+									<i class="bi bi-pencil"></i>
+									{% trans "Edit" %}
+								</a>
+							{% elif user.is_staff %}
+								<a href="{% url 'character_edit' nickname=character.nickname hash_id=character.hash_id %}" class="btn btn-sm btn-outline-primary">
+									<i class="bi bi-pencil"></i>
+									{% trans "Edit" %}
+								</a>
+							{% endif %}
 						</td>
 					</tr>
 					{% endfor %}
 				{% else %}
 					<tr>
-						<td colspan="4" class="text-center p-3 p-lg-5">
+						<td colspan="6" class="text-center p-3 p-lg-5">
 							<p class="">
-							<strong>No characters found matching your criteria.</strong><br>
-							Try typing a part of the nickname or removing the date to broaden your search criteria.
+							<strong>{% trans "No characters found matching your criteria." %}</strong><br>
+							{% trans "Try typing a part of the nickname or removing the date to broaden your search criteria." %}
 							</p>
 						</td>
 					</tr>
@@ -115,60 +153,120 @@
 		</table>
 	</div>
 	</div>
-	{% if is_paginated %}
-	<div class="pagination">
-		<span class="step-links">
-			{% if page_obj.has_previous %}
-			<a href="?page=1">&laquo; first</a>
-			<a href="?page={{ page_obj.previous_page_number }}">previous</a>
-			{% endif %}
 
-			<span class="current">
-				Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-			</span>
-
-			{% if page_obj.has_next %}
-			<a href="?page={{ page_obj.next_page_number }}">next</a>
-			<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-			{% endif %}
-		</span>
-	</div>
-	{% endif %}
-
-</div>
+	{% include "pagination.html" %}
 
 	<div class="row mb-5">
 		<div class="col-12 text-center">
 			<div class="p-3 p-lg-5 align-items-center rounded-3 mb-4 h-100" style="z-index: 4;">
-				<h1 class="display-4 mt-4 mb-4 fw-bold">Can't find who you're looking for?</h1>
-				<h2></h2>
-				<p class="lead">Add your character's information so others can find you when they visit Game Player Nick Finder!</p>
+				<h1 class="display-4 mt-4 mb-4 fw-bold">{% trans "Can't find who you're looking for?" %}</h1>
+				<p class="lead">{% trans "Add your character's information so others can find you when they visit Game Player Nick Finder!" %}</p>
 				<a href="{% url 'add_character' %}" role="button" class="btn btn-primary btn-lg">{% trans "Add new character" %}</a>
 			</div>
 		</div>
 	</div>
-
+</div>
 
 <script>
+	// Mapowanie ID gier do ich slugów
+	const gameSlugs = JSON.parse('{{ game_slugs_json|escapejs }}');
+	// Przechowuje aktualny slug gry z URL (jeśli istnieje)
+	const currentGameSlug = '{{ game_slug|default:"" }}';
+
 	document.addEventListener('DOMContentLoaded', function () {
+		// Zachowaj wartości w formularzu
+		const urlParams = new URLSearchParams(window.location.search);
+		const nickname = urlParams.get('nickname');
+		const game = urlParams.get('game');
+		const year = urlParams.get('year');
+
+		if (nickname) document.querySelector('input[name="nickname"]').value = nickname;
+		if (game) document.querySelector('select[name="game"]').value = game;
+		if (year) document.querySelector('input[name="year"]').value = year;
+
+		// Obsługa formularza
 		const form = document.getElementById('filter-form');
 		const gameSelect = document.querySelector('select[name="game"]');
 
 		form.addEventListener('submit', function (event) {
 			event.preventDefault();
-			const gameSlug = gameSelect.options[gameSelect.selectedIndex].getAttribute('data-slug');
 			const nickname = document.querySelector('input[name="nickname"]').value;
+			const gameValue = gameSelect.value;
+			const gameSlug = gameValue ? gameSlugs[gameValue] : null;
 			const year = document.querySelector('input[name="year"]').value;
 
-			let url = '/characters/';
-			if (gameSlug) {
-				url += `${gameSlug}/`;
-			}
-			url += `?nickname=${encodeURIComponent(nickname)}&game=${gameSelect.value}&year=${encodeURIComponent(year)}`;
+			// Use URL with game slug if a game is selected or we have current filtering by slug
+			if (gameValue && gameSlug) {
+				// Use the new slug from selection
+				let url = `/characters/${gameSlug}/`;
 
-			window.location.href = url;
+				// Add remaining parameters, excluding 'game'
+				const params = [];
+				if (nickname) params.push(`nickname=${encodeURIComponent(nickname)}`);
+				if (year) params.push(`year=${encodeURIComponent(year)}`);
+
+				if (params.length > 0) {
+					url += '?' + params.join('&');
+				}
+
+				window.location.href = url;
+			} else if (currentGameSlug && !gameValue) {
+				// If we are on a page with a game filter but the user did not select a specific game
+				// stay on the same game page, adding remaining filters
+				let url = `/characters/${currentGameSlug}/`;
+
+				// Add remaining parameters, excluding 'game'
+				const params = [];
+				if (nickname) params.push(`nickname=${encodeURIComponent(nickname)}`);
+				if (year) params.push(`year=${encodeURIComponent(year)}`);
+
+				if (params.length > 0) {
+					url += '?' + params.join('&');
+				}
+
+				window.location.href = url;
+			} else {
+				// If no game is selected and we are not on a filtered page, use a simple URL with parameters
+				const params = [];
+				if (nickname) params.push(`nickname=${encodeURIComponent(nickname)}`);
+				if (year) params.push(`year=${encodeURIComponent(year)}`);
+
+				let url = '/characters/';
+				if (params.length > 0) {
+					url += '?' + params.join('&');
+				}
+
+				window.location.href = url;
+			}
 		});
+
+		// Update the 'Clear' button logic
+		const clearButton = document.querySelector('.btn-outline-secondary');
+		if (clearButton) {
+			clearButton.addEventListener('click', function (event) {
+				event.preventDefault();
+				let url = '/characters/';
+				if (currentGameSlug) {
+					url = `/characters/${currentGameSlug}/`;
+				}
+				window.location.href = url;
+			});
+		}
 	});
 </script>
+
+<style>
+.filtered-row {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.filtered-row a {
+    font-weight: normal;
+}
+
+.filtered-cell {
+    position: relative;
+}
+</style>
 
 {% endblock %}

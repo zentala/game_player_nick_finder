@@ -7,6 +7,9 @@ from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 from django.utils.crypto import salted_hmac
 import uuid
+import random
+import string
+from django.urls import reverse
 
 # replace User model with CustomUser
 class CustomUser(AbstractUser):
@@ -89,6 +92,7 @@ class Character(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, db_index=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=100)
+    hash_id = models.CharField(max_length=10, blank=True, db_index=True, unique=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
     description = models.TextField(blank=True, validators=[MaxLengthValidator(1000)])
     year_started = models.PositiveIntegerField(
@@ -111,7 +115,25 @@ class Character(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.username} - {self.nickname} in {self.game.name}"
+        return f"{self.nickname} in {self.game.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.hash_id or self.hash_id.strip() == '':
+            # Generuj unikalny hash tylko gdy hash_id jest puste
+            self.hash_id = self._generate_unique_hash()
+        super().save(*args, **kwargs)
+
+    def _generate_unique_hash(self):
+        while True:
+            # Generowanie losowego 10-znakowego hash'a z małych, dużych liter i cyfr
+            chars = string.ascii_lowercase + string.ascii_uppercase + string.digits
+            hash_id = ''.join(random.choices(chars, k=10))
+            # Sprawdzenie, czy taki hash już istnieje
+            if not Character.objects.filter(hash_id=hash_id).exists():
+                return hash_id
+
+    def get_absolute_url(self):
+        return reverse('character_detail', kwargs={'nickname': self.nickname, 'hash_id': self.hash_id})
 
     def get_games_info(self):
         year_info = ""
@@ -121,11 +143,6 @@ class Character(models.Model):
             else:
                 year_info = f"{self.year_started}-present"
         return [{'game': self.game, 'year_info': year_info}]
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.id = uuid.uuid4()
-        super().save(*args, **kwargs)
 
     class Meta:
         # Zapewnia, że kombinacja (user, nickname, game) jest unikalna

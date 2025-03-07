@@ -1,11 +1,6 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-  <h1>Confirm Deletion</h1>
-  <p>Are you sure you want to delete the game "{{ game.name }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a href="{% url 'game_detail' game.slug %}" class="btn btn-secondary">Cancel</a>
-  </form>
+  {% include "containers/default.html" %}
 {% endblock %}
