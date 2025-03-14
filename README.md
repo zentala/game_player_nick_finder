@@ -357,12 +357,39 @@ Check for:
 3. Push to the branch (`git push origin feature/amazing-feature`)
 4. Open a Pull Request
 
+## Development Environment
+
+### Required Tools
+- **Python 3.10**: Required for running the application (use pyenv to manage Python versions)
+- **pyenv**: For managing Python versions
+- **pipenv**: For managing project dependencies and virtual environments
+
+### Development Scripts
+All development scripts are located in the `scripts/` folder:
+
+1. **scripts/build.sh**: Main build script that installs dependencies, collects static files, runs migrations, and seeds the database
+2. **scripts/first_time_seed.sh**: Script to populate the database with initial data
+3. **scripts/reset_db.sh**: Script to reset the database (development only)
+4. **scripts/render_reset_db.sh**: Script to reset the database on Render deployment
+
+To run these scripts, use:
+```bash
+# First, make sure you have the right Python version
+pyenv local 3.10.x
+
+# Then use pipenv to manage dependencies
+pipenv install
+
+# Finally run scripts as needed
+bash scripts/build.sh
+```
+
 ## Render Deployment
 
 This project can be deployed to Render.com. We've added the necessary configuration files:
 
 1. **render.yaml**: Blueprint for Render deployment
-2. **build.sh**: Build script for the deployment process
+2. **scripts/build.sh**: Build script for the deployment process
 3. **Procfile**: Specifies the command to run the application
 
 ### Deploying to Render

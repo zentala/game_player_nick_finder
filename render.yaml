@@ -3,7 +3,7 @@ services:
     name: game-player-nick-finder
     env: python
     plan: free
-    buildCommand: pip install pipenv && pipenv install --deploy --system && python manage.py collectstatic --noinput
+    buildCommand: bash scripts/build.sh
     startCommand: gunicorn game_player_nick_finder.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
