@@ -357,3 +357,30 @@ Check for:
 3. Push to the branch (`git push origin feature/amazing-feature`)
 4. Open a Pull Request
 
+## Render Deployment
+
+This project can be deployed to Render.com. We've added the necessary configuration files:
+
+1. **render.yaml**: Blueprint for Render deployment
+2. **build.sh**: Build script for the deployment process
+3. **Procfile**: Specifies the command to run the application
+
+### Deploying to Render
+
+1. Sign up for a [Render account](https://render.com/)
+2. Connect your GitHub repository to Render
+3. Click "New Blueprint Instance" from the Render dashboard
+4. Select the repository with this project
+5. Render will detect the `render.yaml` file and set up the services
+6. Configure the environment variables in the Render dashboard:
+   - `DJANGO_SECRET_KEY`
+   - `EMAIL_HOST`
+   - `EMAIL_PORT`
+   - `EMAIL_USE_TLS`
+   - `EMAIL_HOST_USER`
+   - `EMAIL_HOST_PASSWORD`
+   - `DEFAULT_FROM_EMAIL`
+7. Deploy the service and wait for the build to complete
+
+Render will automatically set up a PostgreSQL database and connect it to your application.
+

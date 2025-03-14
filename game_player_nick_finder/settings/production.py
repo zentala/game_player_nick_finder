@@ -1,7 +1,12 @@
 # game_player_nick_finder/settings/production.py
 # Production settings
 
+import dj_database_url
 from .base import *
+
+# Static files settings for Render
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Load production environment variables
 load_dotenv(os.path.join(BASE_DIR, '.env.production'))
@@ -13,14 +18,28 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['gpnf.zentala.io']
+# Add Render domain to allowed hosts
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Consider using PostgreSQL in production
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# Add any other domains from ALLOWED_HOSTS env var
+if os.getenv('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS.extend(os.getenv('ALLOWED_HOSTS').split(','))
+
+# Database - use DATABASE_URL from Render if available
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Session settings
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
@@ -46,6 +65,12 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://gpnf.zentala.io',
 ]
+
+# Add Render domains to CORS and CSRF settings
+if RENDER_EXTERNAL_HOSTNAME:
+    render_origin = f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    CORS_ALLOWED_ORIGINS.append(render_origin)
+    CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
