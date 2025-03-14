@@ -20,6 +20,7 @@ psycopg2-binary = "*"
 whitenoise = "*"
 requests = "*"
 pyjwt = "*"
+cryptography = "*"
 
 [dev-packages]
 
