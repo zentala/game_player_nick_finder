@@ -98,12 +98,81 @@ Refer to Django documentation for best practices in views, models, forms, and se
 5. Set up proper testing
 6. Implement API endpoints for mobile integration
 
+## Testing Requirements (CRITICAL)
+
+### Playwright E2E Testing
+- **MANDATORY**: Every feature must have Playwright E2E tests
+- **MANDATORY**: Every component must be tested with Playwright
+- **MANDATORY**: Every page/route must have Playwright tests
+- **MANDATORY**: All user flows must be covered by Playwright tests
+
+### Test-Driven Development (TDD)
+1. **ALWAYS** write Playwright test first (red phase)
+2. Implement feature (green phase)
+3. Refactor (refactor phase)
+4. **NEVER** commit code without corresponding Playwright tests
+
+### Test Coverage Requirements
+- Minimum 80% E2E test coverage for all user flows
+- All critical paths must have Playwright tests
+- All API endpoints must have Playwright API tests
+- All UI components must have Playwright component tests
+
+### Running Tests
+```bash
+# Run all Playwright tests
+pnpm test:e2e
+
+# Run specific test file
+pnpm test:e2e tests/e2e/feature-name.spec.ts
+
+# Run in UI mode (interactive)
+pnpm test:e2e:ui
+```
+
+### Test Structure
+```
+tests/
+├── e2e/                    # Playwright E2E tests
+│   ├── messaging/          # Messaging feature tests
+│   ├── friends/            # Friend system tests
+│   ├── profile/            # Profile tests
+│   └── characters/        # Character tests
+├── unit/                   # Unit tests (Vitest)
+└── api/                    # API tests (Playwright)
+```
+
+### Before Every Commit
+- [ ] All Playwright tests pass
+- [ ] New features have Playwright tests
+- [ ] No console errors
+- [ ] ESLint passes
+- [ ] TypeScript compiles without errors
+
+## Technology Stack (Future Migration)
+
+### Target Stack (Cloudflare Migration)
+- **Frontend**: Next.js 14+ (App Router) + TypeScript + Joy UI + Tailwind CSS
+- **Backend**: Cloudflare Workers (TypeScript)
+- **Database**: Cloudflare D1 (SQLite)
+- **Storage**: Cloudflare R2 (media files)
+- **Auth**: Cloudflare AUG
+- **Testing**: Playwright (E2E) + Vitest (Unit) + React Testing Library
+
+### Current Stack (Django)
+- **Frontend**: Django Templates + Bootstrap 5
+- **Backend**: Django 5.1.4 + DRF
+- **Database**: SQLite (dev) / PostgreSQL (prod)
+- **Testing**: Django TestCase + Playwright (E2E)
+
 ## Important Notes
 - The project uses UUIDs for all models
-- Bootstrap 5 is used for styling
-- django-crispy-forms handles form rendering
+- Bootstrap 5 is used for styling (current)
+- Joy UI will be used after migration to Next.js
+- django-crispy-forms handles form rendering (current)
 - Email notifications are implemented but need proper SMTP configuration
 - The project is ready for deployment with PM2 and Nginx
+- **Playwright tests are mandatory for all features**
 
 ---
 
