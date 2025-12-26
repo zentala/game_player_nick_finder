@@ -1,93 +1,57 @@
-# Pliki i katalogi, które mają być pomijane przez Git
-
-# Katalogi wirtualnych środowisk Pythona (np. virtualenv, venv, pipenv)
-venv/
-env/
-*.pyc
+# Python
 __pycache__/
-
-# Pliki zawierające hasła, klucze prywatne, itp.
-*.secret
-*.key
-
-# Pliki konfiguracyjne, które mogą różnić się dla różnych środowisk (np. development, production)
-*.cfg
-*.conf
-*.ini
-
-# Pliki logów
-*.log
-
-# Katalogi utworzone przez różne narzędzia
-.idea/
-__pycache__/
-
-# Pliki generowane przez środowiska IDE lub edytory kodu
-*.pyc
-*.pyo
-*.pyd
-*.pyc
-*.pyo
-*.egg-info/
-dist/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
 *.egg
-*.egg-info
-*.pyc
 
-# Katalogi generowane przez narzędzia do testowania
-htmlcov/
-.coverage
-.tox/
-
-# Katalogi i pliki zależności
-node_modules/
-yarn.lock
-package-lock.json
-*.sqlite3
-
-# Pliki związane z wersjonowaniem projektu
-*.bak
-*.swp
-*.cache
-*.orig
-
-# Pliki wygenerowane przez IDE
-.idea/
-*.iml
-*.pydevproject
-*.pyc
-
-# Pliki DS_Store związane z systemem macOS
-.DS_Store
-
-# Pliki Byte-compiled Python
-*.pyc
-__pycache__/
-
-# Katalogi utworzone przez Django
-/migrations/
-
-# Pliki konfiguracyjne środowiska
-.env
-.env.local
-.env.*.local
-.env.*.local.example
-
-# Pliki wygenerowane przez pytest
-.pytest_cache/
-
-# Baza danych
+# Django
+*.log
+local_settings.py
 db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
 
-# PM2 local configuration
-ecosystem.config.js
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
 
-# Environment files
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
 .env
 .env.local
-.env.production
 
-# Example environment files can be committed
-!.env.local.example
-!.env.production.example
+# Node / Playwright
+node_modules/
+playwright-report/
+test-results/
+playwright/.cache/
+playwright/.ms-playwright/
+
+# OS
+.DS_Store
+Thumbs.db
