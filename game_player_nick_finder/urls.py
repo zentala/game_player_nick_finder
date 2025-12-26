@@ -24,11 +24,15 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('about/', views.AboutView.as_view(), name='about'),
     path('accounts/profile/', AccountProfileView.as_view(), name='account_profile'),
+    path('profile/<str:username>/', views.UserProfileDisplayView.as_view(), name='user_profile_display'),
     path('characters/', CharacterListView.as_view(), name='character_list'),
 	path('characters/<slug:game_slug>/', CharacterListView.as_view(), name='character_list_by_game'),
     path('character/add/', views.AddCharacterView.as_view(), name='add_character'),
     path('character/<str:nickname>-<str:hash_id>/', CharacterView.as_view(), name='character_detail'),
     path('character/<str:nickname>-<str:hash_id>/edit/', CharacterEditView.as_view(), name='character_edit'),
+    path('character/<str:nickname>-<str:hash_id>/send-friend-request/', views.SendFriendRequestView.as_view(), name='send_friend_request'),
+    path('character/<str:nickname>-<str:hash_id>/friends/', views.CharacterFriendListView.as_view(), name='character_friend_list'),
+    path('character/<str:nickname>-<str:hash_id>/profile/edit/', views.CharacterProfileEditView.as_view(), name='character_profile_edit'),
 
 
     path('games/', GameListView.as_view(), name='game_list'),
@@ -80,6 +84,11 @@ urlpatterns = [
     path('propose-game/', views.propose_game, name='propose_game'),
     path('proposed-games/', views.proposed_games_list, name='proposed_games_list'),
     path('proposed-games/vote/<int:game_id>/', views.vote_for_game, name='vote_for_game'),
+    
+    # Friend requests
+    path('friends/requests/', views.FriendRequestListView.as_view(), name='friend_request_list'),
+    path('friends/requests/<int:request_id>/accept/', views.AcceptFriendRequestView.as_view(), name='accept_friend_request'),
+    path('friends/requests/<int:request_id>/decline/', views.DeclineFriendRequestView.as_view(), name='decline_friend_request'),
 
 ]
 

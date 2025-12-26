@@ -1,39 +1,174 @@
 {% load i18n %}
+{% load static %}
 
-<div class="character-details">
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-striped">
-                <tbody>
-                    {% if character.description %}
-                    <tr>
-                        <th class="w-25">{% trans "Description" %}</th>
-                        <td>{{ character.description }}</td>
-                    </tr>
-                    {% endif %}
-
-                    <tr>
-                        <th>{% trans "Game" %}</th>
-                        <td>
-                            <a href="{% url 'game_players' slug=character.game.slug %}" class="text-decoration-none">
-                                {{ character.game.name }}
-                            </a>
-
-                            {% if character.year_started or character.year_ended %}
-                                <span class="text-muted ms-2">
-                                    {% if character.year_started and character.year_ended %}
-                                        ({% trans "Played from" %} {{ character.year_started }} {% trans "to" %} {{ character.year_ended }})
-                                    {% elif character.year_started %}
-                                        ({% trans "Playing since" %} {{ character.year_started }})
-                                    {% elif character.year_ended %}
-                                        ({% trans "Played until" %} {{ character.year_ended }})
-                                    {% endif %}
-                                </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="character-detail">
+  <div class="row mb-4">
+    <div class="col-md-4">
+      {% if character.avatar %}
+        <img src="{{ character.avatar.url }}" alt="{{ character.nickname }}" class="img-fluid rounded mb-3">
+      {% else %}
+        <div class="bg-secondary rounded mb-3" style="width: 200px; height: 200px;"></div>
+      {% endif %}
     </div>
+    <div class="col-md-8">
+      <h2>{{ character.nickname }}</h2>
+      <p class="text-muted">{{ character.game.name }}</p>
+      
+      {% if character.description %}
+        <p>{{ character.description }}</p>
+      {% endif %}
+      
+      {# Friend Request Button Section #}
+      {% if user.is_authenticated and not character.user == user %}
+        <div class="mt-3 mb-3">
+          {% if is_friend %}
+            <button class="btn btn-success" disabled>
+              <i class="bi bi-check-circle"></i> {% trans "Friends" %}
+            </button>
+          {% elif pending_request %}
+            <button class="btn btn-secondary" disabled>
+              <i class="bi bi-hourglass-split"></i> {% trans "Friend Request Sent" %}
+            </button>
+          {% elif can_send_request %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#friendRequestModal">
+              <i class="bi bi-person-plus"></i> {% trans "Add as Friend" %}
+            </button>
+          {% endif %}
+          
+          <a href="{% url 'send_message' %}?character={{ character.id }}" class="btn btn-outline-primary ms-2">
+            <i class="bi bi-envelope"></i> {% trans "Send Message" %}
+          </a>
+        </div>
+      {% endif %}
+      
+      {% if is_friend or character.user == user %}
+        <a href="{% url 'character_friend_list' nickname=character.nickname hash_id=character.hash_id %}" 
+           class="btn btn-outline-secondary ms-2">
+          <i class="bi bi-people"></i> {% trans "View Friends" %}
+        </a>
+      {% endif %}
+      
+      {% if character.user == user %}
+        <a href="{% url 'character_profile_edit' nickname=character.nickname hash_id=character.hash_id %}" 
+           class="btn btn-outline-secondary ms-2">
+          <i class="bi bi-person-badge"></i> {% trans "Edit Profile" %}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-striped">
+        <tbody>
+          {% if character.description %}
+          <tr>
+            <th class="w-25">{% trans "Description" %}</th>
+            <td>{{ character.description }}</td>
+          </tr>
+          {% endif %}
+
+          <tr>
+            <th>{% trans "Game" %}</th>
+            <td>
+              <a href="{% url 'game_players' slug=character.game.slug %}" class="text-decoration-none">
+                {{ character.game.name }}
+              </a>
+
+              {% if character.year_started or character.year_ended %}
+                <span class="text-muted ms-2">
+                  {% if character.year_started and character.year_ended %}
+                    ({% trans "Played from" %} {{ character.year_started }} {% trans "to" %} {{ character.year_ended }})
+                  {% elif character.year_started %}
+                    ({% trans "Playing since" %} {{ character.year_started }})
+                  {% elif character.year_ended %}
+                    ({% trans "Played until" %} {{ character.year_ended }})
+                  {% endif %}
+                </span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  {# Character Profile Section #}
+  {% if character_profile %}
+    <div class="mt-4">
+      {% if character_profile.custom_bio %}
+        <div class="mb-3">
+          <h4>{% trans "About" %}</h4>
+          <p>{{ character_profile.custom_bio|linebreaks }}</p>
+        </div>
+      {% endif %}
+      
+      {# Screenshots section - placeholder for future #}
+      {% if character_profile.screenshots %}
+        <div class="mb-3">
+          <h4>{% trans "Screenshots" %}</h4>
+          <div class="row">
+            {% for screenshot in character_profile.screenshots %}
+              <div class="col-md-4 mb-2">
+                <img src="{{ screenshot.url }}" alt="Screenshot" class="img-fluid rounded">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      
+      {# Memories section - placeholder for future #}
+      {% if character_profile.memories %}
+        <div class="mb-3">
+          <h4>{% trans "Memories" %}</h4>
+          <div class="list-group">
+            {% for memory in character_profile.memories %}
+              <div class="list-group-item">
+                <h5>{{ memory.title }}</h5>
+                <p>{{ memory.description }}</p>
+                <small class="text-muted">{{ memory.date }}</small>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 </div>
+
+{# Friend Request Modal #}
+{% if user.is_authenticated and can_send_request %}
+<div class="modal fade" id="friendRequestModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Send Friend Request" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'send_friend_request' nickname=character.nickname hash_id=character.hash_id %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="sender_character" class="form-label">{% trans "Send from Character" %}</label>
+            <select name="sender_character" id="sender_character" class="form-select" required>
+              {% for user_char in user_characters %}
+                <option value="{{ user_char.id }}">{{ user_char.nickname }} ({{ user_char.game.name }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">{% trans "Optional Message" %}</label>
+            <textarea name="message" id="message" class="form-control" rows="3" 
+                      placeholder="{% trans 'Hey, remember me from...' %}"></textarea>
+          </div>
+          <input type="hidden" name="receiver_character" value="{{ character.id }}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+          <button type="submit" class="btn btn-primary">{% trans "Send Request" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}

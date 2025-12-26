@@ -2,12 +2,26 @@
 {% load crispy_forms_tags %}
 
 <div class="profile-details">
-  <p><strong>Username:</strong> {{ user.username }}</p>
-  <p><strong>Email:</strong> {{ user.email }}</p>
+  <h2>{% trans "Profile" %}</h2>
+  
+  <div class="row mb-4">
+    <div class="col-md-3">
+      {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" 
+             class="img-fluid rounded">
+      {% else %}
+        <div class="bg-secondary rounded" style="width: 200px; height: 200px;"></div>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+      <p><strong>{% trans "Username" %}:</strong> {{ user.username }}</p>
+      <p><strong>{% trans "Email" %}:</strong> {{ user.email }}</p>
+    </div>
+  </div>
 
   <h4 class="mt-4 mb-3">{% trans "Edit Profile" %}</h4>
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|crispy }}
 

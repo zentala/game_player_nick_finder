@@ -113,6 +113,53 @@ class IndexView(BaseViewMixin, TemplateView):
 	current_page = 'home'
 	template_name = 'index.html'
 
+class UserProfileDisplayView(DetailView):
+	"""Display public user profile with visibility checks"""
+	model = CustomUser
+	template_name = 'profile/user_profile_display.html'
+	context_object_name = 'profile_user'
+	slug_field = 'username'
+	slug_url_kwarg = 'username'
+	
+	def get_object(self, queryset=None):
+		profile_user = super().get_object(queryset)
+		viewer = self.request.user
+		
+		# Check visibility
+		if profile_user.profile_visibility == 'PRIVATE' and (not viewer.is_authenticated or viewer != profile_user):
+			raise PermissionDenied(_('This profile is private.'))
+		
+		if profile_user.profile_visibility == 'FRIENDS_ONLY' and (not viewer.is_authenticated or viewer != profile_user):
+			# Check if users are friends through any characters
+			if not self._are_friends(profile_user, viewer):
+				raise PermissionDenied(_('This profile is only visible to friends.'))
+		
+		return profile_user
+	
+	def _are_friends(self, user1, user2):
+		"""Check if users are friends through any characters"""
+		if not user2.is_authenticated:
+			return False
+		
+		user1_characters = Character.objects.filter(user=user1)
+		user2_characters = Character.objects.filter(user=user2)
+		
+		return CharacterFriend.objects.filter(
+			(Q(character1__in=user1_characters) & Q(character2__in=user2_characters)) |
+			(Q(character1__in=user2_characters) & Q(character2__in=user1_characters))
+		).exists()
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		profile_user = self.get_object()
+		context['title'] = f'{profile_user.username} - Profile'
+		context['content_template'] = 'profile/user_profile_display_content.html'
+		
+		# Get user's characters
+		context['user_characters'] = Character.objects.filter(user=profile_user)
+		
+		return context
+
 class AccountProfileView(LoginRequiredMixin, View):
 	template_name = 'account_profile.html'
 
@@ -146,7 +193,7 @@ class AccountProfileView(LoginRequiredMixin, View):
 		User = get_user_model()
 		user = User.objects.get(username=request.user.username)
 		characters = Character.objects.filter(user=user)
-		form = UserEditForm(request.POST, instance=user)
+		form = UserEditForm(request.POST, request.FILES, instance=user)  # Add request.FILES
 
 		if form.is_valid():
 			user = form.save()
@@ -157,6 +204,8 @@ class AccountProfileView(LoginRequiredMixin, View):
 			'user': user,
 			'characters': characters,
 			'form': form,
+			'title': 'User Profile',
+			'content_template': 'account/profile_content.html',
 		}
 		return render(request, self.template_name, context)
 
@@ -330,6 +379,42 @@ class CharacterView(BaseViewMixin, DetailView):
 		context['content_template'] = 'characters/character_detail_content.html'
 		context['back_url'] = reverse('account_characters_list')
 		context['back_label'] = _('Back to My Characters')
+		
+		# Check if user is logged in
+		if self.request.user.is_authenticated:
+			user = self.request.user
+			user_characters = Character.objects.filter(user=user)
+			
+			# Check if any of user's characters is friend with this character
+			is_friend = CharacterFriend.objects.filter(
+				Q(character1=character, character2__in=user_characters) |
+				Q(character2=character, character1__in=user_characters)
+			).exists()
+			
+			# Check if there's a pending friend request
+			pending_request = CharacterFriendRequest.objects.filter(
+				receiver_character=character,
+				sender_character__in=user_characters,
+				status='PENDING'
+			).first()
+			
+			# Check if user can send request (not own character, not already friend)
+			can_send_request = (
+				character.user != user and 
+				not is_friend and 
+				pending_request is None
+			)
+			
+			context['is_friend'] = is_friend
+			context['pending_request'] = pending_request
+			context['can_send_request'] = can_send_request
+			context['user_characters'] = user_characters  # For selecting which character sends request
+		
+		# Get character profile if exists
+		try:
+			context['character_profile'] = character.profile
+		except CharacterProfile.DoesNotExist:
+			context['character_profile'] = None
 
 		if self.request.user == character.user:
 			context['show_action'] = True
@@ -340,6 +425,206 @@ class CharacterView(BaseViewMixin, DetailView):
 			context['action_label'] = _('Edit Character')
 
 		return context
+
+class FriendRequestListView(LoginRequiredMixin, ListView):
+	"""List all friend requests for user's characters"""
+	model = CharacterFriendRequest
+	template_name = 'friends/friend_request_list.html'
+	context_object_name = 'friend_requests'
+	current_page = 'friends'
+	
+	def get_queryset(self):
+		user_characters = Character.objects.filter(user=self.request.user)
+		
+		# Get requests received by user's characters
+		return CharacterFriendRequest.objects.filter(
+			receiver_character__in=user_characters,
+			status='PENDING'
+		).select_related('sender_character', 'sender_character__game', 'sender_character__user').order_by('-sent_date')
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['title'] = _('Friend Requests')
+		context['back_url'] = reverse('account_profile')
+		context['back_label'] = _('Back to Profile')
+		context['content_template'] = 'friends/friend_request_list_content.html'
+		return context
+
+
+class AcceptFriendRequestView(LoginRequiredMixin, View):
+	"""Accept a friend request"""
+	
+	def post(self, request, request_id):
+		friend_request = get_object_or_404(
+			CharacterFriendRequest,
+			id=request_id,
+			receiver_character__user=request.user,
+			status='PENDING'
+		)
+		
+		# Create friendship
+		CharacterFriend.objects.create(
+			character1=friend_request.sender_character,
+			character2=friend_request.receiver_character
+		)
+		
+		# Update request status
+		friend_request.status = 'ACCEPTED'
+		friend_request.save()
+		
+		messages.success(request, f'Accepted friend request from {friend_request.sender_character.nickname}!')
+		return redirect('friend_request_list')
+
+
+class DeclineFriendRequestView(LoginRequiredMixin, View):
+	"""Decline a friend request"""
+	
+	def post(self, request, request_id):
+		friend_request = get_object_or_404(
+			CharacterFriendRequest,
+			id=request_id,
+			receiver_character__user=request.user,
+			status='PENDING'
+		)
+		
+		friend_request.status = 'DECLINED'
+		friend_request.save()
+		
+		messages.info(request, f'Declined friend request from {friend_request.sender_character.nickname}.')
+		return redirect('friend_request_list')
+
+
+class SendFriendRequestView(LoginRequiredMixin, View):
+	"""Handle friend request sending from UI"""
+	
+	def post(self, request, nickname, hash_id):
+		receiver_character = get_object_or_404(Character, nickname=nickname, hash_id=hash_id)
+		sender_character_id = request.POST.get('sender_character')
+		message = request.POST.get('message', '')
+		
+		try:
+			sender_character = Character.objects.get(id=sender_character_id, user=request.user)
+		except Character.DoesNotExist:
+			messages.error(request, 'Invalid character selected.')
+			return redirect('character_detail', nickname=nickname, hash_id=hash_id)
+		
+		# Check if already friends
+		if CharacterFriend.objects.filter(
+			Q(character1=sender_character, character2=receiver_character) |
+			Q(character1=receiver_character, character2=sender_character)
+		).exists():
+			messages.error(request, 'You are already friends with this character.')
+			return redirect('character_detail', nickname=nickname, hash_id=hash_id)
+		
+		# Check if request already exists
+		if CharacterFriendRequest.objects.filter(
+			sender_character=sender_character,
+			receiver_character=receiver_character,
+			status='PENDING'
+		).exists():
+			messages.info(request, 'Friend request already sent.')
+			return redirect('character_detail', nickname=nickname, hash_id=hash_id)
+		
+		# Create friend request
+		friend_request = CharacterFriendRequest.objects.create(
+			sender_character=sender_character,
+			receiver_character=receiver_character,
+			message=message,
+			status='PENDING'
+		)
+		
+		messages.success(request, f'Friend request sent to {receiver_character.nickname}!')
+		return redirect('character_detail', nickname=nickname, hash_id=hash_id)
+
+class CharacterFriendListView(LoginRequiredMixin, ListView):
+	"""List all friends for a specific character"""
+	model = CharacterFriend
+	template_name = 'friends/character_friend_list.html'
+	context_object_name = 'friendships'
+	current_page = 'friends'
+	
+	def get_queryset(self):
+		character = get_object_or_404(
+			Character,
+			nickname=self.kwargs['nickname'],
+			hash_id=self.kwargs['hash_id'],
+			user=self.request.user
+		)
+		
+		# Get friendships where character is either character1 or character2
+		friendships = CharacterFriend.objects.filter(
+			Q(character1=character) | Q(character2=character)
+		).select_related('character1', 'character1__game', 'character2', 'character2__game')
+		
+		# Extract friend characters
+		friend_characters = []
+		for friendship in friendships:
+			friend_char = friendship.character2 if friendship.character1 == character else friendship.character1
+			friend_characters.append({
+				'character': friend_char,
+				'friendship': friendship
+			})
+		
+		return friend_characters
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		character = get_object_or_404(
+			Character,
+			nickname=self.kwargs['nickname'],
+			hash_id=self.kwargs['hash_id']
+		)
+		context['character'] = character
+		context['title'] = f'{character.nickname} - Friends'
+		context['back_url'] = reverse('character_detail', kwargs={
+			'nickname': character.nickname,
+			'hash_id': character.hash_id
+		})
+		context['back_label'] = _('Back to Character')
+		context['content_template'] = 'friends/character_friend_list_content.html'
+		return context
+
+class CharacterProfileEditView(LoginRequiredMixin, UpdateView):
+	"""Edit character custom profile"""
+	model = CharacterProfile
+	form_class = CharacterProfileForm
+	template_name = 'characters/character_profile_edit.html'
+	current_page = 'characters'
+	
+	def get_object(self, queryset=None):
+		character = get_object_or_404(
+			Character,
+			nickname=self.kwargs['nickname'],
+			hash_id=self.kwargs['hash_id'],
+			user=self.request.user
+		)
+		profile, created = CharacterProfile.objects.get_or_create(character=character)
+		return profile
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		character = get_object_or_404(
+			Character,
+			nickname=self.kwargs['nickname'],
+			hash_id=self.kwargs['hash_id']
+		)
+		context['character'] = character
+		context['title'] = f'Edit Profile - {character.nickname}'
+		context['back_url'] = reverse('character_detail', kwargs={
+			'nickname': character.nickname,
+			'hash_id': character.hash_id
+		})
+		context['back_label'] = _('Back to Character')
+		context['content_template'] = 'characters/character_profile_edit_content.html'
+		return context
+	
+	def get_success_url(self):
+		character = self.object.character
+		messages.success(self.request, 'Character profile updated successfully!')
+		return reverse('character_detail', kwargs={
+			'nickname': character.nickname,
+			'hash_id': character.hash_id
+		})
 
 class CharacterEditView(BaseViewMixin, LoginRequiredMixin, UpdateView):
 	current_page = 'characters'
