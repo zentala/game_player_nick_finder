@@ -670,137 +670,29 @@ test.describe('Friend Request API', () => {
 
 ---
 
-### Task 2.3: Friend Request UI Components
+### Task 2.3: Friend Request UI Components ⚠️
 
 **Assignee**: Frontend Developer  
 **Story Points**: 8  
 **Priority**: High
 
-#### Implementation Steps
+**Status**: Backend complete, UI implementation needed
 
-1. **Create Friend Request Button Component**
-```typescript
-// components/features/friends/FriendRequestButton.tsx
-'use client';
+**📋 See detailed implementation tasks in**: [UX Implementation Tasks](./ux-implementation-tasks.md#epic-2-character-based-friend-system---ui-implementation)
 
-import { useState } from 'react';
-import { Button, Box, Textarea } from '@mui/joy';
-import { sendFriendRequest } from '@/lib/api/friends';
+#### Subtasks
 
-interface FriendRequestButtonProps {
-  characterId: string;
-  characterName: string;
-}
-
-export function FriendRequestButton({ characterId, characterName }: FriendRequestButtonProps) {
-  const [showForm, setShowForm] = useState(false);
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'sent' | 'friends'>('idle');
-
-  const handleSendRequest = async () => {
-    setLoading(true);
-    try {
-      await sendFriendRequest({
-        receiver_character_id: characterId,
-        message,
-      });
-      setStatus('sent');
-      setShowForm(false);
-    } catch (error) {
-      console.error('Failed to send friend request:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (status === 'sent') {
-    return <Button disabled>Friend Request Sent</Button>;
-  }
-
-  if (status === 'friends') {
-    return <Button disabled>Friends ✓</Button>;
-  }
-
-  return (
-    <Box>
-      {!showForm ? (
-        <Button onClick={() => setShowForm(true)}>Add as Friend</Button>
-      ) : (
-        <Box>
-          <Textarea
-            placeholder={`Optional message to ${characterName}...`}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            minRows={2}
-            sx={{ mb: 1 }}
-          />
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button onClick={handleSendRequest} loading={loading}>
-              Send Request
-            </Button>
-            <Button variant="outlined" onClick={() => setShowForm(false)}>
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      )}
-    </Box>
-  );
-}
-```
-
-#### Playwright Test
-
-```typescript
-// tests/e2e/friends/friend-request-ui.spec.ts
-import { test, expect } from '@playwright/test';
-
-test.describe('Friend Request UI', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.fill('input[name="username"]', 'testuser');
-    await page.fill('input[name="password"]', 'testpass');
-    await page.click('button[type="submit"]');
-  });
-
-  test('should display add friend button', async ({ page }) => {
-    await page.goto('/characters/character-abc123');
-    
-    const addFriendButton = page.locator('button:has-text("Add as Friend")');
-    await expect(addFriendButton).toBeVisible();
-  });
-
-  test('should show friend request form on click', async ({ page }) => {
-    await page.goto('/characters/character-abc123');
-    await page.click('button:has-text("Add as Friend")');
-    
-    // Verify form appears
-    await expect(page.locator('textarea')).toBeVisible();
-    await expect(page.locator('button:has-text("Send Request")')).toBeVisible();
-  });
-
-  test('should send friend request', async ({ page }) => {
-    await page.goto('/characters/character-abc123');
-    await page.click('button:has-text("Add as Friend")');
-    
-    // Fill optional message
-    await page.fill('textarea', 'Hey, remember me from 2005?');
-    
-    // Send request
-    await page.click('button:has-text("Send Request")');
-    
-    // Verify success
-    await expect(page.locator('button:has-text("Friend Request Sent")')).toBeVisible();
-  });
-});
-```
+- **Task 2.3.1**: Add Friend Button on Character Detail Page
+- **Task 2.3.2**: Friend Request List View
+- **Task 2.3.3**: Character Friend List View
 
 #### Acceptance Criteria
 - [ ] Add Friend button displays on character pages
 - [ ] Friend request form appears on click
 - [ ] Request can be sent with optional message
 - [ ] Button updates to "Friend Request Sent" after sending
+- [ ] Friend request list view works
+- [ ] Character friend list view works
 - [ ] Playwright tests pass
 
 ---
@@ -932,6 +824,31 @@ test.describe('User Profile', () => {
 - [ ] Playwright tests pass (tests need to be written)
 - [ ] UI forms need to be updated to show new profile fields
 
+### Task 3.2: User Profile UI Components ⚠️
+
+**Assignee**: Frontend Developer  
+**Story Points**: 8  
+**Priority**: High
+
+**Status**: Backend complete, UI implementation needed
+
+**📋 See detailed implementation tasks in**: [UX Implementation Tasks](./ux-implementation-tasks.md#epic-3-user-profile-system---ui-implementation)
+
+#### Subtasks
+
+- **Task 3.2.1**: Update Profile Edit Form
+- **Task 3.2.2**: User Profile Display Page
+
+#### Acceptance Criteria
+- [ ] Profile edit form shows all new fields
+- [ ] Profile picture can be uploaded
+- [ ] Social media links can be added
+- [ ] Profile visibility can be changed
+- [ ] Public profiles display correctly
+- [ ] Private profiles are protected
+- [ ] Friends-only profiles work correctly
+- [ ] Playwright tests pass
+
 ---
 
 ## Epic 4: Character Custom Profile
@@ -1038,6 +955,28 @@ test.describe('Character Custom Profile', () => {
 - [x] Profile visibility works (in API)
 - [ ] Playwright tests pass (tests need to be written)
 - [ ] UI forms and views need to be created for character profiles
+
+### Task 4.2: Character Profile UI Components ⚠️
+
+**Assignee**: Frontend Developer  
+**Story Points**: 8  
+**Priority**: Medium
+
+**Status**: Backend complete, UI implementation needed
+
+**📋 See detailed implementation tasks in**: [UX Implementation Tasks](./ux-implementation-tasks.md#epic-4-character-custom-profile---ui-implementation)
+
+#### Subtasks
+
+- **Task 4.2.1**: Character Profile Edit View
+- **Task 4.2.2**: Character Profile Display on Detail Page
+
+#### Acceptance Criteria
+- [ ] Character profile edit form works
+- [ ] Custom bio can be edited
+- [ ] Profile displays on character detail page
+- [ ] Profile respects visibility settings
+- [ ] Playwright tests pass
 
 ---
 
