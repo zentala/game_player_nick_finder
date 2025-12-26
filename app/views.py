@@ -15,8 +15,15 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 
-from .forms import AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm, CustomRegistrationForm, UserForm, MessageForm, ProposedGameForm
-from .models import Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote
+from .forms import (
+    AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm,
+    CustomRegistrationForm, UserForm, MessageForm, ProposedGameForm,
+    CharacterFriendRequestForm, CharacterProfileForm
+)
+from .models import (
+    Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote,
+    CharacterFriend, CharacterFriendRequest, CharacterProfile
+)
 
 
 
@@ -785,12 +792,9 @@ class SendMessageView(LoginRequiredMixin, FormView):
 
         message.save()
 
-        # Przekieruj z powrotem do konwersacji z zachowaniem informacji o nadawcy
-        if sender_character_id:
-            redirect_url = f"{reverse('message_list')}?character={message.receiver_character.id}&sender={sender_character_id}"
-        else:
-            redirect_url = f"{reverse('message_list')}?character={message.receiver_character.id}"
-
+        # Redirect back to conversation
+        redirect_url = f"{reverse('message_list')}?character={message.receiver_character.id}"
+        
         if thread_id:
             redirect_url += f"&thread_id={message.thread_id}"
 

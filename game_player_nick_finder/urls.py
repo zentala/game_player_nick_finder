@@ -15,6 +15,9 @@ from app import api_views
 router = DefaultRouter()
 router.register(r'games', api_views.GameViewSet)
 router.register(r'characters', api_views.CharacterViewSet)
+router.register(r'friend-requests', api_views.CharacterFriendRequestViewSet, basename='friend-request')
+router.register(r'character-profiles', api_views.CharacterProfileViewSet, basename='character-profile')
+router.register(r'user-profiles', api_views.UserProfileViewSet, basename='user-profile')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

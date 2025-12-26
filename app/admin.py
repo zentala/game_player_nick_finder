@@ -2,12 +2,22 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Game, CustomUser, ProposedGame
+from .models import (
+    Game, CustomUser, ProposedGame, Character, Message,
+    CharacterFriend, CharacterFriendRequest, CharacterProfile
+)
 
 class CustomUserAdmin(UserAdmin):
     # Add your custom fields to the fieldsets
     fieldsets = UserAdmin.fieldsets + (
         (_('Additional Info'), {'fields': ('birthday', 'facebook', 'twitch', 'gender')}),
+        (_('Profile Settings'), {
+            'fields': (
+                'profile_visibility', 'profile_bio', 'profile_picture',
+                'steam_profile', 'youtube_channel', 'stackoverflow_profile',
+                'github_profile', 'linkedin_profile', 'custom_links'
+            )
+        }),
     )
 
     # Add your custom fields to the add_fieldsets
@@ -20,7 +30,32 @@ class ProposedGameAdmin(admin.ModelAdmin):
     list_filter = ('is_approved',)
     search_fields = ('name', 'description')
 
+class CharacterFriendAdmin(admin.ModelAdmin):
+    list_display = ('character1', 'character2', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('character1__nickname', 'character2__nickname')
+
+class CharacterFriendRequestAdmin(admin.ModelAdmin):
+    list_display = ('sender_character', 'receiver_character', 'status', 'sent_date')
+    list_filter = ('status', 'sent_date')
+    search_fields = ('sender_character__nickname', 'receiver_character__nickname')
+
+class CharacterProfileAdmin(admin.ModelAdmin):
+    list_display = ('character', 'is_public', 'updated_at')
+    list_filter = ('is_public', 'updated_at')
+    search_fields = ('character__nickname',)
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender_character', 'receiver_character', 'privacy_mode', 'is_read', 'sent_date')
+    list_filter = ('privacy_mode', 'is_read', 'sent_date')
+    search_fields = ('sender_character__nickname', 'receiver_character__nickname', 'content')
+
 # Register your models
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Game)
 admin.site.register(ProposedGame, ProposedGameAdmin)
+admin.site.register(Character)
+admin.site.register(Message, MessageAdmin)
+admin.site.register(CharacterFriend, CharacterFriendAdmin)
+admin.site.register(CharacterFriendRequest, CharacterFriendRequestAdmin)
+admin.site.register(CharacterProfile, CharacterProfileAdmin)

@@ -1,6 +1,9 @@
 from django import forms
 from django_registration.forms import RegistrationForm
-from .models import Character, Game, CustomUser, Message, ProposedGame
+from .models import (
+    Character, Game, CustomUser, Message, ProposedGame,
+    CharacterFriendRequest, CharacterProfile
+)
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -73,6 +76,12 @@ class CustomRegistrationForm(RegistrationForm):
         fields = RegistrationForm.Meta.fields + ['birthday', 'facebook', 'twitch', 'gender']
 
 class UserEditForm(forms.ModelForm):
+    PROFILE_VISIBILITY_CHOICES = [
+        ('PUBLIC', 'Public'),
+        ('FRIENDS_ONLY', 'Friends Only'),
+        ('PRIVATE', 'Private'),
+    ]
+    
     first_name = forms.CharField(max_length=150, required=False)
     last_name = forms.CharField(max_length=150, required=False)
     birthday = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
@@ -83,10 +92,33 @@ class UserEditForm(forms.ModelForm):
         required=False,
         widget=forms.Select(choices=[('', '---------'), ('MALE', 'MALE'), ('FEMALE', 'FEMALE')])
     )
+    
+    # Profile fields
+    profile_visibility = forms.ChoiceField(
+        choices=PROFILE_VISIBILITY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    steam_profile = forms.URLField(required=False)
+    youtube_channel = forms.URLField(required=False)
+    stackoverflow_profile = forms.URLField(required=False)
+    github_profile = forms.URLField(required=False)
+    linkedin_profile = forms.URLField(required=False)
+    profile_bio = forms.CharField(
+        required=False,
+        max_length=1000,
+        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control'})
+    )
+    profile_picture = forms.ImageField(required=False)
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'birthday', 'facebook', 'twitch', 'gender']
+        fields = [
+            'first_name', 'last_name', 'birthday', 'facebook', 'twitch', 'gender',
+            'profile_visibility', 'steam_profile', 'youtube_channel',
+            'stackoverflow_profile', 'github_profile', 'linkedin_profile',
+            'profile_bio', 'profile_picture'
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -119,6 +151,11 @@ class GameForm(forms.ModelForm):
         fields = ['name', 'icon', 'desc']
 
 class MessageForm(forms.ModelForm):
+    PRIVACY_MODES = [
+        ('ANONYMOUS', 'Hide my identity (Character only)'),
+        ('REVEAL_IDENTITY', 'Show my identity (Character + Username)'),
+    ]
+    
     receiver_character = forms.ModelChoiceField(
         queryset=Character.objects.all(),
         required=True,
@@ -133,10 +170,19 @@ class MessageForm(forms.ModelForm):
         }),
         label=''
     )
+    
+    privacy_mode = forms.ChoiceField(
+        choices=PRIVACY_MODES,
+        initial='ANONYMOUS',
+        required=True,
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Privacy Mode',
+        help_text='Choose whether to reveal your user identity'
+    )
 
     class Meta:
         model = Message
-        fields = ['content', 'receiver_character']
+        fields = ['content', 'receiver_character', 'privacy_mode']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -153,13 +199,67 @@ class MessageForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         receiver_character = cleaned_data.get('receiver_character')
+        privacy_mode = cleaned_data.get('privacy_mode', 'ANONYMOUS')
 
         if not receiver_character:
             raise forms.ValidationError("Please select a character recipient.")
+        
+        # Set identity_revealed based on privacy_mode
+        cleaned_data['identity_revealed'] = (privacy_mode == 'REVEAL_IDENTITY')
 
         return cleaned_data
+    
+    def save(self, commit=True):
+        message = super().save(commit=False)
+        privacy_mode = self.cleaned_data.get('privacy_mode', 'ANONYMOUS')
+        message.privacy_mode = privacy_mode
+        message.identity_revealed = (privacy_mode == 'REVEAL_IDENTITY')
+        
+        if commit:
+            message.save()
+        return message
 
 class ProposedGameForm(forms.ModelForm):
     class Meta:
         model = ProposedGame
         fields = ['name', 'description']
+
+
+class CharacterFriendRequestForm(forms.ModelForm):
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Optional message...',
+            'class': 'form-control'
+        }),
+        label='Message (optional)'
+    )
+    
+    class Meta:
+        model = CharacterFriendRequest
+        fields = ['message']
+
+
+class CharacterProfileForm(forms.ModelForm):
+    custom_bio = forms.CharField(
+        required=False,
+        max_length=2000,
+        widget=forms.Textarea(attrs={
+            'rows': 6,
+            'class': 'form-control',
+            'placeholder': 'Tell your gaming story...'
+        }),
+        label='Custom Bio'
+    )
+    
+    is_public = forms.BooleanField(
+        required=False,
+        initial=True,
+        label='Public Profile',
+        help_text='Make this profile visible to everyone'
+    )
+    
+    class Meta:
+        model = CharacterProfile
+        fields = ['custom_bio', 'is_public']

@@ -16,6 +16,12 @@ import json
 
 # replace User model with CustomUser
 class CustomUser(AbstractUser):
+    PROFILE_VISIBILITY_CHOICES = [
+        ('PUBLIC', 'Public'),
+        ('FRIENDS_ONLY', 'Friends Only'),
+        ('PRIVATE', 'Private'),
+    ]
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     birthday = models.DateField(null=True, blank=True, default=None)
     facebook = models.URLField(blank=True)
@@ -25,6 +31,26 @@ class CustomUser(AbstractUser):
         choices=[('MALE', 'MALE'), ('FEMALE', 'FEMALE')],
         blank=True
     )
+    
+    # Profile visibility settings
+    profile_visibility = models.CharField(
+        max_length=20,
+        choices=PROFILE_VISIBILITY_CHOICES,
+        default='FRIENDS_ONLY',
+        help_text='Who can see your profile'
+    )
+    
+    # Social media links
+    steam_profile = models.URLField(blank=True)
+    youtube_channel = models.URLField(blank=True)
+    stackoverflow_profile = models.URLField(blank=True)
+    github_profile = models.URLField(blank=True)
+    linkedin_profile = models.URLField(blank=True)
+    custom_links = models.JSONField(default=list, blank=True)  # Array of {name, url}
+    
+    # Profile customization
+    profile_bio = models.TextField(blank=True, max_length=1000)
+    profile_picture = models.ImageField(upload_to='profiles/', blank=True)
 
     # Add related_name to avoid conflicts
     groups = models.ManyToManyField(
@@ -234,12 +260,101 @@ class FriendRequest(models.Model):
     def __str__(self):
         return f"{self.sender} -> {self.receiver}"
 
+
+# Character-based friend system (Epic 2)
+class CharacterFriend(models.Model):
+    """
+    Friendship between two characters (not users)
+    """
+    character1 = models.ForeignKey(
+        'Character',
+        on_delete=models.CASCADE,
+        related_name='friends_as_character1'
+    )
+    character2 = models.ForeignKey(
+        'Character',
+        on_delete=models.CASCADE,
+        related_name='friends_as_character2'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('character1', 'character2')
+        indexes = [
+            models.Index(fields=['character1', 'character2']),
+        ]
+    
+    def save(self, *args, **kwargs):
+        # Ensure character1.id < character2.id to avoid duplicates
+        # We need to compare UUIDs properly
+        if str(self.character1.id) > str(self.character2.id):
+            self.character1, self.character2 = self.character2, self.character1
+        super().save(*args, **kwargs)
+    
+    def get_other_character(self, character):
+        """Get the other character in this friendship"""
+        if character == self.character1:
+            return self.character2
+        return self.character1
+    
+    def __str__(self):
+        return f"{self.character1.nickname} <-> {self.character2.nickname}"
+
+
+class CharacterFriendRequest(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('ACCEPTED', 'Accepted'),
+        ('DECLINED', 'Declined'),
+    ]
+    
+    sender_character = models.ForeignKey(
+        'Character',
+        on_delete=models.CASCADE,
+        related_name='sent_friend_requests'
+    )
+    receiver_character = models.ForeignKey(
+        'Character',
+        on_delete=models.CASCADE,
+        related_name='received_friend_requests'
+    )
+    sent_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='PENDING'
+    )
+    message = models.TextField(blank=True)
+    
+    class Meta:
+        unique_together = ('sender_character', 'receiver_character')
+    
+    def __str__(self):
+        return f"{self.sender_character.nickname} -> {self.receiver_character.nickname} ({self.status})"
+
 class Message(models.Model):
+    PRIVACY_MODES = [
+        ('ANONYMOUS', 'Anonymous'),
+        ('REVEAL_IDENTITY', 'Reveal Identity'),
+    ]
+    
     sender_character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='sent_messages', null=True)
     receiver_character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='received_messages', null=True)
     content = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True)
     thread_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    privacy_mode = models.CharField(
+        max_length=20,
+        choices=PRIVACY_MODES,
+        default='ANONYMOUS',
+        help_text='Privacy mode when message was sent'
+    )
+    identity_revealed = models.BooleanField(
+        default=False,
+        help_text='Whether sender revealed their user identity'
+    )
+    is_read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.sender_character.nickname} -> {self.receiver_character.nickname} ({self.sent_date})"
@@ -274,3 +389,26 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ('user', 'game')
+
+
+# Character custom profile (Epic 4)
+class CharacterProfile(models.Model):
+    character = models.OneToOneField(
+        'Character',
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    
+    # Custom content
+    custom_bio = models.TextField(blank=True, max_length=2000)
+    custom_images = models.JSONField(default=list, blank=True)  # Array of image URLs
+    screenshots = models.JSONField(default=list, blank=True)  # Array of screenshot URLs
+    memories = models.JSONField(default=list, blank=True)  # Array of memory objects
+    
+    # Settings
+    is_public = models.BooleanField(default=True, help_text='Show profile to everyone')
+    
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Profile for {self.character.nickname}"

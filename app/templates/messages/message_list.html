@@ -38,7 +38,17 @@
                         {% for message in messages %}
                             <div class="message mb-3 {% if message.sender_character.user == user %}text-end{% endif %}">
                                 <div class="message-bubble d-inline-block p-2 rounded {% if message.sender_character.user == user %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
-                                    <small class="message-sender">{{ message.sender_character.nickname }}</small>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <small class="message-sender">{{ message.sender_character.nickname }}</small>
+                                        {% if message.privacy_mode == 'ANONYMOUS' %}
+                                            <span class="badge bg-secondary privacy-badge">Anonymous</span>
+                                        {% endif %}
+                                        {% if message.identity_revealed and message.privacy_mode == 'REVEAL_IDENTITY' %}
+                                            <small class="user-username text-muted {% if message.sender_character.user == user %}text-white-50{% endif %}">
+                                                @{{ message.sender_character.user.username }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
                                     <div class="message-content">{{ message.content }}</div>
                                     <small class="message-time text-muted {% if message.sender_character.user == user %}text-white-50{% endif %}">
                                         {{ message.sent_date|date:"H:i" }}
@@ -54,6 +64,21 @@
                 <div class="card-footer">
                     <form method="post" class="message-form">
                         {% csrf_token %}
+                        {% if form.privacy_mode %}
+                        <div class="mb-2">
+                            <label class="form-label small">{% trans "Privacy Mode" %}</label>
+                            <div class="privacy-mode-options">
+                                {% for choice in form.privacy_mode %}
+                                    <div class="form-check form-check-inline">
+                                        {{ choice.tag }}
+                                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                            {{ choice.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="input-group">
                             {{ form.content }}
                             {% if receiver_character %}

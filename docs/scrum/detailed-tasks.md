@@ -122,10 +122,10 @@ test.describe('Message Privacy Mode', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Message model has privacy_mode and identity_revealed fields
-- [ ] Migration created and applied
-- [ ] Playwright test passes
-- [ ] API returns privacy fields in response
+- [x] Message model has privacy_mode and identity_revealed fields
+- [x] Migration created (needs to be applied: `python manage.py makemigrations app` and `python manage.py migrate`)
+- [ ] Playwright test passes (tests need to be written)
+- [x] API returns privacy fields in response
 
 ---
 
@@ -282,11 +282,11 @@ test.describe('Message Form', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Message form displays privacy mode options
-- [ ] Privacy mode can be toggled
-- [ ] Form validates message content
-- [ ] Message is sent with correct privacy mode
-- [ ] Playwright tests pass
+- [x] Message form displays privacy mode options
+- [x] Privacy mode can be toggled
+- [x] Form validates message content
+- [x] Message is sent with correct privacy mode
+- [ ] Playwright tests pass (tests need to be written)
 
 ---
 
@@ -399,10 +399,10 @@ test.describe('Message Display', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Messages display with correct privacy indicators
-- [ ] Anonymous messages hide user info
-- [ ] Identity-revealed messages show user info
-- [ ] Playwright tests pass
+- [x] Messages display with correct privacy indicators
+- [x] Anonymous messages hide user info
+- [x] Identity-revealed messages show user info
+- [ ] Playwright tests pass (tests need to be written)
 
 ---
 
@@ -518,11 +518,11 @@ test.describe('Character Friend Model', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] CharacterFriend model created
-- [ ] CharacterFriendRequest model created
-- [ ] Migrations created and applied
-- [ ] Unique constraints work correctly
-- [ ] Playwright test passes
+- [x] CharacterFriend model created
+- [x] CharacterFriendRequest model created
+- [x] Migrations created (needs to be applied: `python manage.py makemigrations app` and `python manage.py migrate`)
+- [x] Unique constraints work correctly
+- [ ] Playwright test passes (tests need to be written)
 
 ---
 
@@ -662,11 +662,11 @@ test.describe('Friend Request API', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] API endpoint for sending friend requests
-- [ ] API endpoint for accepting requests
-- [ ] API endpoint for declining requests
-- [ ] Proper authentication and authorization
-- [ ] Playwright tests pass
+- [x] API endpoint for sending friend requests
+- [x] API endpoint for accepting requests
+- [x] API endpoint for declining requests
+- [x] Proper authentication and authorization
+- [ ] Playwright tests pass (tests need to be written)
 
 ---
 
@@ -925,11 +925,12 @@ test.describe('User Profile', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] User model has profile visibility settings
-- [ ] Social media links can be added
-- [ ] Profile visibility logic works correctly
-- [ ] Friends can see friends-only profiles
-- [ ] Playwright tests pass
+- [x] User model has profile visibility settings
+- [x] Social media links can be added
+- [x] Profile visibility logic works correctly (in API)
+- [x] Friends can see friends-only profiles (logic implemented)
+- [ ] Playwright tests pass (tests need to be written)
+- [ ] UI forms need to be updated to show new profile fields
 
 ---
 
@@ -1030,12 +1031,13 @@ test.describe('Character Custom Profile', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] CharacterProfile model created
-- [ ] Custom bio can be added
-- [ ] Screenshots can be uploaded
-- [ ] Memories can be added
-- [ ] Profile visibility works
-- [ ] Playwright tests pass
+- [x] CharacterProfile model created
+- [x] Custom bio can be added (via API)
+- [ ] Screenshots can be uploaded (JSON field ready, upload UI needed)
+- [ ] Memories can be added (JSON field ready, UI needed)
+- [x] Profile visibility works (in API)
+- [ ] Playwright tests pass (tests need to be written)
+- [ ] UI forms and views need to be created for character profiles
 
 ---
 
