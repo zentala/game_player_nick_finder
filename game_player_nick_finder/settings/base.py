@@ -115,10 +115,10 @@ REGISTRATION_OPEN = True
 
 # Django Allauth settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'none', 'optional', 'mandatory'
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # 'username', 'email', 'username_email'
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = False
+# New django-allauth settings (replacing deprecated ones)
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Replaces ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']  # Replaces ACCOUNT_EMAIL_REQUIRED and ACCOUNT_USERNAME_REQUIRED
+ACCOUNT_UNIQUE_EMAIL = True  # Required when using email as login method
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
 # Social Account Providers
