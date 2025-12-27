@@ -113,6 +113,14 @@ LOGIN_URL = '/accounts/login/'
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_OPEN = True
 
+# Django Allauth settings
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'none', 'optional', 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # 'username', 'email', 'username_email'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+
 # Social Account Providers
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

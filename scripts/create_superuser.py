@@ -32,6 +32,30 @@ def create_superuser(username, email, password):
             email=email,
             password=password
         )
+        
+        # Ensure user is active
+        user.is_active = True
+        user.save()
+        
+        # Verify email in allauth if allauth is installed
+        try:
+            from allauth.account.models import EmailAddress
+            # Delete existing email addresses for this user
+            EmailAddress.objects.filter(user=user).delete()
+            # Create verified email address
+            EmailAddress.objects.create(
+                user=user,
+                email=email,
+                verified=True,
+                primary=True
+            )
+        except ImportError:
+            # allauth not installed, skip
+            pass
+        except Exception:
+            # Ignore errors - email verification is optional
+            pass
+        
         print(f"Superuser '{username}' created successfully!")
         return True
     except ValidationError as e:

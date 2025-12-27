@@ -34,8 +34,33 @@ def delete_and_recreate_superuser(username, email, password):
             email=email,
             password=password
         )
+        
+        # Ensure user is active
+        user.is_active = True
+        user.save()
+        
+        # Verify email in allauth if allauth is installed
+        try:
+            from allauth.account.models import EmailAddress
+            # Delete existing email addresses for this user
+            EmailAddress.objects.filter(user=user).delete()
+            # Create verified email address
+            EmailAddress.objects.create(
+                user=user,
+                email=email,
+                verified=True,
+                primary=True
+            )
+            print(f"Email address verified in allauth")
+        except ImportError:
+            # allauth not installed, skip
+            pass
+        except Exception as e:
+            print(f"Warning: Could not verify email in allauth: {e}")
+        
         print(f"Superuser '{username}' created successfully!")
-        print(f"\nYou can now login to Django admin at: http://localhost:8000/admin/")
+        print(f"User is_active: {user.is_active}")
+        print(f"\nYou can now login at: http://localhost:8000/accounts/login/")
         print(f"Username: {username}")
         print(f"Email: {email}")
         return True
@@ -44,6 +69,8 @@ def delete_and_recreate_superuser(username, email, password):
         return False
     except Exception as e:
         print(f"Unexpected error: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == '__main__':
