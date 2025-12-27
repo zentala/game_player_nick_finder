@@ -191,15 +191,20 @@ Using this, you can get insights into the various options available in `manage.p
 
 ## Project Status
 
-Current development stage: **Alpha**
-- ✅ Basic models and views
-- ✅ User authentication
-- ✅ Character management
-- ✅ Game listings
-- 🔄 UI refinement
-- ❌ Search functionality
-- ❌ Friend system
-- ❌ API completion
+**📊 For detailed project status, see:**
+- **[Project Status Summary](docs/PROJECT_STATUS_SUMMARY.md)** - Comprehensive status overview with all features
+- **[Status Report](docs/STATUS_REPORT.md)** - Current implementation status
+
+**Quick Status:**
+- ✅ **Epic 1**: Enhanced Messaging with Privacy Controls (Backend + UI complete)
+- ✅ **Epic 2**: Character-Based Friend System (Backend + UI complete)
+- ✅ **Epic 3**: User Profile System (Backend + UI complete)
+- ✅ **Epic 4**: Character Custom Profile (Basic version complete)
+- ⚠️ **Testy Playwright**: Napisane, wymagają weryfikacji
+- ❌ **Conversation Management UI**: Backend ready, UI needed
+- ❌ **Screenshots & Memories UI**: Backend ready, UI needed
+
+**See [docs/PROJECT_STATUS_SUMMARY.md](docs/PROJECT_STATUS_SUMMARY.md) for complete status breakdown.**
 
 ## Tech Stack
 
@@ -207,6 +212,16 @@ Current development stage: **Alpha**
 - Bootstrap 5
 - SQLite (development) / PostgreSQL (production)
 - Django Rest Framework
+
+## Documentation
+
+**📚 For developers**: See [docs/README.md](docs/README.md) for complete documentation index.
+
+**Key Documents**:
+- **[Project Status Summary](docs/PROJECT_STATUS_SUMMARY.md)** - Current project status and pending tasks
+- **[Status Report](docs/STATUS_REPORT.md)** - Implementation status of all features
+- **[Implementation Guide](docs/architecture/implementation-guide.md)** - Step-by-step guide for mid-level developers
+- **[Detailed Tasks](docs/scrum/detailed-tasks.md)** - Detailed implementation tasks with code examples
 
 ## Development Setup
 

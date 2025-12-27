@@ -46,20 +46,33 @@
 
 ### ⚠️ Co nie zostało zrobione / wymaga dalszej pracy
 
-1. **Testy Playwright**
-   - ✅ Testy napisane dla większości funkcji
-   - ⚠️ Testy wymagają weryfikacji (uruchomienia i sprawdzenia czy przechodzą)
+1. **Testy Playwright** ⚠️
+   - ✅ Testy napisane dla większości funkcji (7 plików testowych)
+   - ⚠️ **Status**: Testy wymagają weryfikacji (uruchomienia i sprawdzenia czy przechodzą)
    - 📍 Lokalizacja: `tests/e2e/`
+   - 📋 Testy dostępne:
+     - `characters/character-profile-display.spec.ts` ✅
+     - `characters/character-profile-edit.spec.ts` ✅
+     - `friends/character-friend-list.spec.ts` ✅
+     - `friends/friend-request-button.spec.ts` ✅
+     - `friends/friend-request-list.spec.ts` ✅
+     - `profile/profile-edit.spec.ts` ✅
+     - `profile/user-profile-display.spec.ts` ✅
+   - 🎯 **Akcja wymagana**: Uruchomić `pnpm test:e2e` z załadowanymi fixtures
 
-2. **Character Profile - Zaawansowane funkcje**
+2. **Character Profile - Zaawansowane funkcje** ❌
    - ❌ Screenshots upload UI (backend ready - JSONField istnieje, UI potrzebne)
    - ❌ Memories management UI (backend ready - JSONField istnieje, UI potrzebne)
    - 📍 Backend: CharacterProfile model ma pola screenshots i memories (JSONField)
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 3
+   - 🎯 **Priorytet**: Medium
 
-3. **Multiple Conversation Management**
-   - ⚠️ Thread_id system istnieje w Message model
+3. **Multiple Conversation Management** ❌
+   - ✅ Thread_id system istnieje w Message model
    - ❌ Conversation list UI (grupowanie konwersacji, łatwe przełączanie)
    - 📍 Obecnie: messages są grupowane przez thread_id, ale brak UI do zarządzania wieloma konwersacjami
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 2
+   - 🎯 **Priorytet**: High
 
 4. **Real-time Messaging**
    - ❌ WebSocket lub Server-Sent Events
@@ -80,26 +93,36 @@
 
 ### High Priority
 
-1. **Weryfikacja testów Playwright** ⚠️
-   - Uruchomić wszystkie testy
+1. **Weryfikacja testów Playwright** ⚠️ (8 SP)
+   - Status: Testy napisane, wymagają uruchomienia
+   - Uruchomić wszystkie testy: `pnpm test:e2e`
+   - Załadować fixtures: `pnpm load:fixtures` lub `.\load_fixtures.ps1`
    - Naprawić ewentualne błędy
    - Zapewnić że wszystkie testy przechodzą
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 1
 
-2. **Conversation Management UI** 📍
+2. **Conversation Management UI** ❌ (13 SP)
+   - Status: Backend ready, UI missing
    - Stworzyć conversation list view
    - Zaimplementować łatwe przełączanie między konwersacjami
    - Dodać unread message indicators
+   - Dodać last message preview
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 2
 
 ### Medium Priority
 
-3. **Character Profile - Screenshots & Memories UI**
+3. **Character Profile - Screenshots & Memories UI** ❌ (13 SP)
+   - Status: Backend ready (JSONField), UI missing
    - Screenshots upload UI
    - Memories management UI
    - Backend jest gotowy (JSONField)
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 3
 
-4. **Mobile Responsiveness**
+4. **Mobile Responsiveness** ⚠️ (8 SP)
+   - Status: Częściowo zrobione (Bootstrap 5)
    - Testowanie na urządzeniach mobilnych
    - Poprawa UI dla małych ekranów
+   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 4
 
 ### Low Priority (Future Enhancements)
 
@@ -142,10 +165,17 @@ Wszystkie pliki zostały ponumerowane:
 
 ## 🎯 Następne kroki
 
-1. **Testy**: Uruchomić i zweryfikować testy Playwright
-2. **Conversation UI**: Zaimplementować conversation list
-3. **Polish**: Poprawić mobile responsiveness
-4. **Future**: Screenshots/Memories UI, Real-time messaging
+### Week 1-2: High Priority
+1. **Testy**: Uruchomić i zweryfikować testy Playwright (`pnpm test:e2e`)
+2. **Conversation UI**: Zaimplementować conversation list (Task 2)
+
+### Week 3: Medium Priority
+3. **Screenshots/Memories UI**: Zaimplementować upload i management UI (Task 3)
+4. **Mobile**: Poprawić mobile responsiveness (Task 4)
+
+### Future (Low Priority)
+5. **Real-time Messaging**: WebSocket lub Server-Sent Events
+6. **Additional UX Features**: Quick Actions, Notification Center, etc.
 
 ## 📝 Notatki
 
@@ -154,7 +184,18 @@ Wszystkie pliki zostały ponumerowane:
 - Status każdego pliku został oznaczony w nagłówku
 - Większość funkcjonalności jest gotowa do użycia
 
+## 📝 Aktualizacja Statusu
+
+**WAŻNE**: Po zakończeniu każdego taska, zaktualizuj ten dokument:
+
+1. Zmień status taska z `❌` na `✅` lub `⚠️` na `✅`
+2. Przenieś z "Co nie zostało zrobione" do "Co zostało zrobione" jeśli w pełni ukończone
+3. Zaktualizuj sekcję "Priorytetowe zadania do wykonania"
+4. Dodaj datę ukończenia jeśli istotne
+
+**Zobacz**: `.cursor/rules/always.mdc` - sekcja "After Completing Task" dla pełnej checklisty
+
 ---
 
 **Raport wygenerowany**: 2024  
-**Ostatnia aktualizacja**: 2024
+**Ostatnia aktualizacja**: 2024-12-19

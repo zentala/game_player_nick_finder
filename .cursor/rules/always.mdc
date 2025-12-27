@@ -296,6 +296,147 @@ pnpm load:fixtures  # Works on both Windows and Unix
 - The project is ready for deployment with PM2 and Nginx
 - **Playwright tests are mandatory for all features**
 
+## Project Status Documentation
+
+**CRITICAL**: Always check project status before starting work:
+
+- **[Project Status Summary](../docs/PROJECT_STATUS_SUMMARY.md)** - Comprehensive status overview
+  - What works (implemented features)
+  - What needs work (pending tasks)
+  - E2E test coverage
+  - Priority tasks with story points
+  - Next steps and timeline
+
+- **[Status Report](../docs/STATUS_REPORT.md)** - Current implementation status
+  - ✅ Completed features (Backend + UI)
+  - ⚠️ Features requiring further work
+  - 📋 Priority tasks to complete
+  - Test coverage status
+
+- **[Implementation Guide](../docs/architecture/implementation-guide.md)** - Step-by-step guide for mid-level developers
+  - Prerequisites and setup
+  - Implementation workflow (TDD)
+  - Priority tasks with detailed steps
+  - Code examples and patterns
+  - Testing checklist
+  - Best practices
+
+## How to Use Documentation
+
+### Before Starting Work
+
+**ALWAYS** follow this workflow:
+
+1. **Check Project Status**:
+   - Read [Project Status Summary](../docs/PROJECT_STATUS_SUMMARY.md) to see if task is already done
+   - Check [Status Report](../docs/STATUS_REPORT.md) for current implementation status
+   - Verify task is not already completed
+
+2. **Understand Requirements**:
+   - Read [Implementation Guide](../docs/architecture/implementation-guide.md) for step-by-step instructions
+   - Review [Detailed Tasks](../docs/scrum/detailed-tasks.md) for code examples
+   - Check [005-pending-tasks-implementation.md](../docs/scrum/005-pending-tasks-implementation.md) for specific task details
+
+3. **Setup Environment**:
+   - Load fixtures: `pnpm load:fixtures` or `.\load_fixtures.ps1` (Windows) / `./load_fixtures.sh` (Unix)
+   - Run migrations: `python manage.py migrate`
+   - Ensure test environment is ready
+
+### During Implementation
+
+1. **Follow TDD**:
+   - Write Playwright test first (red phase)
+   - Implement feature (green phase)
+   - Refactor (refactor phase)
+   - **NEVER** commit without tests
+
+2. **Use Existing Patterns**:
+   - Follow code patterns in `app/models.py`, `app/views.py`, `app/forms.py`
+   - Use existing template structure from `app/templates/`
+   - Follow API patterns from `app/api_views.py`
+
+3. **Reference Documentation**:
+   - Check [Implementation Guide](../docs/architecture/implementation-guide.md) for code examples
+   - Review [Detailed Tasks](../docs/scrum/detailed-tasks.md) for similar implementations
+   - Use [005-pending-tasks-implementation.md](../docs/scrum/005-pending-tasks-implementation.md) for specific task steps
+
+### After Completing Task
+
+**MANDATORY**: Update status documentation after completing any task:
+
+1. **Update Status Report** (`docs/STATUS_REPORT.md`):
+   - Change task status from `❌` to `✅` or `⚠️` to `✅`
+   - Update "Co zostało zrobione" section
+   - Remove from "Co nie zostało zrobione" if fully complete
+   - Update test status if tests were verified
+
+2. **Update Project Status Summary** (`docs/PROJECT_STATUS_SUMMARY.md`):
+   - Update statistics (Epiki, Testy E2E, etc.)
+   - Move completed task from "Co wymaga pracy" to "Co działa"
+   - Update "Pokrycie Testami E2E" section if tests were added/verified
+   - Update "Następne kroki" section
+
+3. **Update Detailed Tasks** (`docs/scrum/detailed-tasks.md`):
+   - Mark acceptance criteria as complete: `- [x]` instead of `- [ ]`
+   - Update task status in header if present
+   - Add completion date if documented
+
+4. **Update Implementation Guide** (`docs/architecture/implementation-guide.md`):
+   - Mark task as complete in checklist
+   - Update "Next Steps" section
+   - Add notes if implementation differed from guide
+
+5. **Commit Changes**:
+   - Include status documentation updates in PR
+   - Commit message should mention: "Update status documentation for [task name]"
+   - Example: `git commit -m "feat: implement conversation management UI + update status docs"`
+
+### Status Update Checklist
+
+After completing any task, verify:
+
+- [ ] Status Report updated (`docs/STATUS_REPORT.md`)
+- [ ] Project Status Summary updated (`docs/PROJECT_STATUS_SUMMARY.md`)
+- [ ] Detailed Tasks acceptance criteria marked complete
+- [ ] Implementation Guide checklist updated (if applicable)
+- [ ] All Playwright tests pass
+- [ ] Manual testing completed
+- [ ] Code reviewed
+- [ ] Documentation changes included in PR
+
+### Status Symbols Reference
+
+When updating status documents, use these symbols:
+
+- `✅` - Completed / Working
+- `⚠️` - In Progress / Needs Verification
+- `❌` - Not Started / Missing
+- `📍` - Location / Reference
+- `📋` - Documentation / Checklist
+- `🎯` - Priority / Target
+
+### Example Status Update
+
+**Before** (in STATUS_REPORT.md):
+```markdown
+1. **Weryfikacja testów Playwright** ⚠️
+   - Status: Testy napisane, wymagają uruchomienia
+```
+
+**After** (after completing):
+```markdown
+1. **Weryfikacja testów Playwright** ✅
+   - Status: Testy zweryfikowane, wszystkie przechodzą
+   - Data ukończenia: 2024-12-19
+```
+
+**Before starting any task**:
+1. Check [Project Status Summary](../docs/PROJECT_STATUS_SUMMARY.md) to see if it's already done
+2. Check [Status Report](../docs/STATUS_REPORT.md) for current status
+3. Read [Implementation Guide](../docs/architecture/implementation-guide.md) for step-by-step instructions
+4. Review [Detailed Tasks](../docs/scrum/detailed-tasks.md) for implementation steps
+5. Always write Playwright tests first (TDD)
+
 ---
 
 **Join the adventure and reconnect with your old gaming buddies!**

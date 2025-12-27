@@ -35,6 +35,17 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Migration strategy
   - Cost estimation
 
+#### [Implementation Guide](./architecture/implementation-guide.md)
+- **Audience**: Mid-level Developers, Tech Leads
+- **Purpose**: Step-by-step implementation guide for pending features
+- **Contents**:
+  - Prerequisites and setup
+  - Implementation workflow (TDD)
+  - Priority tasks with detailed steps
+  - Code examples and patterns
+  - Testing checklist
+  - Best practices
+
 ### Scrum Documentation
 **Location**: `docs/scrum/`
 
@@ -123,12 +134,38 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Success criteria
   - Timeline estimate
 
+### Status Documentation
+**Location**: `docs/`
+
+#### [Status Report](./STATUS_REPORT.md)
+- **Audience**: All team members, Product Owners, Tech Leads
+- **Purpose**: Current implementation status of all features and tasks
+- **Contents**:
+  - ✅ Completed features (Backend + UI)
+  - ⚠️ Features requiring further work
+  - 📋 Priority tasks to complete
+  - Test coverage status
+  - Next steps
+
+#### [Project Status Summary](./PROJECT_STATUS_SUMMARY.md)
+- **Audience**: All team members, Stakeholders, New developers
+- **Purpose**: Comprehensive project status overview with detailed breakdown
+- **Contents**:
+  - Overall project status
+  - What works (implemented features)
+  - What needs work (pending tasks)
+  - E2E test coverage statistics
+  - Priority tasks with story points
+  - Next steps and timeline
+
 ## Quick Start Guide
 
 ### For Solution Architects
-1. Start with [Cloudflare Migration Architecture](./architecture/cloudflare-migration-architecture.md)
-2. Review [Technology Stack](./architecture/technology-stack.md)
-3. Review [Completion Requirements](./requirements/completion-requirements.md) for technical details
+1. **Start with**: [Project Status Summary](./PROJECT_STATUS_SUMMARY.md) for current state overview
+2. Review [Status Report](./STATUS_REPORT.md) for implementation status
+3. Start with [Cloudflare Migration Architecture](./architecture/cloudflare-migration-architecture.md) for future migration
+4. Review [Technology Stack](./architecture/technology-stack.md)
+5. Review [Completion Requirements](./requirements/completion-requirements.md) for technical details
 
 ### For Scrum Masters
 1. Start with [Epics and Tasks](./scrum/epics-and-tasks.md)
@@ -136,11 +173,14 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
 3. Use sprint planning recommendations for organizing work
 
 ### For Developers
-1. Read [Detailed Tasks](./scrum/detailed-tasks.md) for implementation guides
-2. Check [Technology Stack](./architecture/technology-stack.md) for stack information
-3. Review [Feature Proposals](./features/feature-proposals.md) for implementation details
-4. Check [Completion Requirements](./requirements/completion-requirements.md) for technical checklist
-5. **IMPORTANT**: Always write Playwright tests first (TDD)
+1. **Start with**: [Project Status Summary](./PROJECT_STATUS_SUMMARY.md) to understand current state
+2. **Read**: [Implementation Guide](./architecture/implementation-guide.md) for step-by-step instructions
+3. Read [Detailed Tasks](./scrum/detailed-tasks.md) for implementation guides
+4. Check [Status Report](./STATUS_REPORT.md) for what's done and what's pending
+5. Check [Technology Stack](./architecture/technology-stack.md) for stack information
+6. Review [Feature Proposals](./features/feature-proposals.md) for implementation details
+7. Check [Completion Requirements](./requirements/completion-requirements.md) for technical checklist
+8. **IMPORTANT**: Always write Playwright tests first (TDD)
 
 ### For UX Engineers
 1. Start with [Completion Guide](./ux/completion-guide.md)
