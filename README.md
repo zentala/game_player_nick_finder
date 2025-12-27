@@ -119,7 +119,7 @@ The application should now be accessible at http://localhost:8000/
 ### Intallation and Deamonizing Application on Server
 1) Follow all steps for local installation and startup. Verify that the application is running at http://localhost:8000/.
 2) Copy `ecosystem.config.js.manage` or `ecosystem.config.js.wsgi` (recommended) into `ecosystem.config.js` and adjust paths in the configuration file.
-3) Daemonize the server using the command `pm2 start ecosystem.config.js`. Ensure you have PM2 installed. If not, you can install it using the command `npm install pm2 -g`.
+3) Daemonize the server using the command `pm2 start ecosystem.config.js`. Ensure you have PM2 installed. If not, you can install it using the command `pnpm add -g pm2`.
 4) Configure the nginx server to handle requests under a specific domain and add an SSL Certificate. You can use Let's Encrypt for a free SSL certificate. Keep in mind that nginx configuration may vary depending on your operating system and specific requirements.
 
 ### Options in manage.py
