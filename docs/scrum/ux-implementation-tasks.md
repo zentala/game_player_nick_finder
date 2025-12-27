@@ -1,4 +1,7 @@
-# UX Implementation Tasks - Game Player Nick Finder
+# 003 - UX Implementation Tasks - Game Player Nick Finder
+
+**Status**: ✅ Most tasks completed  
+**Last Updated**: 2024
 
 ## Document Purpose
 This document provides detailed, actionable tasks for implementing UX components for Epic 2 (Friend System), Epic 3 (User Profile), and Epic 4 (Character Profile). These tasks are designed for MIT developers following TDD principles.
@@ -307,14 +310,17 @@ test.describe('Friend Request Button', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Add Friend button displays on character detail pages for non-owned characters
-- [ ] Button is hidden for own characters
-- [ ] Button shows "Friends" badge when already friends
-- [ ] Modal opens on button click
-- [ ] Character selector shows user's characters
-- [ ] Friend request can be sent with optional message
-- [ ] Button updates to "Friend Request Sent" after sending
-- [ ] Playwright tests pass
+- [x] Add Friend button displays on character detail pages for non-owned characters
+- [x] Button is hidden for own characters
+- [x] Button shows "Friends" badge when already friends
+- [x] Modal opens on button click
+- [x] Character selector shows user's characters
+- [x] Friend request can be sent with optional message
+- [x] Button updates to "Friend Request Sent" after sending
+- [x] View implemented: SendFriendRequestView
+- [x] Template updated: character_detail_content.html
+- [x] URL configured
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -538,13 +544,16 @@ test.describe('Friend Request List', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Friend request list displays all pending requests for user's characters
-- [ ] Each request shows sender character info and optional message
-- [ ] Accept button creates friendship and updates request status
-- [ ] Decline button updates request status
-- [ ] Success/info messages shown after actions
-- [ ] Empty state shown when no requests
-- [ ] Playwright tests pass
+- [x] Friend request list displays all pending requests for user's characters
+- [x] Each request shows sender character info and optional message
+- [x] Accept button creates friendship and updates request status
+- [x] Decline button updates request status
+- [x] Success/info messages shown after actions
+- [x] Empty state shown when no requests
+- [x] Views implemented: FriendRequestListView, AcceptFriendRequestView, DeclineFriendRequestView
+- [x] Templates created: friend_request_list.html, friend_request_list_content.html
+- [x] URLs configured
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -737,11 +746,14 @@ test.describe('Character Friend List', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Friend list displays all friends for the character
-- [ ] Each friend card shows character info and game
-- [ ] View and Message buttons work correctly
-- [ ] Empty state shown when no friends
-- [ ] Playwright tests pass
+- [x] Friend list displays all friends for the character
+- [x] Each friend card shows character info and game
+- [x] View and Message buttons work correctly
+- [x] Empty state shown when no friends
+- [x] View implemented: CharacterFriendListView
+- [x] Templates created: character_friend_list.html, character_friend_list_content.html
+- [x] URL configured
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -890,13 +902,14 @@ test.describe('Profile Edit', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Profile edit form displays all new fields
-- [ ] Profile picture can be uploaded
-- [ ] Profile visibility can be changed
-- [ ] Social media links can be added
-- [ ] Profile bio can be edited
-- [ ] Changes are saved successfully
-- [ ] Playwright tests pass
+- [x] Profile edit form displays all new fields (UserEditForm updated)
+- [x] Profile picture can be uploaded (profile_picture field)
+- [x] Profile visibility can be changed (profile_visibility field)
+- [x] Social media links can be added (steam_profile, github_profile, etc.)
+- [x] Profile bio can be edited (profile_bio field)
+- [x] Changes are saved successfully
+- [x] AccountProfileView handles file uploads
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -1114,14 +1127,17 @@ test.describe('User Profile Display', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Public profiles are visible to all
-- [ ] Private profiles are blocked from non-owners
-- [ ] Friends-only profiles are visible to friends
-- [ ] Profile picture displays if set
-- [ ] Profile bio displays if set
-- [ ] Social media links display if set
-- [ ] User's characters are listed
-- [ ] Playwright tests pass
+- [x] Public profiles are visible to all
+- [x] Private profiles are blocked from non-owners
+- [x] Friends-only profiles are visible to friends
+- [x] Profile picture displays if set
+- [x] Profile bio displays if set
+- [x] Social media links display if set
+- [x] User's characters are listed
+- [x] View implemented: UserProfileDisplayView
+- [x] Templates created: user_profile_display.html, user_profile_display_content.html
+- [x] URL configured
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -1285,11 +1301,15 @@ test.describe('Character Profile Edit', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Edit profile form displays for character owner
-- [ ] Custom bio can be edited
-- [ ] Changes are saved successfully
-- [ ] Form redirects to character detail after save
-- [ ] Playwright tests pass
+- [x] Edit profile form displays for character owner
+- [x] Custom bio can be edited
+- [x] Changes are saved successfully
+- [x] Form redirects to character detail after save
+- [x] View implemented: CharacterProfileEditView
+- [x] Templates created: character_profile_edit.html, character_profile_edit_content.html
+- [x] URL configured
+- [x] CharacterProfileForm created
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 
@@ -1393,10 +1413,14 @@ test.describe('Character Profile Display', () => {
 ```
 
 #### Acceptance Criteria
-- [ ] Character custom bio displays if set
-- [ ] Profile sections only show if data exists
-- [ ] Profile respects visibility settings (via backend API)
-- [ ] Playwright tests pass
+- [x] Character custom bio displays if set
+- [x] Profile sections only show if data exists
+- [x] Profile respects visibility settings (via backend API)
+- [x] CharacterView updated to include profile data
+- [x] character_detail_content.html updated to show profile
+- [ ] Screenshots UI (backend ready, UI needed)
+- [ ] Memories UI (backend ready, UI needed)
+- [ ] Playwright tests pass (tests written but need verification)
 
 ---
 

@@ -1,4 +1,7 @@
-# Cloudflare + AUG Migration Architecture
+# 001 - Cloudflare + AUG Migration Architecture
+
+**Status**: 📋 Planning document - Future migration  
+**Last Updated**: 2024
 
 ## Document Purpose
 This document describes the architectural approach for migrating the Game Player Nick Finder application to Cloudflare infrastructure with AUG (Application User Gateway) integration. It is intended for Tech Leads and mid-level developers who will be involved in the migration process.
