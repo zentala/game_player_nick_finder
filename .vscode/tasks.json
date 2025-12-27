@@ -4,16 +4,31 @@
       {
           "label": "Check Environment",
           "type": "shell",
-          "command": "./.vscode/task_check_environment.sh",
+          "command": "${workspaceFolder}/.vscode/task_check_environment.ps1",
+          "windows": {
+              "command": "powershell",
+              "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/.vscode/task_check_environment.ps1"]
+          },
+          "linux": {
+              "command": "${workspaceFolder}/.vscode/task_check_environment.sh"
+          },
+          "osx": {
+              "command": "${workspaceFolder}/.vscode/task_check_environment.sh"
+          },
           "runOptions": { "runOn": "folderOpen" },
           "presentation": {
-              "group": "Django"
+              "group": "Django",
+              "reveal": "silent"
           }
       },
       {
           "label": "Setup Environment for Django",
           "type": "shell",
-          "command": "pipenv install",
+          "command": "pipenv install --python 3.11",
+          "windows": {
+              "command": "pipenv",
+              "args": ["install", "--python", "3.11"]
+          },
           "options": {
               "cwd": "${workspaceFolder}"
           },
@@ -21,7 +36,8 @@
           "dependsOn": ["Check Environment"],
           "runOptions": { "runOn": "folderOpen" },
           "presentation": {
-              "group": "Django"
+              "group": "Django",
+              "reveal": "silent"
           }
       },
       {
@@ -34,22 +50,84 @@
           },
           "problemMatcher": [],
           "dependsOn": ["Setup Environment for Django"],
-          "runOptions": { "runOn": "folderOpen" },
           "presentation": {
-              "group": "Django"
+              "group": "Django",
+              "reveal": "always",
+              "panel": "new"
           }
       },
       {
-          "label": "Start Django Server",
+          "label": "Start Django Server (PowerShell)",
           "type": "shell",
-          "command": "./start_django.sh",
+          "command": "${workspaceFolder}/start_django.ps1",
+          "windows": {
+              "command": "powershell",
+              "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/start_django.ps1"]
+          },
+          "linux": {
+              "command": "${workspaceFolder}/start_django.sh"
+          },
+          "osx": {
+              "command": "${workspaceFolder}/start_django.sh"
+          },
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "presentation": {
+              "group": "Django",
+              "reveal": "always",
+              "panel": "new"
+          }
+      },
+      {
+          "label": "Run Django Migrations",
+          "type": "shell",
+          "command": "pipenv",
+          "args": ["run", "python", "manage.py", "migrate"],
           "options": {
               "cwd": "${workspaceFolder}"
           },
           "problemMatcher": [],
-          "runOptions": { "runOn": "folderOpen" },
           "presentation": {
-              "group": "Django"
+              "group": "Django",
+              "reveal": "always"
+          }
+      },
+      {
+          "label": "Create Django Superuser",
+          "type": "shell",
+          "command": "pipenv",
+          "args": ["run", "python", "manage.py", "createsuperuser"],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "presentation": {
+              "group": "Django",
+              "reveal": "always"
+          }
+      },
+      {
+          "label": "Load Django Fixtures",
+          "type": "shell",
+          "command": "${workspaceFolder}/load_fixtures.ps1",
+          "windows": {
+              "command": "powershell",
+              "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/load_fixtures.ps1"]
+          },
+          "linux": {
+              "command": "${workspaceFolder}/load_fixtures.sh"
+          },
+          "osx": {
+              "command": "${workspaceFolder}/load_fixtures.sh"
+          },
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "presentation": {
+              "group": "Django",
+              "reveal": "always"
           }
       }
   ]

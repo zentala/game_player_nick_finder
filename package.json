@@ -1,0 +1,18 @@
+{
+  "name": "game-player-nick-finder",
+  "version": "1.0.0",
+  "description": "E2E tests for Game Player Nick Finder",
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "load:fixtures": "node scripts/load-fixtures.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0"
+  }
+}
+
