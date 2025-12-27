@@ -66,12 +66,37 @@ All implemented features have E2E tests:
 ## Requirements
 
 - Django server running on `http://localhost:8000`
-- Test users and data in database (use fixtures)
+- **MANDATORY**: Test data must be loaded from fixtures before running tests
+- Load fixtures using: `pnpm load:fixtures` or `.\load_fixtures.ps1` (Windows) / `./load_fixtures.sh` (Unix)
 - Playwright will automatically start the server if configured
+
+## Test Data
+
+**CRITICAL**: All E2E tests require seeded test data. Fixtures must be loaded before running tests.
+
+### Loading Fixtures
+```bash
+# Using npm/pnpm script (cross-platform)
+pnpm load:fixtures
+
+# Windows PowerShell
+.\load_fixtures.ps1
+
+# Unix/Linux/MacOS
+./load_fixtures.sh
+```
+
+### Test Users
+- `testuser` / `testpass123` - Main test user with multiple characters
+- `otheruser` / `pass` - Secondary test user
+- `privateuser` / `testpass123` - User with private profile
+
+See [TEST_FIXTURES.md](../docs/TEST_FIXTURES.md) for complete fixture documentation.
 
 ## Notes
 
 - Tests use test data from fixtures
 - Some tests check for conditional visibility (if elements exist)
 - Adjust test data URLs based on your fixtures
+- If you get unique constraint errors, flush database first: `pipenv run python manage.py flush --noinput`
 

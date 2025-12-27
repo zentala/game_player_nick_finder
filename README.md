@@ -100,8 +100,16 @@ python manage.py createsuperuser
 
 #### Step 6: Apply fixtures
 ```bash
+# Using helper scripts (recommended)
+# Windows:
+.\load_fixtures.ps1
+# Unix/Linux/MacOS:
+./load_fixtures.sh
+
+# Or manually:
 python manage.py loaddata app/fixtures/categories_fixtures.json
 python manage.py loaddata app/fixtures/games_fixtures.json
+python manage.py loaddata app/fixtures/users_and_characters.json
 ```
 
 #### Step 7: .env Configuration
@@ -248,11 +256,17 @@ The project contains the following fixtures for development:
 Load them in the correct order:
 
 ```bash
-# Load in this exact order to maintain data integrity
+# Using helper script (recommended)
+pnpm load:fixtures
+# Or: .\load_fixtures.ps1 (Windows) / ./load_fixtures.sh (Unix)
+
+# Or manually in this exact order to maintain data integrity
 python manage.py loaddata app/fixtures/categories_fixtures.json
 python manage.py loaddata app/fixtures/games_fixtures.json
 python manage.py loaddata app/fixtures/users_and_characters.json
 ```
+
+**Note**: Fixtures are mandatory before running E2E tests. See [docs/TEST_FIXTURES.md](docs/TEST_FIXTURES.md) for complete documentation.
 
 ### Database Reset
 
@@ -271,10 +285,9 @@ python manage.py makemigrations
 # Apply migrations
 python manage.py migrate
 
-# Load fixtures
-python manage.py loaddata app/fixtures/categories_fixtures.json
-python manage.py loaddata app/fixtures/games_fixtures.json
-python manage.py loaddata app/fixtures/users_and_characters.json
+# Load fixtures (required before running E2E tests)
+pnpm load:fixtures
+# Or: .\load_fixtures.ps1 (Windows) / ./load_fixtures.sh (Unix)
 
 # Create superuser
 python manage.py createsuperuser

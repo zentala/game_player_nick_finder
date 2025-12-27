@@ -31,7 +31,7 @@ test.describe('Character Friend List', () => {
     await page.goto('/character/my-character-123-myhash/friends/');
     
     // Click View button on first friend if exists
-    const viewButton = page.locator('.card:first-child a:has-text("View")');
+    const viewButton = page.locator('.card:first-child a:has-text("View")').first();
     if (await viewButton.count() > 0) {
       await viewButton.click();
       

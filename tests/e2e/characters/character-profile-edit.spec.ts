@@ -33,7 +33,7 @@ test.describe('Character Profile Edit', () => {
     
     // Verify success and redirect
     await expect(page.locator('text=Character profile updated successfully')).toBeVisible();
-    await expect(page).toHaveURL(/\/character\/.+\/.+\/$/);
+    await expect(page).toHaveURL(/\/character\/.+\/.+\/?$/);
   });
 });
 

@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 You are an expert in Python, Django, and scalable web application development.
 
 Key Principles
@@ -142,9 +145,21 @@ tests/
 └── api/                    # API tests (Playwright)
 ```
 
+### Test Data Requirements (CRITICAL)
+- **MANDATORY**: All E2E tests require seeded test data to run properly
+- **MANDATORY**: Database must be seeded with fixtures before running E2E tests
+- **MANDATORY**: Test fixtures include users, characters, messages, friend requests, and friendships
+- **ALWAYS**: Load fixtures before running E2E tests using: `pipenv run python manage.py loaddata app/fixtures/categories_fixtures.json app/fixtures/games_fixtures.json app/fixtures/users_and_characters.json`
+- **ALWAYS**: Use script: `pnpm load:fixtures` or `.\load_fixtures.ps1` (Windows) / `./load_fixtures.sh` (Unix)
+- Test users available:
+  - `testuser` / `testpass123` - Main test user with multiple characters
+  - `otheruser` / `pass` - Secondary test user
+  - `privateuser` / `testpass123` - User with private profile
+
 ### Before Every Commit
-- [ ] All Playwright tests pass
+- [ ] All Playwright tests pass (with seeded data)
 - [ ] New features have Playwright tests
+- [ ] Database fixtures are up to date
 - [ ] No console errors
 - [ ] ESLint passes
 - [ ] TypeScript compiles without errors

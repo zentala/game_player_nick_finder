@@ -26,7 +26,16 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+Write-Host "Loading users and characters fixtures..." -ForegroundColor Yellow
+pipenv run python manage.py loaddata app/fixtures/users_and_characters.json
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: Failed to load users and characters fixtures" -ForegroundColor Red
+    exit 1
+}
+
 Write-Host "`nAll fixtures loaded successfully!" -ForegroundColor Green
 Write-Host "  - Categories: 7 objects" -ForegroundColor Cyan
 Write-Host "  - Games: 17 objects" -ForegroundColor Cyan
+Write-Host "  - Users, Characters, Messages, Friend Requests, Friendships" -ForegroundColor Cyan
 

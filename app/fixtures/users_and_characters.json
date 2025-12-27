@@ -17,6 +17,14 @@
       "facebook": "https://facebook.com/oldschool_gamer",
       "twitch": "https://twitch.tv/oldschool_gamer",
       "gender": "MALE",
+      "profile_visibility": "PUBLIC",
+      "profile_bio": "Veteran gamer since 2005. Love MMORPGs and strategy games.",
+      "steam_profile": "https://steamcommunity.com/id/oldschool_gamer",
+      "github_profile": "https://github.com/oldschool_gamer",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
       "groups": [],
       "user_permissions": []
     }
@@ -39,6 +47,14 @@
       "facebook": "https://facebook.com/pro_gamer_girl",
       "twitch": "https://twitch.tv/pro_gamer_girl",
       "gender": "FEMALE",
+      "profile_visibility": "PUBLIC",
+      "profile_bio": "Professional gamer and speedrunner. Multiple world records holder.",
+      "steam_profile": "https://steamcommunity.com/id/pro_gamer_girl",
+      "github_profile": "",
+      "youtube_channel": "https://youtube.com/@pro_gamer_girl",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
       "groups": [],
       "user_permissions": []
     }
@@ -61,6 +77,14 @@
       "facebook": "https://facebook.com/zentala",
       "twitch": "https://twitch.tv/zentala",
       "gender": "MALE",
+      "profile_visibility": "PUBLIC",
+      "profile_bio": "Game developer and gaming enthusiast. Creator of this platform.",
+      "steam_profile": "https://steamcommunity.com/id/zentala",
+      "github_profile": "https://github.com/zentala",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
       "groups": [],
       "user_permissions": []
     }
@@ -83,6 +107,104 @@
       "facebook": "",
       "twitch": "",
       "gender": "MALE",
+      "profile_visibility": "PUBLIC",
+      "profile_bio": "Casual gamer, just here to have fun!",
+      "steam_profile": "",
+      "github_profile": "",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.customuser",
+    "pk": "82918bec-16b5-494d-84f8-10fc7de1a0fb",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$dorg90gfawta10j0g2nxNK$Cq1E7wYagpUUqxWxH+Vg4LwSKEp7KKC47VlWrMDCBIA=",
+      "last_login": "2024-03-20T10:00:00Z",
+      "is_superuser": false,
+      "username": "testuser",
+      "first_name": "Test",
+      "last_name": "User",
+      "email": "testuser@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-10T10:00:00Z",
+      "birthday": "1995-06-15",
+      "facebook": "https://facebook.com/testuser",
+      "twitch": "https://twitch.tv/testuser",
+      "gender": "MALE",
+      "profile_visibility": "PUBLIC",
+      "profile_bio": "Test user for E2E testing. I play multiple games and love connecting with old gaming friends.",
+      "steam_profile": "https://steamcommunity.com/id/testuser",
+      "github_profile": "https://github.com/testuser",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [{"name": "Personal Website", "url": "https://testuser.example.com"}],
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.customuser",
+    "pk": "193627ae-3456-42b9-8ecc-27cb8dfc4759",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$35oH7qaTBORxLdpafbDGwD$NUrlbyEAr4LDEFGh0ZOerVVcECfWMtjfx98mMxrqqzg=",
+      "last_login": "2024-03-20T09:00:00Z",
+      "is_superuser": false,
+      "username": "otheruser",
+      "first_name": "Other",
+      "last_name": "User",
+      "email": "otheruser@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-11T10:00:00Z",
+      "birthday": "1992-08-20",
+      "facebook": "",
+      "twitch": "",
+      "gender": "FEMALE",
+      "profile_visibility": "FRIENDS_ONLY",
+      "profile_bio": "Another test user for E2E testing scenarios.",
+      "steam_profile": "",
+      "github_profile": "",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.customuser",
+    "pk": "9ac9410c-0fc8-48dd-970d-e79d2a0c158a",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$dorg90gfawta10j0g2nxNK$Cq1E7wYagpUUqxWxH+Vg4LwSKEp7KKC47VlWrMDCBIA=",
+      "last_login": "2024-03-19T15:00:00Z",
+      "is_superuser": false,
+      "username": "privateuser",
+      "first_name": "Private",
+      "last_name": "User",
+      "email": "privateuser@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-01-12T10:00:00Z",
+      "birthday": "1988-04-10",
+      "facebook": "",
+      "twitch": "",
+      "gender": "MALE",
+      "profile_visibility": "PRIVATE",
+      "profile_bio": "This profile is private for testing purposes.",
+      "steam_profile": "",
+      "github_profile": "",
+      "youtube_channel": "",
+      "stackoverflow_profile": "",
+      "linkedin_profile": "",
+      "custom_links": [],
       "groups": [],
       "user_permissions": []
     }
@@ -218,6 +340,181 @@
     }
   },
   {
+    "model": "app.character",
+    "pk": "15f97226-ca54-4e26-8e18-37be99014caa",
+    "fields": {
+      "user": "82918bec-16b5-494d-84f8-10fc7de1a0fb",
+      "game": 1,
+      "nickname": "my-character-123",
+      "hash_id": "myhash",
+      "description": "My main character for testing",
+      "year_started": 2015,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "791e73a0-7940-4a78-abf3-f4ca2d02708b",
+    "fields": {
+      "user": "82918bec-16b5-494d-84f8-10fc7de1a0fb",
+      "game": 3,
+      "nickname": "test-character-123",
+      "hash_id": "testhash",
+      "description": "Test character for E2E tests",
+      "year_started": 2018,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "721cea2d-d4b4-419b-a0ec-9e3d01c1312e",
+    "fields": {
+      "user": "82918bec-16b5-494d-84f8-10fc7de1a0fb",
+      "game": 1,
+      "nickname": "character-with-bio-123",
+      "hash_id": "hash",
+      "description": "Character with custom bio profile",
+      "year_started": 2010,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "54af8821-f2ac-441a-b155-90f794ac885e",
+    "fields": {
+      "user": "82918bec-16b5-494d-84f8-10fc7de1a0fb",
+      "game": 2,
+      "nickname": "new-character-123",
+      "hash_id": "newhash",
+      "description": "New character without profile",
+      "year_started": 2023,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+    "fields": {
+      "user": "193627ae-3456-42b9-8ecc-27cb8dfc4759",
+      "game": 1,
+      "nickname": "other-char-123",
+      "hash_id": "otherhash",
+      "description": "Other user's character",
+      "year_started": 2016,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.character",
+    "pk": "532a9344-9c1b-4312-b665-ef3ae9277db4",
+    "fields": {
+      "user": "9ac9410c-0fc8-48dd-970d-e79d2a0c158a",
+      "game": 2,
+      "nickname": "private-char-123",
+      "hash_id": "privatehash",
+      "description": "Private user's character",
+      "year_started": 2017,
+      "year_ended": null
+    }
+  },
+  {
+    "model": "app.characterprofile",
+    "pk": 1,
+    "fields": {
+      "character": "721cea2d-d4b4-419b-a0ec-9e3d01c1312e",
+      "custom_bio": "This is my custom bio for my character. I've been playing this character since 2010 and have many great memories!",
+      "custom_images": [],
+      "screenshots": [],
+      "memories": [],
+      "is_public": true,
+      "updated_at": "2024-03-20T10:00:00Z"
+    }
+  },
+  {
+    "model": "app.characterprofile",
+    "pk": 2,
+    "fields": {
+      "character": "66de8400-e29b-41d4-a716-446655440007",
+      "custom_bio": "Zentaur - My main healer since vanilla WoW. Countless raids and adventures!",
+      "custom_images": [],
+      "screenshots": [],
+      "memories": [],
+      "is_public": true,
+      "updated_at": "2024-03-20T09:00:00Z"
+    }
+  },
+  {
+    "model": "app.characterfriend",
+    "pk": 1,
+    "fields": {
+      "character1": "66de8400-e29b-41d4-a716-446655440002",
+      "character2": "66de8400-e29b-41d4-a716-446655440007",
+      "created_at": "2024-03-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "app.characterfriend",
+    "pk": 2,
+    "fields": {
+      "character1": "66de8400-e29b-41d4-a716-446655440005",
+      "character2": "66de8400-e29b-41d4-a716-446655440009",
+      "created_at": "2024-03-16T11:00:00Z"
+    }
+  },
+  {
+    "model": "app.characterfriend",
+    "pk": 3,
+    "fields": {
+      "character1": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "character2": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+      "created_at": "2024-03-18T14:00:00Z"
+    }
+  },
+  {
+    "model": "app.characterfriendrequest",
+    "pk": 1,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440000",
+      "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "sent_date": "2024-03-20T08:00:00Z",
+      "status": "PENDING",
+      "message": "Hey! I remember playing together in WoW. Let's reconnect!"
+    }
+  },
+  {
+    "model": "app.characterfriendrequest",
+    "pk": 2,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440001",
+      "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "sent_date": "2024-03-19T15:00:00Z",
+      "status": "PENDING",
+      "message": "Would love to add you as a friend!"
+    }
+  },
+  {
+    "model": "app.characterfriendrequest",
+    "pk": 3,
+    "fields": {
+      "sender_character": "791e73a0-7940-4a78-abf3-f4ca2d02708b",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440003",
+      "sent_date": "2024-03-17T12:00:00Z",
+      "status": "ACCEPTED",
+      "message": ""
+    }
+  },
+  {
+    "model": "app.characterfriendrequest",
+    "pk": 4,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440008",
+      "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "sent_date": "2024-03-16T10:00:00Z",
+      "status": "DECLINED",
+      "message": "Add me please!"
+    }
+  },
+  {
     "model": "app.message",
     "pk": 1,
     "fields": {
@@ -225,7 +522,11 @@
       "receiver_character": "66de8400-e29b-41d4-a716-446655440002",
       "content": "Hey HealingMaster! I remember you from the old Molten Core raids. Still healing these days?",
       "sent_date": "2024-03-20T10:00:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440000"
+      "thread_id": "880e8400-e29b-41d4-a716-446655440000",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-20T10:05:00Z"
     }
   },
   {
@@ -236,51 +537,146 @@
       "receiver_character": "66de8400-e29b-41d4-a716-446655440007",
       "content": "Zentaur! Those were the days! I actually stopped playing in 2015, but I miss the raid healing.",
       "sent_date": "2024-03-20T10:05:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440000"
+      "thread_id": "880e8400-e29b-41d4-a716-446655440000",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-20T10:10:00Z"
     }
   },
   {
     "model": "app.message",
     "pk": 3,
     "fields": {
-      "sender_character": "66de8400-e29b-41d4-a716-446655440009",
-      "receiver_character": "66de8400-e29b-41d4-a716-446655440005",
-      "content": "Hey PolandMafia*! Nice moves in that last game. You almost got me!",
-      "sent_date": "2024-03-20T11:00:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440001"
+      "sender_character": "66de8400-e29b-41d4-a716-446655440007",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440002",
+      "content": "Maybe we should start playing again? I'm back on the game since last month!",
+      "sent_date": "2024-03-20T10:15:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440000",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": false,
+      "read_at": null
     }
   },
   {
     "model": "app.message",
     "pk": 4,
     "fields": {
-      "sender_character": "66de8400-e29b-41d4-a716-446655440005",
-      "receiver_character": "66de8400-e29b-41d4-a716-446655440009",
-      "content": "Thanks BobTheBlob! Yeah, that was a close one. Let's team up next time!",
-      "sent_date": "2024-03-20T11:05:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440001"
+      "sender_character": "66de8400-e29b-41d4-a716-446655440009",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440005",
+      "content": "Hey PolandMafia*! Nice moves in that last game. You almost got me!",
+      "sent_date": "2024-03-20T11:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440001",
+      "privacy_mode": "ANONYMOUS",
+      "identity_revealed": false,
+      "is_read": true,
+      "read_at": "2024-03-20T11:10:00Z"
     }
   },
   {
     "model": "app.message",
     "pk": 5,
     "fields": {
-      "sender_character": "66de8400-e29b-41d4-a716-446655440008",
-      "receiver_character": "66de8400-e29b-41d4-a716-446655440003",
-      "content": "Hi SpeedRunner! Saw your amazing speedrun yesterday. Any tips for a beginner?",
-      "sent_date": "2024-03-20T12:00:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440002"
+      "sender_character": "66de8400-e29b-41d4-a716-446655440005",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440009",
+      "content": "Thanks BobTheBlob! Yeah, that was a close one. Let's team up next time!",
+      "sent_date": "2024-03-20T11:05:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440001",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-20T11:15:00Z"
     }
   },
   {
     "model": "app.message",
     "pk": 6,
     "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440008",
+      "receiver_character": "66de8400-e29b-41d4-a716-446655440003",
+      "content": "Hi SpeedRunner! Saw your amazing speedrun yesterday. Any tips for a beginner?",
+      "sent_date": "2024-03-20T12:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440002",
+      "privacy_mode": "ANONYMOUS",
+      "identity_revealed": false,
+      "is_read": true,
+      "read_at": "2024-03-20T12:30:00Z"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 7,
+    "fields": {
       "sender_character": "66de8400-e29b-41d4-a716-446655440003",
       "receiver_character": "66de8400-e29b-41d4-a716-446655440008",
       "content": "Thanks ZenMage! Sure, I can show you some basic tricks. When are you usually online?",
       "sent_date": "2024-03-20T12:05:00Z",
-      "thread_id": "880e8400-e29b-41d4-a716-446655440002"
+      "thread_id": "880e8400-e29b-41d4-a716-446655440002",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": false,
+      "read_at": null
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 8,
+    "fields": {
+      "sender_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "receiver_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+      "content": "Hey other-char-123! Great game yesterday! Want to play again soon?",
+      "sent_date": "2024-03-19T14:00:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440003",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-19T14:30:00Z"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 9,
+    "fields": {
+      "sender_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+      "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "content": "Absolutely! I had a lot of fun. How about this weekend?",
+      "sent_date": "2024-03-19T14:15:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440003",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-19T14:45:00Z"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 10,
+    "fields": {
+      "sender_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "receiver_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+      "content": "Perfect! Saturday evening works for me. See you then!",
+      "sent_date": "2024-03-19T14:20:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440003",
+      "privacy_mode": "REVEAL_IDENTITY",
+      "identity_revealed": true,
+      "is_read": true,
+      "read_at": "2024-03-19T14:50:00Z"
+    }
+  },
+  {
+    "model": "app.message",
+    "pk": 11,
+    "fields": {
+      "sender_character": "66de8400-e29b-41d4-a716-446655440000",
+      "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+      "content": "Hello! I saw your character and remembered playing together years ago. Would you like to reconnect?",
+      "sent_date": "2024-03-20T08:30:00Z",
+      "thread_id": "880e8400-e29b-41d4-a716-446655440004",
+      "privacy_mode": "ANONYMOUS",
+      "identity_revealed": false,
+      "is_read": false,
+      "read_at": null
     }
   }
 ]

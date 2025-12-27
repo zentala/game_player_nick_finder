@@ -28,8 +28,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "Loading users and characters fixtures..."
+pipenv run python manage.py loaddata app/fixtures/users_and_characters.json
+
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to load users and characters fixtures"
+    exit 1
+fi
+
 echo ""
 echo "All fixtures loaded successfully!"
 echo "  - Categories: 7 objects"
 echo "  - Games: 17 objects"
+echo "  - Users, Characters, Messages, Friend Requests, Friendships"
 
