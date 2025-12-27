@@ -1,0 +1,78 @@
+{% load i18n %}
+
+<div class="user-profile-display">
+  <div class="row mb-4">
+    <div class="col-md-3">
+      {% if profile_user.profile_picture %}
+        <img src="{{ profile_user.profile_picture.url }}" alt="{{ profile_user.username }}" 
+             class="img-fluid rounded mb-3">
+      {% else %}
+        <div class="bg-secondary rounded mb-3" style="width: 200px; height: 200px;"></div>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+      <h2>{{ profile_user.username }}</h2>
+      {% if profile_user.profile_bio %}
+        <p class="lead">{{ profile_user.profile_bio }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Social Media Links #}
+  {% if profile_user.steam_profile or profile_user.github_profile or profile_user.youtube_channel or profile_user.linkedin_profile or profile_user.stackoverflow_profile %}
+    <div class="mb-4">
+      <h4>{% trans "Links" %}</h4>
+      <div class="d-flex flex-wrap gap-2">
+        {% if profile_user.steam_profile %}
+          <a href="{{ profile_user.steam_profile }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-steam"></i> Steam
+          </a>
+        {% endif %}
+        {% if profile_user.github_profile %}
+          <a href="{{ profile_user.github_profile }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-github"></i> GitHub
+          </a>
+        {% endif %}
+        {% if profile_user.youtube_channel %}
+          <a href="{{ profile_user.youtube_channel }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-youtube"></i> YouTube
+          </a>
+        {% endif %}
+        {% if profile_user.linkedin_profile %}
+          <a href="{{ profile_user.linkedin_profile }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-linkedin"></i> LinkedIn
+          </a>
+        {% endif %}
+        {% if profile_user.stackoverflow_profile %}
+          <a href="{{ profile_user.stackoverflow_profile }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-stack-overflow"></i> Stack Overflow
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  {# Characters #}
+  {% if user_characters %}
+    <div class="mb-4">
+      <h4>{% trans "Characters" %}</h4>
+      <div class="row">
+        {% for character in user_characters %}
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ character.nickname }}</h5>
+                <p class="text-muted">{{ character.game.name }}</p>
+                <a href="{% url 'character_detail' nickname=character.nickname hash_id=character.hash_id %}" 
+                   class="btn btn-sm btn-primary">
+                  {% trans "View" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
