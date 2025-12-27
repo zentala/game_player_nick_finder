@@ -35,7 +35,16 @@ python manage.py loaddata app/fixtures/users_and_characters.json
 # Tworzenie superusera tylko gdy podano parametr --create-superuser
 if [[ "$1" == "--create-superuser" ]]; then
     echo "👤 Creating superuser..."
-    python manage.py createsuperuser
+    # Use the new create_superuser script in auto mode
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    CREATE_SUPERUSER_SCRIPT="$PROJECT_ROOT/create_superuser.sh"
+    
+    if [[ -f "$CREATE_SUPERUSER_SCRIPT" ]]; then
+        bash "$CREATE_SUPERUSER_SCRIPT" --auto
+    else
+        python manage.py createsuperuser
+    fi
 else
     echo "ℹ️ Skipping superuser creation (use --create-superuser to create one)"
 fi

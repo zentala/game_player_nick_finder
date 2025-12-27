@@ -27,6 +27,7 @@ db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
+# Note: migrations/ should NOT be ignored - they must be committed!
 
 # Virtual Environment
 venv/
@@ -44,6 +45,18 @@ env/
 # Environment
 .env
 .env.local
+.env.*.local
+.env.production
+# Secret files
+*.secret
+*.key
+# Config files (local only)
+*.cfg
+*.conf
+*.ini
+
+# Local development data (not committed)
+.dot/
 
 # Node / Playwright
 node_modules/
@@ -51,6 +64,19 @@ playwright-report/
 test-results/
 playwright/.cache/
 playwright/.ms-playwright/
+# Note: yarn.lock and package-lock.json should be committed
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+*.cover
+
+# PM2 (local config, not committed)
+ecosystem.config.js
+# Note: ecosystem.config.js.wsgi and ecosystem.config.js.manage are templates and should be committed
 
 # OS
 .DS_Store

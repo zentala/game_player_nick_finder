@@ -164,6 +164,113 @@ tests/
 - [ ] ESLint passes
 - [ ] TypeScript compiles without errors
 
+## Database Seeding and Superuser Management (CRITICAL)
+
+### Seeding Scripts Overview
+The project uses automated seeding scripts that load fixtures AND automatically create superuser accounts. All seeding scripts are integrated with the superuser creation system.
+
+### Available Seeding Scripts
+
+#### Cross-Platform Scripts
+- **`pnpm load:fixtures`** - Cross-platform script (calls appropriate platform-specific script)
+- **`scripts/load-fixtures.js`** - Node.js wrapper that detects OS and calls correct script
+
+#### Windows (PowerShell)
+- **`load_fixtures.ps1`** - Main seeding script for Windows
+  - Loads: categories, games, users and characters fixtures
+  - **AUTOMATICALLY** creates superuser after loading fixtures (if `.dot/sudo_user` exists)
+
+#### Unix/Linux/MacOS (Bash)
+- **`load_fixtures.sh`** - Main seeding script for Unix systems
+  - Loads: categories, games, users and characters fixtures
+  - **AUTOMATICALLY** creates superuser after loading fixtures (if `.dot/sudo_user` exists)
+
+#### Additional Seeding Scripts
+- **`scripts/first_time_seed.sh`** - First-time deployment seeding (production)
+  - Checks if database is empty before seeding
+  - **AUTOMATICALLY** creates superuser after seeding (if `.dot/sudo_user` exists)
+- **`scripts/reset_db.sh --create-superuser`** - Database reset with superuser creation
+  - Uses `create_superuser.sh --auto` when available
+
+### Superuser Creation System
+
+#### How It Works
+1. **First Time Setup**: User runs `create_superuser.ps1` (Windows) or `create_superuser.sh` (Unix)
+   - Script prompts for: username, email, password
+   - Saves credentials to `.dot/sudo_user` (in `.gitignore`, never committed)
+   - Creates superuser in database
+
+2. **Automatic Mode**: All seeding scripts automatically call superuser creation in `--auto` mode
+   - Reads credentials from `.dot/sudo_user`
+   - Creates superuser if it doesn't exist
+   - Skips if user already exists (returns success)
+   - If `.dot/sudo_user` doesn't exist, shows helpful message
+
+#### Superuser Scripts
+- **`create_superuser.ps1`** (Windows) - Interactive or auto mode
+  - Usage: `.\create_superuser.ps1` (interactive) or `.\create_superuser.ps1 --auto` (automatic)
+- **`create_superuser.sh`** (Unix) - Interactive or auto mode
+  - Usage: `./create_superuser.sh` (interactive) or `./create_superuser.sh --auto` (automatic)
+- **`scripts/create_superuser.py`** - Python script used by both shell scripts
+  - Creates superuser via Django ORM
+  - Returns success if user already exists (idempotent)
+
+#### Credentials Storage
+- **Location**: `.dot/sudo_user` (in project root)
+- **Format**:
+  ```
+  username: your_username
+  email: your@email.com
+  password: your_password
+  ```
+- **Security**: File is in `.gitignore`, never committed to repository
+- **Purpose**: Allows automatic superuser creation during seeding
+
+### Integration with Seeding Scripts
+
+**CRITICAL**: All seeding scripts automatically create superuser after loading fixtures:
+1. `load_fixtures.ps1` / `load_fixtures.sh` - After loading all fixtures
+2. `scripts/first_time_seed.sh` - After first-time seeding
+3. `scripts/reset_db.sh --create-superuser` - After database reset
+
+**Workflow**:
+1. User runs seeding script (e.g., `.\load_fixtures.ps1`)
+2. Script loads all fixtures (categories, games, users, characters)
+3. Script automatically calls `create_superuser.ps1 --auto` (or `.sh --auto`)
+4. If `.dot/sudo_user` exists, superuser is created/verified
+5. If `.dot/sudo_user` doesn't exist, script shows message to run `create_superuser.ps1` first
+
+### Important Rules for Agents
+
+- **ALWAYS**: When modifying seeding scripts, ensure superuser creation is called after fixtures are loaded
+- **ALWAYS**: Use `--auto` flag when calling superuser scripts from other scripts
+- **ALWAYS**: Check if `.dot/sudo_user` exists before attempting automatic creation
+- **NEVER**: Commit `.dot/sudo_user` file (it's in `.gitignore`)
+- **NEVER**: Hardcode superuser credentials in scripts
+- **ALWAYS**: Make superuser creation idempotent (safe to run multiple times)
+- **ALWAYS**: Return success if user already exists (don't treat as error)
+
+### Example Usage
+
+```powershell
+# First time setup (Windows)
+.\create_superuser.ps1  # Prompts for credentials, saves to .dot/sudo_user
+
+# Load fixtures (automatically creates superuser)
+.\load_fixtures.ps1  # Loads fixtures + creates superuser automatically
+
+# Or use cross-platform script
+pnpm load:fixtures  # Works on both Windows and Unix
+```
+
+```bash
+# First time setup (Unix)
+./create_superuser.sh  # Prompts for credentials, saves to .dot/sudo_user
+
+# Load fixtures (automatically creates superuser)
+./load_fixtures.sh  # Loads fixtures + creates superuser automatically
+```
+
 ## Technology Stack (Future Migration)
 
 ### Target Stack (Cloudflare Migration)

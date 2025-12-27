@@ -39,3 +39,23 @@ Write-Host "  - Categories: 7 objects" -ForegroundColor Cyan
 Write-Host "  - Games: 17 objects" -ForegroundColor Cyan
 Write-Host "  - Users, Characters, Messages, Friend Requests, Friendships" -ForegroundColor Cyan
 
+# Create superuser automatically if credentials file exists
+Write-Host "`nCreating superuser..." -ForegroundColor Yellow
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if (-not $scriptDir) {
+    $scriptDir = Get-Location
+}
+
+$createSuperuserScript = Join-Path $scriptDir "create_superuser.ps1"
+if (Test-Path $createSuperuserScript) {
+    & $createSuperuserScript -Auto
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Superuser created/verified successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "Note: Superuser creation skipped (credentials file may not exist)" -ForegroundColor Yellow
+        Write-Host "Run '.\create_superuser.ps1' to create superuser manually" -ForegroundColor Cyan
+    }
+} else {
+    Write-Host "Note: create_superuser.ps1 not found. Skipping superuser creation." -ForegroundColor Yellow
+}
+

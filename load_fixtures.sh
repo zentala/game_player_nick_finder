@@ -42,3 +42,23 @@ echo "  - Categories: 7 objects"
 echo "  - Games: 17 objects"
 echo "  - Users, Characters, Messages, Friend Requests, Friendships"
 
+# Create superuser automatically if credentials file exists
+echo ""
+echo "Creating superuser..."
+
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CREATE_SUPERUSER_SCRIPT="$SCRIPT_DIR/create_superuser.sh"
+
+if [[ -f "$CREATE_SUPERUSER_SCRIPT" ]]; then
+    bash "$CREATE_SUPERUSER_SCRIPT" --auto
+    if [[ $? -eq 0 ]]; then
+        echo "Superuser created/verified successfully!"
+    else
+        echo "Note: Superuser creation skipped (credentials file may not exist)"
+        echo "Run './create_superuser.sh' to create superuser manually"
+    fi
+else
+    echo "Note: create_superuser.sh not found. Skipping superuser creation."
+fi
+

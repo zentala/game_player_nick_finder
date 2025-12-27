@@ -47,6 +47,24 @@ elif [ "$DB_CHECK" = "0" ]; then
   # Create a flag file to indicate seeding was done
   touch .db_seeded
   
+  # Create superuser automatically if credentials file exists
+  echo "  ↪ Creating superuser..."
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+  CREATE_SUPERUSER_SCRIPT="$PROJECT_ROOT/create_superuser.sh"
+  
+  if [[ -f "$CREATE_SUPERUSER_SCRIPT" ]]; then
+    bash "$CREATE_SUPERUSER_SCRIPT" --auto
+    if [[ $? -eq 0 ]]; then
+      echo "  ✅ Superuser created/verified successfully!"
+    else
+      echo "  ⚠️  Superuser creation skipped (credentials file may not exist)"
+      echo "     Run './create_superuser.sh' to create superuser manually"
+    fi
+  else
+    echo "  ⚠️  create_superuser.sh not found. Skipping superuser creation."
+  fi
+  
   echo "✅ Database seeding completed successfully!"
 else
   echo "🔄 Database already contains data. Skipping seeding."
