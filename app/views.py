@@ -544,36 +544,44 @@ class CharacterFriendListView(LoginRequiredMixin, ListView):
 	current_page = 'friends'
 	
 	def get_queryset(self):
-		character = get_object_or_404(
+		# Store character as instance variable for use in get_context_data
+		self.character = get_object_or_404(
 			Character,
 			nickname=self.kwargs['nickname'],
 			hash_id=self.kwargs['hash_id'],
 			user=self.request.user
 		)
 		
-		# Get friendships where character is either character1 or character2
-		friendships = CharacterFriend.objects.filter(
-			Q(character1=character) | Q(character2=character)
+		# Return QuerySet (not a list) - Django ListView requires QuerySet for pagination
+		return CharacterFriend.objects.filter(
+			Q(character1=self.character) | Q(character2=self.character)
 		).select_related('character1', 'character1__game', 'character2', 'character2__game')
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
 		
-		# Extract friend characters
-		friend_characters = []
-		for friendship in friendships:
+		# Get the character (either from instance variable or query)
+		character = getattr(self, 'character', None)
+		if not character:
+			character = get_object_or_404(
+				Character,
+				nickname=self.kwargs['nickname'],
+				hash_id=self.kwargs['hash_id']
+			)
+		
+		# Process friendships queryset/list into friend_data format expected by template
+		# self.object_list contains the queryset results (list if paginated, queryset otherwise)
+		friendships_list = list(self.object_list) if hasattr(self, 'object_list') else []
+		friend_data_list = []
+		for friendship in friendships_list:
 			friend_char = friendship.character2 if friendship.character1 == character else friendship.character1
-			friend_characters.append({
+			friend_data_list.append({
 				'character': friend_char,
 				'friendship': friendship
 			})
 		
-		return friend_characters
-	
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		character = get_object_or_404(
-			Character,
-			nickname=self.kwargs['nickname'],
-			hash_id=self.kwargs['hash_id']
-		)
+		# Replace friendships in context with processed list
+		context['friendships'] = friend_data_list
 		context['character'] = character
 		context['title'] = f'{character.nickname} - Friends'
 		context['back_url'] = reverse('character_detail', kwargs={
