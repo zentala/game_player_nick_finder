@@ -61,4 +61,3 @@ if [[ -f "$CREATE_SUPERUSER_SCRIPT" ]]; then
 else
     echo "Note: create_superuser.sh not found. Skipping superuser creation."
 fi
-

@@ -22,4 +22,3 @@ test.describe('Character Profile Display', () => {
     }
   });
 });
-

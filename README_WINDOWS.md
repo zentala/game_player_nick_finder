@@ -64,4 +64,3 @@ pipenv install --python 3.11
 pipenv run python manage.py migrate sites
 pipenv run python manage.py migrate
 ```
-

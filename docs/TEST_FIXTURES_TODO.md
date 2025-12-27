@@ -83,4 +83,3 @@ Fixtures loaded successfully:
 - Users, Characters, Messages, Friend Requests, Friendships: 43 objects
 
 All fixture data is correctly structured and loads without errors.
-

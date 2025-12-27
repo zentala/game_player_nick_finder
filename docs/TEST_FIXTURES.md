@@ -161,4 +161,3 @@ pipenv run python manage.py loaddata app/fixtures/users_and_characters.json
 - `categories_fixtures.json` - Game categories (7 objects)
 - `games_fixtures.json` - Games (17 objects)
 - `users_and_characters.json` - Users, Characters, Profiles, Friend Requests, Friendships, Messages (comprehensive test data)
-

@@ -163,4 +163,3 @@
 - Friend request and profile UIs need to be added
 - Migrations need to be created and applied
 - Tests need to be written according to TDD principles
-

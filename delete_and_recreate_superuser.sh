@@ -46,4 +46,3 @@ else
     echo "Error: Failed to recreate superuser"
     exit 1
 fi
-

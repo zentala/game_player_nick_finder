@@ -423,4 +423,3 @@ This project can be deployed to Render.com. We've added the necessary configurat
 7. Deploy the service and wait for the build to complete
 
 Render will automatically set up a PostgreSQL database and connect it to your application.
-

@@ -79,4 +79,3 @@ def fix_all_users():
 if __name__ == '__main__':
     success = fix_all_users()
     sys.exit(0 if success else 1)
-

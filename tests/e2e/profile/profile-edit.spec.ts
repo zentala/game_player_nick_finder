@@ -42,4 +42,3 @@ test.describe('Profile Edit', () => {
     await expect(page.locator('textarea[name="profile_bio"]')).toHaveValue('My gaming journey started in 2005...');
   });
 });
-

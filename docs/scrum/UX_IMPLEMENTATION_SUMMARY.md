@@ -117,4 +117,3 @@ Ten dokument zawiera:
 **Data utworzenia**: 2024  
 **Autor**: UX Engineer + Software Architect  
 **Status**: Gotowe do wdrożenia
-

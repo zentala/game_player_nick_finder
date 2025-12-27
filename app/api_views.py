@@ -171,4 +171,3 @@ class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
             Q(friends_as_character2__character1__in=user_characters)
         )
         return friend_characters.values_list('user_id', flat=True).distinct()
-

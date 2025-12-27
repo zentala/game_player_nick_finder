@@ -58,4 +58,3 @@ if (Test-Path $createSuperuserScript) {
 } else {
     Write-Host "Note: create_superuser.ps1 not found. Skipping superuser creation." -ForegroundColor Yellow
 }
-

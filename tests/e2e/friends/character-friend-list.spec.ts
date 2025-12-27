@@ -50,4 +50,3 @@ test.describe('Character Friend List', () => {
     }
   });
 });
-

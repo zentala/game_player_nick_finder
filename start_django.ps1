@@ -22,4 +22,3 @@ if ($LASTEXITCODE -ne 0) {
 # Run Django server
 Write-Host "Starting Django development server..." -ForegroundColor Green
 pipenv run python manage.py runserver
-

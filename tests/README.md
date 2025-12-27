@@ -99,4 +99,3 @@ See [TEST_FIXTURES.md](../docs/TEST_FIXTURES.md) for complete fixture documentat
 - Some tests check for conditional visibility (if elements exist)
 - Adjust test data URLs based on your fixtures
 - If you get unique constraint errors, flush database first: `pipenv run python manage.py flush --noinput`
-

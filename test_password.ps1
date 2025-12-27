@@ -37,4 +37,3 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "`nPassword authentication failed!" -ForegroundColor Red
     exit 1
 }
-

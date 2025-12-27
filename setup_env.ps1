@@ -34,4 +34,3 @@ Write-Host "`nSetup complete! You can now:" -ForegroundColor Green
 Write-Host "  1. Run '.\start_django.ps1' to start the development server" -ForegroundColor Cyan
 Write-Host "  2. Run 'pipenv run python manage.py createsuperuser' to create an admin user" -ForegroundColor Cyan
 Write-Host "  3. Run 'pipenv run python manage.py loaddata app/fixtures/categories_fixtures.json' to load fixtures" -ForegroundColor Cyan
-

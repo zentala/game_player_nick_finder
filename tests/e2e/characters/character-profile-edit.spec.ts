@@ -36,4 +36,3 @@ test.describe('Character Profile Edit', () => {
     await expect(page).toHaveURL(/\/character\/.+\/.+\/?$/);
   });
 });
-

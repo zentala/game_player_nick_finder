@@ -54,4 +54,3 @@ test.describe('User Profile Display', () => {
     }
   });
 });
-

@@ -51,4 +51,3 @@ if __name__ == '__main__':
     password = sys.argv[2]
     success = test_password(username, password)
     sys.exit(0 if success else 1)
-

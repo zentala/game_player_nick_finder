@@ -22,4 +22,3 @@ try {
   console.error('Error loading fixtures:', error.message);
   process.exit(1);
 }
-

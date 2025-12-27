@@ -157,4 +157,3 @@ else
     echo "Error: Failed to create superuser"
     exit 1
 fi
-

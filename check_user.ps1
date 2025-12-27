@@ -32,4 +32,3 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "`nError: Failed to check user" -ForegroundColor Red
     exit 1
 }
-

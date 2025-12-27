@@ -70,4 +70,3 @@ if __name__ == '__main__':
     username = sys.argv[1]
     success = check_user(username)
     sys.exit(0 if success else 1)
-

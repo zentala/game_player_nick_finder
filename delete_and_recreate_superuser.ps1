@@ -47,4 +47,3 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "`nError: Failed to recreate superuser" -ForegroundColor Red
     exit 1
 }
-
