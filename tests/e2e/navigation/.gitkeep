@@ -1,0 +1,9 @@
+# Navigation E2E Tests Directory
+
+This directory contains E2E tests for navigation menu links:
+- navbar-authenticated.spec.ts - Navbar links for logged-in users
+- navbar-unauthenticated.spec.ts - Navbar links for guest users
+- menu-navigation.spec.ts - Menu navigation flows
+
+See: docs/architecture/authentication-testing-architecture.md
+

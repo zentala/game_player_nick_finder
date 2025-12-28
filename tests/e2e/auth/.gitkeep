@@ -1,0 +1,11 @@
+# Authentication E2E Tests Directory
+
+This directory contains E2E tests for authentication flows:
+- login.spec.ts - Login flow tests
+- logout.spec.ts - Logout flow tests
+- signup.spec.ts - Registration flow tests
+- password-reset.spec.ts - Password reset flow tests
+- password-change.spec.ts - Password change flow tests
+
+See: docs/architecture/authentication-testing-architecture.md
+
