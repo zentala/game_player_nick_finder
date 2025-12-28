@@ -18,12 +18,13 @@ from django.db import IntegrityError
 from .forms import (
     AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm,
     CustomRegistrationForm, UserForm, MessageForm, ProposedGameForm,
-    CharacterFriendRequestForm, CharacterProfileForm
+    CharacterFriendRequestForm, CharacterProfileForm, PokeForm
 )
 from .models import (
     Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote,
-    CharacterFriend, CharacterFriendRequest, CharacterProfile
+    CharacterFriend, CharacterFriendRequest, CharacterProfile, Poke, PokeBlock
 )
+from .utils import can_send_poke, can_send_message
 
 
 
@@ -405,10 +406,20 @@ class CharacterView(BaseViewMixin, DetailView):
 				pending_request is None
 			)
 			
+			# Check if messaging is unlocked (mutual POKE exchange)
+			can_send_full_message = False
+			matching_character = None
+			if character.user != user and user_characters.exists():
+				matching_character = user_characters.filter(game=character.game).first()
+				if matching_character:
+					can_send_full_message, _ = can_send_message(matching_character, character)
+			
 			context['is_friend'] = is_friend
 			context['pending_request'] = pending_request
 			context['can_send_request'] = can_send_request
 			context['user_characters'] = user_characters  # For selecting which character sends request
+			context['can_send_full_message'] = can_send_full_message
+			context['matching_character'] = matching_character
 		
 		# Get character profile if exists
 		try:
@@ -922,10 +933,26 @@ class MessageListView(LoginRequiredMixin, ListView):
                     context['create_character_url'] = game_url
                 elif matching_characters.count() == 1:
                     # Jeśli użytkownik ma tylko jedną postać w tej samej grze
-                    context['sender_character'] = matching_characters.first()
+                    matching_char = matching_characters.first()
+                    context['sender_character'] = matching_char
+                    
+                    # Check if messaging is unlocked
+                    can_send, reason = can_send_message(matching_char, receiver_character)
+                    context['can_send_message'] = can_send
+                    if not can_send:
+                        context['suggest_poke'] = True
+                        context['poke_url'] = f"{reverse('send_poke')}?character={receiver_character.id}&sender_character={matching_char.id}"
                 elif sender_character_id and matching_characters.filter(id=sender_character_id).exists():
                     # Jeśli wybrano konkretną postać do wysyłania
-                    context['sender_character'] = matching_characters.get(id=sender_character_id)
+                    matching_char = matching_characters.get(id=sender_character_id)
+                    context['sender_character'] = matching_char
+                    
+                    # Check if messaging is unlocked
+                    can_send, reason = can_send_message(matching_char, receiver_character)
+                    context['can_send_message'] = can_send
+                    if not can_send:
+                        context['suggest_poke'] = True
+                        context['poke_url'] = f"{reverse('send_poke')}?character={receiver_character.id}&sender_character={matching_char.id}"
 
                 context['form'] = MessageForm(
                     user=self.request.user,
@@ -1077,6 +1104,15 @@ class SendMessageView(LoginRequiredMixin, FormView):
             messages.error(self.request, "You need to have a character in the same game to send messages.")
             return redirect('character_list')
 
+        # Check if messaging is unlocked (mutual POKE exchange)
+        can_send, reason = can_send_message(matching_character, receiver_character)
+        if not can_send:
+            messages.warning(
+                self.request,
+                _("You must exchange POKEs before sending messages. ") + str(reason)
+            )
+            return redirect(f"{reverse('send_poke')}?character={receiver_character.id}&sender_character={matching_character.id}")
+
         message.sender_character = matching_character
         thread_id = self.request.GET.get('thread_id')
 
@@ -1092,6 +1128,265 @@ class SendMessageView(LoginRequiredMixin, FormView):
             redirect_url += f"&thread_id={message.thread_id}"
 
         return redirect(redirect_url)
+
+
+### POKE System Views --------------------------------------
+
+class PokeListView(BaseViewMixin, LoginRequiredMixin, ListView):
+    """List received and sent POKEs"""
+    model = Poke
+    template_name = 'pokes/poke_list.html'
+    context_object_name = 'pokes'
+    paginate_by = 50
+    current_page = 'pokes'
+    
+    def get_queryset(self):
+        user_characters = Character.objects.filter(user=self.request.user)
+        status_filter = self.request.GET.get('status', 'all')
+        
+        # Get received POKEs
+        received_pokes = Poke.objects.filter(
+            receiver_character__in=user_characters
+        ).select_related('sender_character', 'sender_character__game', 'sender_character__user')
+        
+        # Get sent POKEs
+        sent_pokes = Poke.objects.filter(
+            sender_character__in=user_characters
+        ).select_related('receiver_character', 'receiver_character__game', 'receiver_character__user')
+        
+        # Filter by status
+        if status_filter == 'received':
+            queryset = received_pokes
+        elif status_filter == 'sent':
+            queryset = sent_pokes
+        elif status_filter == 'pending':
+            queryset = received_pokes.filter(status='PENDING')
+        else:
+            # Combine both, prioritizing received
+            queryset = received_pokes.union(sent_pokes, all=True)
+        
+        return queryset.order_by('-sent_date')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_characters = Character.objects.filter(user=self.request.user)
+        
+        # Count unread POKEs
+        unread_count = Poke.objects.filter(
+            receiver_character__in=user_characters,
+            is_read=False,
+            status='PENDING'
+        ).count()
+        
+        context['unread_count'] = unread_count
+        context['status_filter'] = self.request.GET.get('status', 'all')
+        context['title'] = _('POKEs')
+        context['content_template'] = 'pokes/poke_list_content.html'
+        return context
+
+
+class SendPokeView(BaseViewMixin, LoginRequiredMixin, FormView):
+    """Send POKE to a character"""
+    template_name = 'pokes/send_poke.html'
+    form_class = PokeForm
+    success_url = reverse_lazy('poke_list')
+    current_page = 'pokes'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        
+        # Get receiver character from URL
+        character_id = self.request.GET.get('character')
+        if character_id:
+            try:
+                receiver_character = Character.objects.get(id=character_id)
+                if not kwargs.get('initial'):
+                    kwargs['initial'] = {}
+                kwargs['initial']['receiver_character'] = receiver_character
+            except Character.DoesNotExist:
+                pass
+        
+        # Get sender character from URL or use first matching
+        sender_character_id = self.request.GET.get('sender_character')
+        if sender_character_id:
+            try:
+                sender_character = Character.objects.get(id=sender_character_id, user=self.request.user)
+                kwargs['sender_character'] = sender_character
+            except Character.DoesNotExist:
+                pass
+        
+        return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        character_id = self.request.GET.get('character')
+        if character_id:
+            try:
+                context['receiver_character'] = Character.objects.get(id=character_id)
+            except Character.DoesNotExist:
+                pass
+        
+        # Get user's characters for selection
+        context['user_characters'] = Character.objects.filter(user=self.request.user)
+        
+        # Check rate limits
+        from django.utils import timezone
+        from datetime import timedelta
+        from django.conf import settings
+        yesterday = timezone.now() - timedelta(days=1)
+        today_poke_count = Poke.objects.filter(
+            sender_character__user=self.request.user,
+            sent_date__gte=yesterday
+        ).count()
+        max_per_day = getattr(settings, 'POKE_MAX_PER_USER_PER_DAY', 5)
+        context['pokes_remaining'] = max(0, max_per_day - today_poke_count)
+        context['max_per_day'] = max_per_day
+        
+        return context
+    
+    def form_valid(self, form):
+        poke = form.save()
+        messages.success(self.request, _("POKE sent successfully!"))
+        return redirect('poke_list')
+
+
+class PokeDetailView(BaseViewMixin, LoginRequiredMixin, DetailView):
+    """View POKE details"""
+    model = Poke
+    template_name = 'pokes/poke_detail.html'
+    context_object_name = 'poke'
+    pk_url_kwarg = 'poke_id'
+    current_page = 'pokes'
+    
+    def get_queryset(self):
+        user_characters = Character.objects.filter(user=self.request.user)
+        return Poke.objects.filter(
+            models.Q(sender_character__in=user_characters) |
+            models.Q(receiver_character__in=user_characters)
+        ).select_related('sender_character', 'receiver_character', 'sender_character__game', 'receiver_character__game')
+    
+    def get_object(self, queryset=None):
+        poke = super().get_object(queryset)
+        # Mark as read if user is receiver
+        user_characters = Character.objects.filter(user=self.request.user)
+        if poke.receiver_character in user_characters and not poke.is_read:
+            poke.is_read = True
+            from django.utils import timezone
+            poke.read_at = timezone.now()
+            poke.save(update_fields=['is_read', 'read_at'])
+        return poke
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_characters = Character.objects.filter(user=self.request.user)
+        poke = self.get_object()
+        
+        # Check if user can respond (is receiver and status is PENDING)
+        context['can_respond'] = (
+            poke.receiver_character in user_characters and
+            poke.status == 'PENDING'
+        )
+        
+        # Check if user is sender
+        context['is_sender'] = poke.sender_character in user_characters
+        
+        return context
+
+
+class RespondPokeView(LoginRequiredMixin, View):
+    """Respond to POKE by sending POKE back"""
+    def post(self, request, poke_id):
+        poke = get_object_or_404(
+            Poke.objects.select_related('sender_character', 'receiver_character'),
+            id=poke_id
+        )
+        
+        # Verify user is receiver
+        user_characters = Character.objects.filter(user=request.user)
+        if poke.receiver_character not in user_characters:
+            raise PermissionDenied("You can only respond to POKEs sent to your characters")
+        
+        if poke.status != 'PENDING':
+            messages.error(request, _("This POKE has already been handled."))
+            return redirect('poke_detail', poke_id=poke_id)
+        
+        # Create response POKE
+        try:
+            response_poke = Poke.objects.create(
+                sender_character=poke.receiver_character,
+                receiver_character=poke.sender_character,
+                content=_("Hello! I received your POKE."),  # Default response, can be customized later
+                status='RESPONDED'
+            )
+            
+            # Mark original POKE as responded
+            from django.utils import timezone
+            poke.status = 'RESPONDED'
+            poke.responded_at = timezone.now()
+            poke.save(update_fields=['status', 'responded_at'])
+            
+            messages.success(request, _("POKE sent! You can now send full messages."))
+        except IntegrityError:
+            messages.error(request, _("You have already sent a POKE to this character."))
+        
+        return redirect('poke_list')
+
+
+class IgnorePokeView(LoginRequiredMixin, View):
+    """Ignore a POKE"""
+    def post(self, request, poke_id):
+        poke = get_object_or_404(Poke, id=poke_id)
+        
+        # Verify user is receiver
+        user_characters = Character.objects.filter(user=request.user)
+        if poke.receiver_character not in user_characters:
+            raise PermissionDenied("You can only ignore POKEs sent to your characters")
+        
+        if poke.status != 'PENDING':
+            messages.error(request, _("This POKE has already been handled."))
+            return redirect('poke_detail', poke_id=poke_id)
+        
+        poke.status = 'IGNORED'
+        poke.save(update_fields=['status'])
+        messages.info(request, _("POKE ignored."))
+        
+        return redirect('poke_list')
+
+
+class BlockPokeView(LoginRequiredMixin, View):
+    """Block a sender and optionally report as spam"""
+    def post(self, request, poke_id):
+        poke = get_object_or_404(
+            Poke.objects.select_related('sender_character', 'receiver_character'),
+            id=poke_id
+        )
+        
+        # Verify user is receiver
+        user_characters = Character.objects.filter(user=request.user)
+        if poke.receiver_character not in user_characters:
+            raise PermissionDenied("You can only block POKEs sent to your characters")
+        
+        # Create block
+        PokeBlock.objects.get_or_create(
+            blocker_character=poke.receiver_character,
+            blocked_character=poke.sender_character,
+            defaults={'reason': request.POST.get('reason', '')}
+        )
+        
+        # Mark POKE as blocked and optionally report as spam
+        poke.status = 'BLOCKED'
+        if request.POST.get('report_spam') == 'on':
+            poke.reported_as_spam = True
+            poke.reported_by = request.user
+            from django.utils import timezone
+            poke.reported_at = timezone.now()
+        
+        poke.save()
+        
+        messages.success(request, _("Sender blocked. You will not receive more POKEs from this character."))
+        return redirect('poke_list')
+
 
 @login_required
 def propose_game(request):

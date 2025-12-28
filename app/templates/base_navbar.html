@@ -24,6 +24,7 @@
             <ul class="dropdown-menu dropdown-menu-end" data-popper-placement="bottom-end">
               <li><a class="dropdown-item" href="{% url 'account_profile' %}">{% trans "Profile" %}</a></li>
               <li><a class="dropdown-item" href="{% url 'account_characters_list' %}">{% trans "My characters" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'poke_list' %}">{% trans "POKEs" %} <span class="badge rounded-pill bg-warning" id="poke-badge">0</span></a></li>
               <li><a class="dropdown-item" href="{% url 'message_list' %}">{% trans "Messages" %} <span class="badge rounded-pill bg-danger">0</span></a></li>
               <li><a class="dropdown-item" href="{% url 'password_change' %}">{% trans "Change password" %}</a></li>
               {% if user.is_superuser %}

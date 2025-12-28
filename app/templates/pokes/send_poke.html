@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">{% trans "Send POKE" %}</h5>
+    </div>
+    <div class="card-body">
+      {% if receiver_character %}
+        <div class="alert alert-info mb-3">
+          <strong>{% trans "Sending POKE to" %}:</strong> {{ receiver_character.nickname }} ({{ receiver_character.game.name }})
+        </div>
+      {% endif %}
+      
+      {% if pokes_remaining is not None %}
+        <div class="alert alert-warning mb-3">
+          <i class="bi bi-info-circle"></i> 
+          {% trans "POKEs remaining today" %}: <strong>{{ pokes_remaining }}</strong> / {{ max_per_day }}
+        </div>
+      {% endif %}
+      
+      <form method="post">
+        {% csrf_token %}
+        
+        {% if receiver_character %}
+          <input type="hidden" name="receiver_character" value="{{ receiver_character.id }}">
+        {% else %}
+          <div class="mb-3">
+            {{ form.receiver_character|as_crispy_field }}
+          </div>
+        {% endif %}
+        
+        {% if user_characters.count > 1 %}
+          <div class="mb-3">
+            <label class="form-label">{% trans "Send as" %}</label>
+            {% for character in user_characters %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="sender_character" 
+                       id="sender_{{ character.id }}" value="{{ character.id }}"
+                       {% if forloop.first %}checked{% endif %}>
+                <label class="form-check-label" for="sender_{{ character.id }}">
+                  {{ character.nickname }} ({{ character.game.name }})
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        <div class="mb-3">
+          {{ form.content|as_crispy_field }}
+          <small class="form-text text-muted">
+            {% trans "Maximum 100 characters. URLs and email addresses are not allowed." %}
+          </small>
+        </div>
+        
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-send"></i> {% trans "Send POKE" %}
+          </button>
+          <a href="{% url 'poke_list' %}" class="btn btn-secondary">
+            {% trans "Cancel" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const textarea = document.querySelector('textarea[name="content"]');
+  if (textarea) {
+    const maxLength = 100;
+    const counter = document.createElement('small');
+    counter.className = 'form-text text-muted d-block mt-1';
+    counter.textContent = `0 / ${maxLength} characters`;
+    textarea.parentElement.appendChild(counter);
+    
+    textarea.addEventListener('input', function() {
+      const length = this.value.length;
+      counter.textContent = `${length} / ${maxLength} characters`;
+      if (length > maxLength) {
+        counter.classList.add('text-danger');
+      } else {
+        counter.classList.remove('text-danger');
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+

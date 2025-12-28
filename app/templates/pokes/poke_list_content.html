@@ -1,0 +1,141 @@
+{% load i18n %}
+
+<div class="pokes-list">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "POKEs" %}</h2>
+    <a href="{% url 'send_poke' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> {% trans "Send POKE" %}
+    </a>
+  </div>
+  
+  {% if unread_count > 0 %}
+    <div class="alert alert-info">
+      <i class="bi bi-bell"></i> {% trans "You have" %} <strong>{{ unread_count }}</strong> {% trans "unread POKE(s)" %}
+    </div>
+  {% endif %}
+  
+  <!-- Filter Tabs -->
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" href="{% url 'poke_list' %}?status=all">
+        {% trans "All" %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if status_filter == 'received' %}active{% endif %}" href="{% url 'poke_list' %}?status=received">
+        {% trans "Received" %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if status_filter == 'sent' %}active{% endif %}" href="{% url 'poke_list' %}?status=sent">
+        {% trans "Sent" %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if status_filter == 'pending' %}active{% endif %}" href="{% url 'poke_list' %}?status=pending">
+        {% trans "Pending" %}
+      </a>
+    </li>
+  </ul>
+  
+  {% if pokes %}
+    <div class="list-group">
+      {% for poke in pokes %}
+        <div class="list-group-item {% if not poke.is_read and poke.receiver_character.user == user %}list-group-item-warning{% endif %}">
+          <div class="row align-items-center">
+            <div class="col-md-2">
+              {% if poke.sender_character.user == user %}
+                {# Sent POKE - show receiver #}
+                {% if poke.receiver_character.avatar %}
+                  <img src="{{ poke.receiver_character.avatar.url }}" 
+                       alt="{{ poke.receiver_character.nickname }}" 
+                       class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                {% else %}
+                  <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                       style="width: 50px; height: 50px;">
+                    <span class="text-white">{{ poke.receiver_character.nickname|first|upper }}</span>
+                  </div>
+                {% endif %}
+              {% else %}
+                {# Received POKE - show sender #}
+                {% if poke.sender_character.avatar %}
+                  <img src="{{ poke.sender_character.avatar.url }}" 
+                       alt="{{ poke.sender_character.nickname }}" 
+                       class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                {% else %}
+                  <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                       style="width: 50px; height: 50px;">
+                    <span class="text-white">{{ poke.sender_character.nickname|first|upper }}</span>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <h6 class="mb-1">
+                {% if poke.sender_character.user == user %}
+                  {% trans "To" %}: <strong>{{ poke.receiver_character.nickname }}</strong>
+                {% else %}
+                  {% trans "From" %}: <strong>{{ poke.sender_character.nickname }}</strong>
+                {% endif %}
+                <small class="text-muted">({{ poke.sender_character.game.name }})</small>
+              </h6>
+              <p class="mb-1">{{ poke.content }}</p>
+              <small class="text-muted">{{ poke.sent_date|timesince }} {% trans "ago" %}</small>
+            </div>
+            <div class="col-md-4 text-end">
+              <span class="badge 
+                {% if poke.status == 'PENDING' %}bg-warning
+                {% elif poke.status == 'RESPONDED' %}bg-success
+                {% elif poke.status == 'IGNORED' %}bg-secondary
+                {% elif poke.status == 'BLOCKED' %}bg-danger
+                {% endif %}">
+                {{ poke.get_status_display }}
+              </span>
+              <div class="mt-2">
+                <a href="{% url 'poke_detail' poke.id %}" class="btn btn-sm btn-outline-primary">
+                  {% trans "View" %}
+                </a>
+                {% if poke.receiver_character.user == user and poke.status == 'PENDING' %}
+                  <form method="post" action="{% url 'respond_poke' poke.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success">
+                      {% trans "Respond" %}
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if is_paginated %}
+      <nav aria-label="POKE pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}">{% trans "Previous" %}</a>
+            </li>
+          {% endif %}
+          <li class="page-item active">
+            <span class="page-link">
+              {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+            </span>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}">{% trans "Next" %}</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle"></i> {% trans "No POKEs found." %}
+    </div>
+  {% endif %}
+</div>
+

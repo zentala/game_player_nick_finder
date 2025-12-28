@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView, PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
 # from django.contrib.auth.views import LoginView

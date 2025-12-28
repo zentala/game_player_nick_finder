@@ -31,6 +31,15 @@
                     <hr>
                     <a href="{{ create_character_url }}" class="btn btn-primary">{% trans "Create a character" %}</a>
                 </div>
+                {% elif suggest_poke %}
+                <div class="alert alert-info m-3">
+                    <h5 class="alert-heading">{% trans "Messaging not unlocked yet" %}</h5>
+                    <p>{% trans "You must exchange POKEs before sending full messages." %}</p>
+                    <hr>
+                    <a href="{{ poke_url }}" class="btn btn-primary">
+                        <i class="bi bi-hand-index"></i> {% trans "Send POKE" %}
+                    </a>
+                </div>
                 {% endif %}
 
                 <div class="card-body chat-messages" style="height: 60vh; overflow-y: auto;">
