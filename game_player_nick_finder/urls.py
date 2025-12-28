@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView, PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView, PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView, RevealIdentityView, HideIdentityView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
 # from django.contrib.auth.views import LoginView
@@ -89,6 +89,18 @@ urlpatterns = [
     path('friends/requests/', views.FriendRequestListView.as_view(), name='friend_request_list'),
     path('friends/requests/<int:request_id>/accept/', views.AcceptFriendRequestView.as_view(), name='accept_friend_request'),
     path('friends/requests/<int:request_id>/decline/', views.DeclineFriendRequestView.as_view(), name='decline_friend_request'),
+    
+    # POKE system
+    path('pokes/', PokeListView.as_view(), name='poke_list'),
+    path('pokes/send/', SendPokeView.as_view(), name='send_poke'),
+    path('pokes/<uuid:poke_id>/', PokeDetailView.as_view(), name='poke_detail'),
+    path('pokes/<uuid:poke_id>/respond/', RespondPokeView.as_view(), name='respond_poke'),
+    path('pokes/<uuid:poke_id>/ignore/', IgnorePokeView.as_view(), name='ignore_poke'),
+    path('pokes/<uuid:poke_id>/block/', BlockPokeView.as_view(), name='block_poke'),
+    
+    # Identity reveal
+    path('messages/reveal-identity/', RevealIdentityView.as_view(), name='reveal_identity'),
+    path('messages/hide-identity/', HideIdentityView.as_view(), name='hide_identity'),
 
 ]
 

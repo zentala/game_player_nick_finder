@@ -46,23 +46,94 @@
                     <div class="messages-container">
                         {% for message in messages %}
                             <div class="message mb-3 {% if message.sender_character.user == user %}text-end{% endif %}">
-                                <div class="message-bubble d-inline-block p-2 rounded {% if message.sender_character.user == user %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
-                                    <div class="d-flex align-items-center gap-2 mb-1">
-                                        <small class="message-sender">{{ message.sender_character.nickname }}</small>
-                                        {% if message.privacy_mode == 'ANONYMOUS' %}
-                                            <span class="badge bg-secondary privacy-badge">Anonymous</span>
-                                        {% endif %}
-                                        {% if message.identity_revealed and message.privacy_mode == 'REVEAL_IDENTITY' %}
-                                            <small class="user-username text-muted {% if message.sender_character.user == user %}text-white-50{% endif %}">
-                                                @{{ message.sender_character.user.username }}
-                                            </small>
-                                        {% endif %}
+                                {% if message.identity_revealed and message.privacy_mode == 'REVEAL_IDENTITY' %}
+                                    {# Unmasked Message - Blue/Teal Background #}
+                                    <div class="message-bubble unmasked d-inline-block p-3 rounded {% if message.sender_character.user == user %}unmasked-own{% else %}unmasked-other{% endif %}" style="max-width: 70%;">
+                                        <div class="message-header mb-2">
+                                            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                                <span class="message-character fw-bold">{{ message.sender_character.nickname }}</span>
+                                                <span class="badge badge-real-name">
+                                                    <i class="bi bi-star-fill"></i> {% trans "Real Name" %}
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="identity-revealed-section mt-2 pt-2 border-top">
+                                                <div class="user-info d-flex align-items-center gap-2 mb-2">
+                                                    {% if message.sender_character.user.profile_picture %}
+                                                        <img src="{{ message.sender_character.user.profile_picture.url }}" 
+                                                             class="user-avatar" 
+                                                             alt="{{ message.sender_character.user.username }}">
+                                                    {% else %}
+                                                        <i class="bi bi-person-circle user-avatar-icon"></i>
+                                                    {% endif %}
+                                                    <div>
+                                                        <a href="{% url 'user_profile_display' username=message.sender_character.user.username %}" 
+                                                           class="user-name text-decoration-none {% if message.sender_character.user == user %}text-white{% else %}text-primary fw-bold{% endif %}"
+                                                           title="{% trans 'View profile' %}">
+                                                            @{{ message.sender_character.user.username }}
+                                                        </a>
+                                                        {% if message.sender_character.user.first_name or message.sender_character.user.last_name %}
+                                                            <div class="user-real-name small {% if message.sender_character.user == user %}text-white-50{% else %}text-dark{% endif %}">
+                                                                {{ message.sender_character.user.first_name }} {{ message.sender_character.user.last_name }}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="user-details small {% if message.sender_character.user == user %}text-white-50{% else %}text-muted{% endif %} mb-2">
+                                                    <i class="bi bi-calendar-check"></i> 
+                                                    {% trans "Registered" %}: {{ message.sender_character.user.date_joined|date:"M Y" }}
+                                                </div>
+                                                
+                                                {% if message.sender_character.user.steam_profile or message.sender_character.user.github_profile or message.sender_character.user.linkedin_profile %}
+                                                    <div class="social-links">
+                                                        {% if message.sender_character.user.steam_profile %}
+                                                            <a href="{{ message.sender_character.user.steam_profile }}" target="_blank" 
+                                                               class="social-link text-decoration-none {% if message.sender_character.user == user %}text-white-50{% else %}text-muted{% endif %} me-2" 
+                                                               title="Steam">
+                                                                <i class="bi bi-steam"></i> Steam
+                                                            </a>
+                                                        {% endif %}
+                                                        {% if message.sender_character.user.github_profile %}
+                                                            <a href="{{ message.sender_character.user.github_profile }}" target="_blank" 
+                                                               class="social-link text-decoration-none {% if message.sender_character.user == user %}text-white-50{% else %}text-muted{% endif %} me-2" 
+                                                               title="GitHub">
+                                                                <i class="bi bi-github"></i> GitHub
+                                                            </a>
+                                                        {% endif %}
+                                                        {% if message.sender_character.user.linkedin_profile %}
+                                                            <a href="{{ message.sender_character.user.linkedin_profile }}" target="_blank" 
+                                                               class="social-link text-decoration-none {% if message.sender_character.user == user %}text-white-50{% else %}text-muted{% endif %}" 
+                                                               title="LinkedIn">
+                                                                <i class="bi bi-linkedin"></i> LinkedIn
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="message-content mt-2">{{ message.content }}</div>
+                                        <small class="message-time d-block text-end mt-2 {% if message.sender_character.user == user %}text-white-50{% else %}text-muted{% endif %}">
+                                            {{ message.sent_date|date:"H:i" }}
+                                        </small>
                                     </div>
-                                    <div class="message-content">{{ message.content }}</div>
-                                    <small class="message-time text-muted {% if message.sender_character.user == user %}text-white-50{% endif %}">
-                                        {{ message.sent_date|date:"H:i" }}
-                                    </small>
-                                </div>
+                                {% else %}
+                                    {# Masked Message - Gray Background #}
+                                    <div class="message-bubble masked d-inline-block p-3 rounded {% if message.sender_character.user == user %}masked-own{% else %}masked-other{% endif %}" style="max-width: 70%;">
+                                        <div class="message-header mb-2">
+                                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                                <span class="message-character fw-bold">{{ message.sender_character.nickname }}</span>
+                                                <span class="badge badge-anonymous">
+                                                    <i class="bi bi-mask"></i> {% trans "Anonymous" %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="message-content">{{ message.content }}</div>
+                                        <small class="message-time d-block text-end mt-2 text-muted">
+                                            {{ message.sent_date|date:"H:i" }}
+                                        </small>
+                                    </div>
+                                {% endif %}
                             </div>
                         {% empty %}
                             <p class="text-center text-muted">{% trans "Start the conversation!" %}</p>
@@ -71,23 +142,62 @@
                 </div>
 
                 <div class="card-footer">
+                    {% if sender_character and receiver_character %}
+                        {% if identity_revealed %}
+                            <div class="alert alert-success alert-dismissible fade show mb-2 identity-revealed" role="alert">
+                                <i class="bi bi-star-fill"></i> 
+                                {% trans "You're unmasked to" %} <strong>{{ receiver_character.nickname }}</strong>! 
+                                <span class="text-muted small">{% trans "They can see your real account." %}</span>
+                                <form method="post" action="{% url 'hide_identity' %}" class="d-inline ms-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="sender_character" value="{{ sender_character.id }}">
+                                    <input type="hidden" name="receiver_character" value="{{ receiver_character.id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-mask"></i> {% trans "Go Incognito" %}
+                                    </button>
+                                </form>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% else %}
+                            <div class="identity-reveal-section mb-2">
+                                <button type="button" class="btn btn-sm btn-outline-warning" id="reveal-identity-toggle" data-bs-toggle="collapse" data-bs-target="#reveal-identity-collapse" aria-expanded="false" aria-controls="reveal-identity-collapse">
+                                    <i class="bi bi-mask"></i> {% trans "Unmask" %}
+                                </button>
+                                <div class="collapse mt-2" id="reveal-identity-collapse">
+                                    <div class="card card-body bg-light border-warning">
+                                        <p class="small mb-2">
+                                            <i class="bi bi-info-circle text-warning"></i> 
+                                            <strong>{% trans "Show" %} {{ receiver_character.nickname }} {% trans "who you really are" %}</strong>
+                                        </p>
+                                        <p class="small text-muted mb-2">
+                                            {% trans "Once you unmask," %} <strong>{{ receiver_character.nickname }}</strong> {% trans "will see:" %}
+                                            <ul class="small text-muted mb-2">
+                                                <li>{% trans "Your username" %} (@{{ sender_character.user.username }})</li>
+                                                <li>{% trans "Your profile picture" %}</li>
+                                                <li>{% trans "Your social media links" %} (Steam, GitHub, etc.)</li>
+                                            </ul>
+                                            {% trans "This helps you reconnect as real friends, not just gaming characters. You can always go incognito again later." %}
+                                        </p>
+                                        <form method="post" action="{% url 'reveal_identity' %}" id="unmask-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="sender_character" value="{{ sender_character.id }}">
+                                            <input type="hidden" name="receiver_character" value="{{ receiver_character.id }}">
+                                            <button type="submit" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-star-fill"></i> {% trans "Unmask" %}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#reveal-identity-collapse">
+                                                {% trans "Cancel" %}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
                     <form method="post" class="message-form">
                         {% csrf_token %}
-                        {% if form.privacy_mode %}
-                        <div class="mb-2">
-                            <label class="form-label small">{% trans "Privacy Mode" %}</label>
-                            <div class="privacy-mode-options">
-                                {% for choice in form.privacy_mode %}
-                                    <div class="form-check form-check-inline">
-                                        {{ choice.tag }}
-                                        <label class="form-check-label" for="{{ choice.id_for_label }}">
-                                            {{ choice.choice_label }}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
+                        {{ form.privacy_mode }}
                         <div class="input-group">
                             {{ form.content }}
                             {% if receiver_character %}
@@ -229,6 +339,175 @@
 .input-group .form-control:focus {
     box-shadow: none;
     border-color: #ced4da;
+}
+
+/* Identity reveal animations */
+@keyframes unmaskFadeIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+.identity-revealed {
+    animation: unmaskFadeIn 0.3s ease-in;
+}
+
+/* Avatar styling */
+.avatar-sm {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--bs-success);
+    margin-right: 4px;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+/* Badge real name styling */
+.badge-real-name {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.75em;
+}
+
+/* Privacy badge styling */
+.privacy-badge {
+    font-size: 0.75em;
+}
+
+/* Masked (Anonymous) message styling */
+.message-bubble.masked {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #212529;
+}
+
+.message-bubble.masked-own {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+}
+
+/* Unmasked (Real Name) message styling */
+.message-bubble.unmasked {
+    background-color: #e7f3ff;
+    border: 2px solid #0dcaf0;
+    color: #212529;
+}
+
+.message-bubble.unmasked-own {
+    background-color: #0d6efd;
+    border: 2px solid #0a58ca;
+    color: white;
+}
+
+/* Character nickname (always prominent) */
+.message-character {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #0d6efd;
+}
+
+.message-bubble.unmasked-own .message-character {
+    color: white;
+}
+
+/* Real name section (when unmasked) */
+.identity-revealed-section {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.message-bubble.unmasked-own .identity-revealed-section {
+    border-top-color: rgba(255,255,255,0.3);
+}
+
+.identity-revealed-section .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.identity-revealed-section .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #28a745;
+    object-fit: cover;
+}
+
+.message-bubble.unmasked-own .identity-revealed-section .user-avatar {
+    border-color: white;
+}
+
+.identity-revealed-section .user-avatar-icon {
+    font-size: 32px;
+    color: #28a745;
+}
+
+.message-bubble.unmasked-own .identity-revealed-section .user-avatar-icon {
+    color: white;
+}
+
+.identity-revealed-section .user-name {
+    font-weight: 600;
+    color: #198754;
+    display: block;
+}
+
+.message-bubble.unmasked-own .identity-revealed-section .user-name {
+    color: white;
+}
+
+.identity-revealed-section .user-real-name {
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+
+.identity-revealed-section .user-details {
+    font-size: 0.85em;
+    margin-left: 0;
+    margin-top: 4px;
+}
+
+/* Badge styling */
+.badge-real-name {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+}
+
+.badge-anonymous {
+    background-color: #6c757d;
+    color: white;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75em;
+}
+
+/* Social links */
+.social-links {
+    margin-top: 8px;
+}
+
+.social-link {
+    font-size: 0.85em;
+    margin-right: 8px;
+}
+
+.social-link:hover {
+    opacity: 0.8;
 }
 </style>
 

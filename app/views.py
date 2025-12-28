@@ -22,7 +22,8 @@ from .forms import (
 )
 from .models import (
     Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote,
-    CharacterFriend, CharacterFriendRequest, CharacterProfile, Poke, PokeBlock
+    CharacterFriend, CharacterFriendRequest, CharacterProfile, Poke, PokeBlock,
+    CharacterIdentityReveal
 )
 from .utils import can_send_poke, can_send_message
 
@@ -954,8 +955,39 @@ class MessageListView(LoginRequiredMixin, ListView):
                         context['suggest_poke'] = True
                         context['poke_url'] = f"{reverse('send_poke')}?character={receiver_character.id}&sender_character={matching_char.id}"
 
+                # Check if identity is revealed for this conversation
+                identity_revealed = False
+                if sender_character:
+                    from .models import CharacterIdentityReveal
+                    identity_revealed = CharacterIdentityReveal.objects.filter(
+                        revealing_character=sender_character,
+                        revealed_to_character=receiver_character,
+                        is_active=True
+                    ).exists()
+                    context['identity_revealed'] = identity_revealed
+                    context['identity_reveal'] = CharacterIdentityReveal.objects.filter(
+                        revealing_character=sender_character,
+                        revealed_to_character=receiver_character
+                    ).first()
+                
+                # Check if identity is revealed for this conversation
+                identity_revealed = False
+                identity_reveal = None
+                if 'sender_character' in context:
+                    sender_character = context['sender_character']
+                    from .models import CharacterIdentityReveal
+                    identity_reveal = CharacterIdentityReveal.objects.filter(
+                        revealing_character=sender_character,
+                        revealed_to_character=receiver_character
+                    ).first()
+                    identity_revealed = identity_reveal and identity_reveal.is_active if identity_reveal else False
+                    context['identity_revealed'] = identity_revealed
+                    context['identity_reveal'] = identity_reveal
+                
                 context['form'] = MessageForm(
                     user=self.request.user,
+                    sender_character=context.get('sender_character'),
+                    receiver_character=receiver_character,
                     initial={'receiver_character': receiver_character}
                 )
             except Character.DoesNotExist:
@@ -968,7 +1000,30 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         """Obsługuje wysyłanie wiadomości bezpośrednio z widoku listy wiadomości"""
-        form = MessageForm(request.POST, user=request.user)
+        receiver_character_id = request.POST.get('receiver_character')
+        sender_character_id = request.POST.get('sender_character')
+        
+        sender_character = None
+        receiver_character = None
+        
+        if sender_character_id:
+            try:
+                sender_character = Character.objects.get(id=sender_character_id, user=request.user)
+            except Character.DoesNotExist:
+                pass
+        
+        if receiver_character_id:
+            try:
+                receiver_character = Character.objects.get(id=receiver_character_id)
+            except Character.DoesNotExist:
+                pass
+        
+        form = MessageForm(
+            request.POST, 
+            user=request.user,
+            sender_character=sender_character,
+            receiver_character=receiver_character
+        )
 
         if form.is_valid():
             message = form.save(commit=False)
@@ -1450,3 +1505,98 @@ def check_approved_games():
             game.is_approved = True
             game.save()
             # Tutaj można dodać logikę do przeniesienia gry do listy gier
+
+### Identity Reveal Views ---------------------------------
+
+class RevealIdentityView(LoginRequiredMixin, View):
+    """Reveal user identity to another character"""
+    
+    def post(self, request, *args, **kwargs):
+        sender_character_id = request.POST.get('sender_character')
+        receiver_character_id = request.POST.get('receiver_character')
+        
+        if not sender_character_id or not receiver_character_id:
+            messages.error(request, _("Missing required parameters."))
+            return redirect('message_list')
+        
+        try:
+            sender_character = get_object_or_404(
+                Character,
+                id=sender_character_id,
+                user=request.user
+            )
+            receiver_character = get_object_or_404(Character, id=receiver_character_id)
+            
+            # Create or update identity reveal
+            identity_reveal, created = CharacterIdentityReveal.objects.get_or_create(
+                revealing_character=sender_character,
+                revealed_to_character=receiver_character,
+                defaults={'is_active': True}
+            )
+            
+            if not created:
+                # Reactivate if it was previously revoked
+                identity_reveal.is_active = True
+                identity_reveal.revoked_at = None
+                identity_reveal.save()
+            
+            messages.success(
+                request,
+                _("You're now unmasked to {character_name}! ⭐").format(
+                    character_name=receiver_character.nickname
+                )
+            )
+            
+        except Exception as e:
+            messages.error(request, _("Failed to reveal identity: {error}").format(error=str(e)))
+        
+        # Redirect back to conversation
+        redirect_url = f"{reverse('message_list')}?character={receiver_character_id}"
+        if sender_character_id:
+            redirect_url += f"&sender={sender_character_id}"
+        return redirect(redirect_url)
+
+class HideIdentityView(LoginRequiredMixin, View):
+    """Hide (revoke) user identity from another character"""
+    
+    def post(self, request, *args, **kwargs):
+        sender_character_id = request.POST.get('sender_character')
+        receiver_character_id = request.POST.get('receiver_character')
+        
+        if not sender_character_id or not receiver_character_id:
+            messages.error(request, _("Missing required parameters."))
+            return redirect('message_list')
+        
+        try:
+            sender_character = get_object_or_404(
+                Character,
+                id=sender_character_id,
+                user=request.user
+            )
+            receiver_character = get_object_or_404(Character, id=receiver_character_id)
+            
+            # Find and revoke identity reveal
+            identity_reveal = CharacterIdentityReveal.objects.filter(
+                revealing_character=sender_character,
+                revealed_to_character=receiver_character
+            ).first()
+            
+            if identity_reveal:
+                identity_reveal.revoke()
+                messages.success(
+                    request,
+                    _("You're now incognito to {character_name} 🎭").format(
+                        character_name=receiver_character.nickname
+                    )
+                )
+            else:
+                messages.warning(request, _("Identity was not revealed to this character."))
+            
+        except Exception as e:
+            messages.error(request, _("Failed to hide identity: {error}").format(error=str(e)))
+        
+        # Redirect back to conversation
+        redirect_url = f"{reverse('message_list')}?character={receiver_character_id}"
+        if sender_character_id:
+            redirect_url += f"&sender={sender_character_id}"
+        return redirect(redirect_url)

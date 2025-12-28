@@ -47,6 +47,28 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Best practices
   - POKE system implementation guide
 
+#### [Blocking System Architecture](./architecture/blocking-system-architecture.md)
+- **Audience**: Mid-level Developers, Solution Architects
+- **Purpose**: Complete architecture for character blocking system
+- **Contents**:
+  - CharacterBlock model design
+  - Blocking business logic
+  - Views and URLs
+  - UI components
+  - Integration with existing systems
+  - Testing requirements
+  - Migration plan
+
+#### [Complete Implementation Guide](./architecture/complete-implementation-guide.md)
+- **Audience**: Mid-level Developers
+- **Purpose**: Step-by-step guide for implementing blocking system and message visual enhancements
+- **Contents**:
+  - Part 1: Character Blocking System
+  - Part 2: Message Visual Enhancements
+  - Part 3: Testing
+  - Part 4: Verification Checklist
+  - Common issues and solutions
+
 #### [Authentication Testing Architecture](./architecture/authentication-testing-architecture.md)
 - **Audience**: Mid-level Developers, QA Engineers
 - **Purpose**: Comprehensive testing strategy and implementation guide for authentication flows and navigation
@@ -80,6 +102,18 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Security considerations
   - Performance optimization
   - Testing strategy
+
+### Scrum Documentation
+
+#### [Blocking System Tasks](./scrum/blocking-system-tasks.md)
+- **Audience**: Social Marketing Team, Developers, Scrum Master
+- **Purpose**: Task breakdown for blocking system implementation
+- **Contents**:
+  - User story and acceptance criteria
+  - 9 detailed tasks with story points
+  - Testing checklist
+  - Dependencies and risks
+  - Success metrics
 
 ### Scrum Documentation
 **Location**: `docs/scrum/`

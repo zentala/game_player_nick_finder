@@ -362,6 +362,40 @@ class Message(models.Model):
     class Meta:
         ordering = ['sent_date']  # chronologiczne sortowanie wiadomości
 
+class CharacterIdentityReveal(models.Model):
+    """
+    Tracks when a character reveals their identity to another character.
+    Once revealed, all future messages in this conversation will show user identity.
+    Can be revoked by the revealing character.
+    """
+    revealing_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='identity_reveals_sent'
+    )
+    revealed_to_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='identity_reveals_received'
+    )
+    revealed_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True, help_text='Whether the identity reveal is currently active')
+    revoked_at = models.DateTimeField(null=True, blank=True, help_text='When the identity reveal was revoked')
+    
+    class Meta:
+        unique_together = ('revealing_character', 'revealed_to_character')
+        ordering = ['-revealed_at']
+    
+    def __str__(self):
+        status = "Active" if self.is_active else "Revoked"
+        return f"{self.revealing_character.nickname} -> {self.revealed_to_character.nickname} ({status})"
+    
+    def revoke(self):
+        """Revoke the identity reveal"""
+        self.is_active = False
+        self.revoked_at = timezone.now()
+        self.save()
+
 class EmailNotification(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     subject = models.CharField(max_length=200)
@@ -515,6 +549,43 @@ class PokeBlock(models.Model):
         indexes = [
             models.Index(fields=['blocker_character', 'blocked_character']),
         ]
+    
+    def __str__(self):
+        return f"{self.blocker_character.nickname} blocked {self.blocked_character.nickname}"
+
+
+class CharacterBlock(models.Model):
+    """
+    General blocking between characters.
+    Blocks messages, friend requests, and all interactions.
+    """
+    blocker_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='blocked_characters'  # Characters I blocked
+    )
+    blocked_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='blocked_by_characters'  # Characters that blocked me
+    )
+    blocked_at = models.DateTimeField(auto_now_add=True)
+    reason = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text='Optional reason for blocking (not shown to blocked user)'
+    )
+    # Optional: report as spam/harassment
+    reported_as_spam = models.BooleanField(default=False)
+    reported_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        unique_together = ('blocker_character', 'blocked_character')
+        indexes = [
+            models.Index(fields=['blocker_character', 'blocked_at']),
+            models.Index(fields=['blocked_character']),
+        ]
+        ordering = ['-blocked_at']
     
     def __str__(self):
         return f"{self.blocker_character.nickname} blocked {self.blocked_character.nickname}"

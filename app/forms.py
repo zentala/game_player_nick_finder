@@ -152,11 +152,6 @@ class GameForm(forms.ModelForm):
         fields = ['name', 'icon', 'desc']
 
 class MessageForm(forms.ModelForm):
-    PRIVACY_MODES = [
-        ('ANONYMOUS', 'Hide my identity (Character only)'),
-        ('REVEAL_IDENTITY', 'Show my identity (Character + Username)'),
-    ]
-    
     receiver_character = forms.ModelChoiceField(
         queryset=Character.objects.all(),
         required=True,
@@ -172,13 +167,10 @@ class MessageForm(forms.ModelForm):
         label=''
     )
     
-    privacy_mode = forms.ChoiceField(
-        choices=PRIVACY_MODES,
-        initial='ANONYMOUS',
-        required=True,
-        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-        label='Privacy Mode',
-        help_text='Choose whether to reveal your user identity'
+    # Hidden field - privacy mode is determined automatically based on identity reveal status
+    privacy_mode = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput()
     )
 
     class Meta:
@@ -188,6 +180,7 @@ class MessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         sender_character = kwargs.pop('sender_character', None)
+        receiver_character = kwargs.pop('receiver_character', None)
         super(MessageForm, self).__init__(*args, **kwargs)
 
         if sender_character:
@@ -196,6 +189,21 @@ class MessageForm(forms.ModelForm):
                 models.Q(id=sender_character.id) |
                 models.Q(user=sender_character.user)
             )
+        
+        # Check if identity is already revealed for this conversation
+        if sender_character and receiver_character:
+            from .models import CharacterIdentityReveal
+            identity_revealed = CharacterIdentityReveal.objects.filter(
+                revealing_character=sender_character,
+                revealed_to_character=receiver_character,
+                is_active=True
+            ).exists()
+            
+            if identity_revealed:
+                # If identity is revealed, set privacy mode to REVEAL_IDENTITY
+                self.fields['privacy_mode'].initial = 'REVEAL_IDENTITY'
+            else:
+                self.fields['privacy_mode'].initial = 'ANONYMOUS'
 
     def clean(self):
         cleaned_data = super().clean()

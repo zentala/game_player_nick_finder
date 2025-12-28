@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import (
     Game, CustomUser, ProposedGame, Character, Message,
     CharacterFriend, CharacterFriendRequest, CharacterProfile,
-    Poke, PokeBlock
+    Poke, PokeBlock, CharacterIdentityReveal, CharacterBlock
 )
 
 class CustomUserAdmin(UserAdmin):
@@ -74,3 +74,18 @@ admin.site.register(CharacterFriendRequest, CharacterFriendRequestAdmin)
 admin.site.register(CharacterProfile, CharacterProfileAdmin)
 admin.site.register(Poke, PokeAdmin)
 admin.site.register(PokeBlock, PokeBlockAdmin)
+
+class CharacterIdentityRevealAdmin(admin.ModelAdmin):
+    list_display = ('revealing_character', 'revealed_to_character', 'is_active', 'revealed_at', 'revoked_at')
+    list_filter = ('is_active', 'revealed_at', 'revoked_at')
+    search_fields = ('revealing_character__nickname', 'revealed_to_character__nickname')
+    readonly_fields = ('revealed_at', 'revoked_at')
+
+class CharacterBlockAdmin(admin.ModelAdmin):
+    list_display = ('blocker_character', 'blocked_character', 'reported_as_spam', 'blocked_at')
+    list_filter = ('reported_as_spam', 'blocked_at')
+    search_fields = ('blocker_character__nickname', 'blocked_character__nickname', 'reason')
+    readonly_fields = ('blocked_at', 'reported_at')
+
+admin.site.register(CharacterIdentityReveal, CharacterIdentityRevealAdmin)
+admin.site.register(CharacterBlock, CharacterBlockAdmin)
