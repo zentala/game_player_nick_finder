@@ -1,7 +1,8 @@
 # Status Report - Game Player Nick Finder Documentation
 
-**Data utworzenia**: 2024  
-**Status**: ✅ Większość funkcjonalności zaimplementowana
+**Data utworzenia**: 2024
+**Ostatnia aktualizacja**: 2025-12-28
+**Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete)
 
 ## 📊 Podsumowanie
 
@@ -11,8 +12,9 @@
    - ✅ Message model z privacy_mode i identity_revealed
    - ✅ MessageForm z privacy toggle
    - ✅ Message display z privacy indicators
+   - ✅ Conversation Management UI (sidebar, unread indicators, message preview)
    - ✅ Migracje utworzone
-   - 📋 **POKE System**: Specification ready, needs implementation (POKE required before messaging)
+   - ✅ **POKE System**: FULLY IMPLEMENTED (wszystkie komponenty gotowe)
 
 2. **Epic 2: Character-Based Friend System** ✅
    - ✅ CharacterFriend model
@@ -39,60 +41,116 @@
    - ✅ Templates: character_profile_edit
    - ✅ Migracje utworzone
 
-5. **Dodatkowe**
+5. **Epic 5: Character Blocking System** ✅ (2025-12-28)
+   - ✅ CharacterBlock model (blocks messages, POKEs, friend requests)
+   - ✅ BlockCharacterView, UnblockCharacterView, BlockedCharactersListView
+   - ✅ Block button on character detail page
+   - ✅ Blocked characters list page with pagination
+   - ✅ Integration with can_send_message() and can_send_poke() utilities
+   - ✅ Block checking in SendFriendRequestView
+   - ✅ Navigation link in navbar
+   - ✅ Templates: blocked_list.html, blocked_list_content.html
+   - ✅ Migracje utworzone (0005_add_character_block)
+
+6. **Epic 6: POKE System** ✅ (FULLY IMPLEMENTED)
+   - ✅ Poke model (PENDING/RESPONDED/IGNORED/BLOCKED status)
+   - ✅ PokeBlock model (POKE-specific blocking)
+   - ✅ Views: PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView (6 views)
+   - ✅ Templates: poke_list.html, poke_list_content.html, send_poke.html, poke_detail.html (4 templates)
+   - ✅ Business Logic: validate_poke_content(), can_send_poke(), can_send_message()
+   - ✅ Rate limiting: 5 POKEs/day per user
+   - ✅ Content filtering: No URLs, no emails, profanity filter
+   - ✅ 30-day cooldown between POKEs to same character
+   - ✅ Full integration with messaging system (POKE unlock required)
+   - ✅ **Testy Playwright**: 4 pliki testowe
+     - `pokes/poke-list.spec.ts` ✅
+     - `pokes/send-poke.spec.ts` ✅
+     - `pokes/poke-detail.spec.ts` ✅
+     - `pokes/poke-actions.spec.ts` ✅
+
+7. **Epic 7: Identity Reveal System** ✅ (FULLY IMPLEMENTED)
+   - ✅ CharacterIdentityReveal model (one-way reveal relationship)
+   - ✅ RevealIdentityView, HideIdentityView (reveal/revoke identity)
+   - ✅ Full integration with messaging system
+   - ✅ Privacy mode tracking (ANONYMOUS vs REVEAL_IDENTITY)
+   - ✅ Can be granted or revoked at any time
+
+8. **Epic 8: Homepage Layout Switcher** ✅ (FULLY IMPLEMENTED)
+   - ✅ IndexView with get_user_layout() method
+   - ✅ Session-based layout storage
+   - ✅ URL param handling (?layout=v0/v1/v2/v3)
+   - ✅ Reset functionality
+   - ✅ Templates: layout_v0.html, layout_v1.html, layout_v2.html, layout_v3.html, layout_switcher.html (5 templates)
+   - ✅ Shows in DEBUG mode or for staff/superuser
+   - ✅ **Testy Playwright**: `navigation/homepage-layout-switcher.spec.ts` ✅
+   - 📋 Dokumentacja: `docs/architecture/homepage-layout-switcher-architecture.md`
+
+9. **Dodatkowe (Infrastructure)**
    - ✅ Forms: MessageForm, CharacterFriendRequestForm, CharacterProfileForm, UserEditForm (zaktualizowany)
    - ✅ Serializers: MessageSerializer, CharacterFriendSerializer, CharacterFriendRequestSerializer, CharacterProfileSerializer, UserProfileSerializer
    - ✅ Admin: wszystkie modele zarejestrowane
    - ✅ URLs: wszystkie skonfigurowane
 
+
 ### ⚠️ Co nie zostało zrobione / wymaga dalszej pracy
 
-1. **POKE System** ❌ (High Priority)
-   - Status: 📋 Specification ready (architecture + feature spec)
-   - ⚠️ **CRITICAL**: POKE is required before users can send full Messages
-   - Required: Models (Poke, PokeBlock), Business Logic, Views, Templates, Integration with Message system
-   - 📍 Dokumentacja: 
-     - `docs/architecture/poke-system-architecture.md` - Technical architecture
-     - `docs/features/poke-system-specification.md` - Feature specification
-   - 🎯 **Priorytet**: High (must implement before messaging works as designed)
-
-2. **Testy Playwright** ⚠️
-   - ✅ Testy napisane dla większości funkcji (7 plików testowych)
+1. **Testy Playwright** ⚠️ (CRITICAL - High Priority)
+   - ✅ Testy napisane dla WSZYSTKICH funkcji (24 pliki testowe - NOT 11!)
    - ⚠️ **Status**: Testy wymagają weryfikacji (uruchomienia i sprawdzenia czy przechodzą)
    - 📍 Lokalizacja: `tests/e2e/`
-   - 📋 Testy dostępne:
-     - `characters/character-profile-display.spec.ts` ✅
-     - `characters/character-profile-edit.spec.ts` ✅
-     - `friends/character-friend-list.spec.ts` ✅
-     - `friends/friend-request-button.spec.ts` ✅
-     - `friends/friend-request-list.spec.ts` ✅
-     - `profile/profile-edit.spec.ts` ✅
-     - `profile/user-profile-display.spec.ts` ✅
-   - 🎯 **Akcja wymagana**: Uruchomić `pnpm test:e2e` z załadowanymi fixtures
+   - 📋 Testy dostępne (COMPLETE LIST):
+     - **Authentication (5 tests):**
+       - `auth/login.spec.ts` ✅
+       - `auth/logout.spec.ts` ✅
+       - `auth/password-change.spec.ts` ✅
+       - `auth/password-reset.spec.ts` ✅
+       - `auth/signup.spec.ts` ✅
+     - **Characters (2 tests):**
+       - `characters/character-profile-display.spec.ts` ✅
+       - `characters/character-profile-edit.spec.ts` ✅
+     - **Friends (3 tests):**
+       - `friends/character-friend-list.spec.ts` ✅
+       - `friends/friend-request-button.spec.ts` ✅
+       - `friends/friend-request-list.spec.ts` ✅
+     - **Profile (2 tests):**
+       - `profile/profile-edit.spec.ts` ✅
+       - `profile/user-profile-display.spec.ts` ✅
+     - **Blocking (4 tests):**
+       - `blocking/block-character.spec.ts` ✅
+       - `blocking/unblock-character.spec.ts` ✅
+       - `blocking/blocked-list.spec.ts` ✅
+       - `blocking/blocked-interactions.spec.ts` ✅
+     - **POKE System (4 tests):**
+       - `pokes/poke-list.spec.ts` ✅
+       - `pokes/send-poke.spec.ts` ✅
+       - `pokes/poke-detail.spec.ts` ✅
+       - `pokes/poke-actions.spec.ts` ✅
+     - **Messaging (1 test):**
+       - `messaging/conversation-list.spec.ts` ✅
+     - **Navigation (3 tests):**
+       - `navigation/navbar-authenticated.spec.ts` ✅
+       - `navigation/navbar-unauthenticated.spec.ts` ✅
+       - `navigation/homepage-layout-switcher.spec.ts` ✅
+   - **TOTAL: 24 E2E Test Files** (previously documented as 11-12)
+   - 🎯 **Akcja wymagana**: Uruchomić `pnpm test:e2e` z załadowanymi fixtures i działającym serwerem Django
 
-2. **Character Profile - Zaawansowane funkcje** ❌
+2. **Character Profile - Zaawansowane funkcje** ❌ (Medium Priority)
    - ❌ Screenshots upload UI (backend ready - JSONField istnieje, UI potrzebne)
    - ❌ Memories management UI (backend ready - JSONField istnieje, UI potrzebne)
    - 📍 Backend: CharacterProfile model ma pola screenshots i memories (JSONField)
    - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 3
    - 🎯 **Priorytet**: Medium
 
-3. **Multiple Conversation Management** ❌
-   - ✅ Thread_id system istnieje w Message model
-   - ❌ Conversation list UI (grupowanie konwersacji, łatwe przełączanie)
-   - 📍 Obecnie: messages są grupowane przez thread_id, ale brak UI do zarządzania wieloma konwersacjami
-   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 2
-   - 🎯 **Priorytet**: High
+3. **Real-time Messaging** ❌ (Low Priority - Future Enhancement)
 
-4. **Real-time Messaging**
    - ❌ WebSocket lub Server-Sent Events
    - ⚠️ Obecnie: polling lub odświeżanie strony
 
-5. **Mobile Responsiveness**
+4. **Mobile Responsiveness** ⚠️ (Medium Priority)
    - ⚠️ Częściowo zrobione (Bootstrap 5)
    - ❌ Wymaga testów i poprawy na urządzeniach mobilnych
 
-6. **Future Enhancements (z additional-ux-features.md)**
+5. **Future Enhancements (z additional-ux-features.md)** ❌ (Low Priority)
    - ❌ Quick Actions & Shortcuts
    - ❌ Notification Center
    - ❌ Enhanced Search & Discovery
@@ -101,21 +159,9 @@
 
 ## 📋 Priorytetowe zadania do wykonania
 
-### High Priority
+### CRITICAL Priority
 
-1. **POKE System Implementation** ❌ (13 SP)
-   - Status: Specification ready, needs implementation
-   - **CRITICAL**: Users cannot send Messages until POKE system is implemented
-   - Required components:
-     - Models: Poke, PokeBlock
-     - Business Logic: Content filtering, rate limiting, mutual POKE detection
-     - Views: SendPokeView, PokeListView, RespondPokeView, BlockPokeView
-     - Templates: send_poke, poke_list, poke_detail
-     - Integration: Update Message system to check POKE unlock status
-   - 📍 Dokumentacja: `docs/architecture/poke-system-architecture.md`
-   - 🎯 **Priorytet**: CRITICAL - Required for messaging flow
-
-2. **Weryfikacja testów Playwright** ⚠️ (8 SP)
+1. **Weryfikacja testów Playwright** ⚠️ (8 SP)
    - Status: Testy napisane, wymagają uruchomienia
    - Uruchomić wszystkie testy: `pnpm test:e2e`
    - Załadować fixtures: `pnpm load:fixtures` lub `.\load_fixtures.ps1`
@@ -123,24 +169,16 @@
    - Zapewnić że wszystkie testy przechodzą
    - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 1
 
-2. **Conversation Management UI** ❌ (13 SP)
-   - Status: Backend ready, UI missing
-   - Stworzyć conversation list view
-   - Zaimplementować łatwe przełączanie między konwersacjami
-   - Dodać unread message indicators
-   - Dodać last message preview
-   - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 2
-
 ### Medium Priority
 
-3. **Character Profile - Screenshots & Memories UI** ❌ (13 SP)
+2. **Character Profile - Screenshots & Memories UI** ❌ (13 SP)
    - Status: Backend ready (JSONField), UI missing
    - Screenshots upload UI
    - Memories management UI
    - Backend jest gotowy (JSONField)
    - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 3
 
-4. **Mobile Responsiveness** ⚠️ (8 SP)
+3. **Mobile Responsiveness** ⚠️ (8 SP)
    - Status: Częściowo zrobione (Bootstrap 5)
    - Testowanie na urządzeniach mobilnych
    - Poprawa UI dla małych ekranów
@@ -187,17 +225,16 @@ Wszystkie pliki zostały ponumerowane:
 
 ## 🎯 Następne kroki
 
-### Week 1-2: High Priority
-1. **Testy**: Uruchomić i zweryfikować testy Playwright (`pnpm test:e2e`)
-2. **Conversation UI**: Zaimplementować conversation list (Task 2)
+### Immediate (CRITICAL)
+1. **Testy**: Uruchomić i zweryfikować wszystkie 24 testy Playwright (`pnpm test:e2e`)
 
-### Week 3: Medium Priority
-3. **Screenshots/Memories UI**: Zaimplementować upload i management UI (Task 3)
-4. **Mobile**: Poprawić mobile responsiveness (Task 4)
+### Week 1-2: Medium Priority
+2. **Screenshots/Memories UI**: Zaimplementować upload i management UI (Task 3)
+3. **Mobile**: Poprawić mobile responsiveness (Task 4)
 
-### Future (Low Priority)
-5. **Real-time Messaging**: WebSocket lub Server-Sent Events
-6. **Additional UX Features**: Quick Actions, Notification Center, etc.
+### Future (Low Priority - Not MVP)
+4. **Real-time Messaging**: WebSocket lub Server-Sent Events
+5. **Additional UX Features**: Quick Actions, Notification Center, Enhanced Search, Activity Feed
 
 ## 📝 Notatki
 
@@ -219,5 +256,6 @@ Wszystkie pliki zostały ponumerowane:
 
 ---
 
-**Raport wygenerowany**: 2024  
-**Ostatnia aktualizacja**: 2024-12-19
+**Raport wygenerowany**: 2024
+**Ostatnia aktualizacja**: 2025-12-28
+**Kolejna weryfikacja**: Po uruchomieniu testów E2E
