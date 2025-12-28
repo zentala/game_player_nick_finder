@@ -45,6 +45,41 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Code examples and patterns
   - Testing checklist
   - Best practices
+  - POKE system implementation guide
+
+#### [Authentication Testing Architecture](./architecture/authentication-testing-architecture.md)
+- **Audience**: Mid-level Developers, QA Engineers
+- **Purpose**: Comprehensive testing strategy and implementation guide for authentication flows and navigation
+- **Contents**:
+  - Current test coverage analysis
+  - Missing test coverage identification
+  - Test structure and organization
+  - Authentication helper functions design
+  - 8 detailed implementation tasks:
+    - Login flow tests
+    - Logout flow tests
+    - Registration flow tests
+    - Password reset flow tests
+    - Password change flow tests
+    - Navigation menu tests (authenticated)
+    - Navigation menu tests (unauthenticated)
+  - Implementation guidelines and code examples
+  - Test data requirements
+  - Priority order and timeline estimates
+
+#### [POKE System Architecture](./architecture/poke-system-architecture.md)
+- **Audience**: Tech Leads, Solution Architects, Mid-level Developers
+- **Purpose**: Complete architectural design for the POKE system
+- **Contents**:
+  - System architecture and data model
+  - Business logic and validation rules
+  - Anti-spam measures and rate limiting
+  - API design and endpoints
+  - UI/UX flow specifications
+  - Database migrations
+  - Security considerations
+  - Performance optimization
+  - Testing strategy
 
 ### Scrum Documentation
 **Location**: `docs/scrum/`
@@ -86,6 +121,18 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
   - Feature Proposal 3: Multiple Conversation Management
   - Feature Proposal 4: Identity Management System
   - Implementation priority recommendations
+
+#### [POKE System Specification](./features/poke-system-specification.md)
+- **Audience**: Developers, UX Engineers, Product Owners
+- **Purpose**: Complete feature specification for the POKE system
+- **Contents**:
+  - User stories and acceptance criteria
+  - Functional requirements (FR1-FR10)
+  - Non-functional requirements
+  - Technical implementation details
+  - Testing requirements
+  - UI/UX specifications
+  - Migration plan
 
 #### [Additional UX Features](./features/additional-ux-features.md)
 - **Audience**: UX Engineers, Frontend Developers, Product Owners
@@ -245,6 +292,7 @@ Three privacy modes:
 - Character profile UI (basic) ✅
 
 ### 🚧 In Progress / Needed
+- **POKE System** - Initial contact mechanism (📋 Specification ready, needs implementation)
 - Multiple conversation management (thread_id exists, UI needed)
 - Identity reveal system (privacy controls exist, UI needed)
 - Character custom profiles (screenshots, memories UI)
@@ -295,6 +343,7 @@ Three privacy modes:
 ## Priority Order
 
 1. **High Priority** (MVP):
+   - **POKE System** - Initial contact mechanism (📋 Specification ready)
    - Privacy-controlled messaging
    - Character-based friend system
    - Friend request management
