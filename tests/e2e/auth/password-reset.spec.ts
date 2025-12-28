@@ -109,8 +109,8 @@ test.describe('Password Reset Flow', () => {
     // Verify login form is present
     await expect(page.locator('form.login')).toBeVisible();
     
-    // Verify "Forgot Password?" link is present
-    const forgotPasswordLink = page.locator('a:has-text("Forgot Password"), a:has-text("Forgot"), a:has-text("forgot")');
+    // Verify "Forgot Password?" link is present (link text is "Reset it")
+    const forgotPasswordLink = page.locator('a:has-text("Reset it"), a:has-text("Reset"), a:has-text("Forgot")');
     await expect(forgotPasswordLink.first()).toBeVisible();
     
     // Click "Forgot Password?" link

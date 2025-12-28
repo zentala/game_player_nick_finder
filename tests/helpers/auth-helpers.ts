@@ -10,10 +10,20 @@ export async function login(
   password: string
 ): Promise<void> {
   await page.goto('/accounts/login/');
-  await page.fill('#id_login', username);
+  await page.fill('#id_username', username);
   await page.fill('#id_password', password);
   await page.click('button[type="submit"]');
   await page.waitForURL('**/');
+}
+
+/**
+ * Opens user dropdown menu and waits for it to be visible
+ * Handles Bootstrap dropdown animation timing
+ */
+export async function openUserMenu(page: Page): Promise<void> {
+  await page.click('nav .dropdown-toggle');
+  await page.waitForSelector('.dropdown-menu.show', { state: 'visible', timeout: 2000 });
+  await page.waitForTimeout(200); // Safety buffer for animation completion
 }
 
 /**
@@ -21,8 +31,8 @@ export async function login(
  * Logs out current user and waits for redirect
  */
 export async function logout(page: Page): Promise<void> {
-  // Click user menu dropdown
-  await page.click('nav .dropdown-toggle');
+  // Open user menu dropdown with proper wait
+  await openUserMenu(page);
   // Click logout link
   await page.click('a:has-text("Log out")');
   // Wait for redirect (usually to home page)

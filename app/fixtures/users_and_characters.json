@@ -683,5 +683,269 @@
             "is_read": false,
             "read_at": null
         }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440010",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440000",
+            "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "content": "Hey! Remember me from WoW Vanilla days? Let's reconnect!",
+            "status": "PENDING",
+            "sent_date": "2024-03-19T10:00:00Z",
+            "responded_at": null,
+            "is_read": false,
+            "read_at": null,
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440011",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440008",
+            "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "content": "Found you! We used to raid together in TBC. Good times!",
+            "status": "PENDING",
+            "sent_date": "2024-03-18T15:30:00Z",
+            "responded_at": null,
+            "is_read": true,
+            "read_at": "2024-03-18T16:00:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440012",
+        "fields": {
+            "sender_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "receiver_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+            "content": "Yes! I remember you! Those Kara runs were epic!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-19T11:00:00Z",
+            "responded_at": "2024-03-19T11:30:00Z",
+            "is_read": true,
+            "read_at": "2024-03-19T11:15:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440013",
+        "fields": {
+            "sender_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+            "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "content": "Right?! We should catch up sometime!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-19T12:00:00Z",
+            "responded_at": "2024-03-19T12:30:00Z",
+            "is_read": true,
+            "read_at": "2024-03-19T12:05:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440014",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440001",
+            "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "content": "Do you still play WoW?",
+            "status": "IGNORED",
+            "sent_date": "2024-03-17T09:00:00Z",
+            "responded_at": null,
+            "is_read": true,
+            "read_at": "2024-03-17T14:00:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440015",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440002",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440007",
+            "content": "HealingMaster! Long time no see!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-16T10:00:00Z",
+            "responded_at": "2024-03-16T11:00:00Z",
+            "is_read": true,
+            "read_at": "2024-03-16T10:30:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440016",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440007",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440002",
+            "content": "Zentaur! Great to hear from you!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-16T10:30:00Z",
+            "responded_at": "2024-03-16T11:30:00Z",
+            "is_read": true,
+            "read_at": "2024-03-16T10:45:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440017",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440003",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440008",
+            "content": "Hey ZenMage! Want to team up for speedruns?",
+            "status": "PENDING",
+            "sent_date": "2024-03-15T12:00:00Z",
+            "responded_at": null,
+            "is_read": false,
+            "read_at": null,
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440018",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440005",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440009",
+            "content": "BobTheBlob, you're hard to catch!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-14T08:00:00Z",
+            "responded_at": "2024-03-14T09:00:00Z",
+            "is_read": true,
+            "read_at": "2024-03-14T08:30:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440019",
+        "fields": {
+            "sender_character": "66de8400-e29b-41d4-a716-446655440009",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440005",
+            "content": "Haha! You too! Let's play together next time!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-14T08:30:00Z",
+            "responded_at": "2024-03-14T09:30:00Z",
+            "is_read": true,
+            "read_at": "2024-03-14T08:45:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440020",
+        "fields": {
+            "sender_character": "791e73a0-7940-4a78-abf3-f4ca2d02708b",
+            "receiver_character": "66de8400-e29b-41d4-a716-446655440003",
+            "content": "SpeedRunner! Saw your amazing run yesterday!",
+            "status": "RESPONDED",
+            "sent_date": "2024-03-13T14:00:00Z",
+            "responded_at": "2024-03-13T15:00:00Z",
+            "is_read": true,
+            "read_at": "2024-03-13T14:30:00Z",
+            "reported_as_spam": false,
+            "reported_at": null,
+            "reported_by": null
+        }
+    },
+    {
+        "model": "app.poke",
+        "pk": "550e8400-e29b-41d4-a716-446655440021",
+        "fields": {
+            "sender_character": "532a9344-9c1b-4312-b665-ef3ae9277db4",
+            "receiver_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "content": "This is a spam POKE - reported!",
+            "status": "BLOCKED",
+            "sent_date": "2024-03-12T10:00:00Z",
+            "responded_at": null,
+            "is_read": true,
+            "read_at": "2024-03-12T11:00:00Z",
+            "reported_as_spam": true,
+            "reported_at": "2024-03-12T11:00:00Z",
+            "reported_by": "82918bec-16b5-494d-84f8-10fc7de1a0fb"
+        }
+    },
+    {
+        "model": "app.characterblock",
+        "pk": 1,
+        "fields": {
+            "blocker_character": "15f97226-ca54-4e26-8e18-37be99014caa",
+            "blocked_character": "532a9344-9c1b-4312-b665-ef3ae9277db4",
+            "blocked_at": "2024-03-16T14:00:00Z",
+            "reason": "Spamming messages",
+            "reported_as_spam": true,
+            "reported_at": "2024-03-16T14:00:00Z"
+        }
+    },
+    {
+        "model": "app.characterblock",
+        "pk": 2,
+        "fields": {
+            "blocker_character": "483ccf39-0886-456f-9a32-9ab875bc21f0",
+            "blocked_character": "66de8400-e29b-41d4-a716-446655440004",
+            "blocked_at": "2024-03-15T10:00:00Z",
+            "reason": "Inappropriate behavior",
+            "reported_as_spam": false,
+            "reported_at": null
+        }
+    },
+    {
+        "model": "app.characterblock",
+        "pk": 3,
+        "fields": {
+            "blocker_character": "66de8400-e29b-41d4-a716-446655440007",
+            "blocked_character": "66de8400-e29b-41d4-a716-446655440001",
+            "blocked_at": "2024-03-14T12:00:00Z",
+            "reason": "Test block for E2E tests",
+            "reported_as_spam": false,
+            "reported_at": null
+        }
+    },
+    {
+        "model": "app.characterblock",
+        "pk": 4,
+        "fields": {
+            "blocker_character": "791e73a0-7940-4a78-abf3-f4ca2d02708b",
+            "blocked_character": "66de8400-e29b-41d4-a716-446655440000",
+            "blocked_at": "2024-03-13T09:00:00Z",
+            "reason": "Unwanted contact",
+            "reported_as_spam": false,
+            "reported_at": null
+        }
+    },
+    {
+        "model": "app.characterblock",
+        "pk": 5,
+        "fields": {
+            "blocker_character": "66de8400-e29b-41d4-a716-446655440002",
+            "blocked_character": "66de8400-e29b-41d4-a716-446655440009",
+            "blocked_at": "2024-03-12T15:00:00Z",
+            "reason": "Harassment",
+            "reported_as_spam": true,
+            "reported_at": "2024-03-12T15:00:00Z"
+        }
     }
 ]

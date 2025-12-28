@@ -9,13 +9,72 @@
 
 ## 📋 Table of Contents
 
-1. [Current State Overview](#current-state-overview)
-2. [Sprint 1: CRITICAL - Test Verification](#sprint-1-critical---test-verification)
-3. [Sprint 2: HIGH - Screenshots & Memories UI](#sprint-2-high---screenshots--memories-ui)
-4. [Sprint 3: MEDIUM - Mobile Responsiveness](#sprint-3-medium---mobile-responsiveness)
-5. [Sprint 4+: LOW - Future Enhancements](#sprint-4-low---future-enhancements)
-6. [Task Assignment & Branching Strategy](#task-assignment--branching-strategy)
-7. [CI/CD & GitHub Actions](#cicd--github-actions)
+1. [🚨 Pre-Production Deployment Checklist](#-pre-production-deployment-checklist) **← START HERE BEFORE LAUNCH**
+2. [Current State Overview](#current-state-overview)
+3. [Sprint 1: CRITICAL - Test Verification](#sprint-1-critical---test-verification)
+4. [Sprint 2: HIGH - Screenshots & Memories UI](#sprint-2-high---screenshots--memories-ui)
+5. [Sprint 3: MEDIUM - Mobile Responsiveness](#sprint-3-medium---mobile-responsiveness)
+6. [Sprint 4+: LOW - Future Enhancements](#sprint-4-low---future-enhancements)
+7. [Task Assignment & Branching Strategy](#task-assignment--branching-strategy)
+8. [CI/CD & GitHub Actions](#cicd--github-actions)
+
+---
+
+## 🚨 Pre-Production Deployment Checklist
+
+**Priority**: CRITICAL - MUST COMPLETE BEFORE PRODUCTION LAUNCH
+**Status**: ⛔ NOT READY - Email validation disabled (development mode only)
+**Duration**: 2-3 weeks of focused work
+**Assignee**: DevOps Team + Backend Team
+
+### Overview
+Before launching to production, this project requires comprehensive security hardening, email validation setup, and E2E test verification. Email is currently disabled for development but MUST be required in production.
+
+**Detailed Checklist**: [docs/deployment/BEFORE_PRODUCTION_CHECKLIST.md](docs/deployment/BEFORE_PRODUCTION_CHECKLIST.md)
+
+### Quick Task List
+
+**🔴 CRITICAL - Email Validation (1 week)**:
+- [ ] Enable email requirement in production settings (`ACCOUNT_EMAIL_REQUIRED = True`)
+- [ ] Enable email verification (`ACCOUNT_EMAIL_VERIFICATION = 'mandatory'`)
+- [ ] Set up SendGrid/AWS SES email service
+- [ ] Update and test all signup/email tests
+- [ ] Document email configuration process
+
+**🔴 CRITICAL - Security Hardening (3-4 days)**:
+- [ ] Disable DEBUG mode (`DEBUG = False`)
+- [ ] Set secure ALLOWED_HOSTS
+- [ ] Configure HTTPS and security headers (HSTS, CSP, etc.)
+- [ ] Change admin URL from /admin/
+- [ ] Secure cookies (SESSION_COOKIE_SECURE, CSRF_COOKIE_SECURE)
+
+**🟠 HIGH - E2E Test Completion (1 week)**:
+- [ ] All 24 E2E tests must pass (currently 27% pass rate)
+- [ ] Fix failing tests
+- [ ] Verify consistent passes (run 3x each)
+- [ ] Load fixtures (`pnpm load:fixtures`) before testing
+
+**🟡 MEDIUM - Database & Monitoring (1 week)**:
+- [ ] Migrate from SQLite to PostgreSQL
+- [ ] Set up automated backups
+- [ ] Configure error tracking (Sentry)
+- [ ] Set up application monitoring
+- [ ] Configure centralized logging
+
+**🟡 MEDIUM - Testing & Compliance (3-4 days)**:
+- [ ] Security audit (OWASP ZAP scan)
+- [ ] Accessibility audit (WCAG 2.1 AA)
+- [ ] Write Privacy Policy & Terms of Service
+- [ ] Load testing and performance baseline
+
+### Key Decisions Made
+- ✅ Email disabled for development (ease of testing)
+- ✅ Email required for production (security, password reset, compliance)
+- ✅ SQLite for development, PostgreSQL for production
+- ✅ Bootstrap 5 for development, migration to Next.js + Joy UI planned for future
+
+### No Deploy Without Checklist Completion!
+**DO NOT DEPLOY TO PRODUCTION UNTIL ALL ITEMS ARE COMPLETED!**
 
 ---
 
@@ -195,7 +254,7 @@ python manage.py runserver
 **Acceptance Criteria**:
 - [ ] Fixtures loaded successfully
 - [ ] Database contains test users: `testuser`, `otheruser`, `privateuser`
-- [ ] Django server running on http://localhost:8000
+- [ ] Django server running on http://localhost:7600
 - [ ] No migration warnings
 
 ---

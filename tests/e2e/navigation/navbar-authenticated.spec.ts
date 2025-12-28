@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login, isAuthenticated, TEST_USERS } from '../../helpers/auth-helpers';
+import { login, isAuthenticated, openUserMenu, TEST_USERS } from '../../helpers/auth-helpers';
 
 test.describe('Navigation Menu - Authenticated Users', () => {
   test.beforeEach(async ({ page }) => {
@@ -65,88 +65,88 @@ test.describe('Navigation Menu - Authenticated Users', () => {
 
   test('should navigate to profile via user menu Profile link', async ({ page }) => {
     await page.goto('/');
-    
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
-    
+
+    // Open user menu dropdown with proper wait
+    await openUserMenu(page);
+
     // Click "Profile" link
     await page.click('a:has-text("Profile")');
-    
+
     // Verify navigation to profile page
     await expect(page).toHaveURL(/\/accounts\/profile\/?/);
-    
+
     // Verify navbar is still visible
     await expect(page.locator('nav')).toBeVisible();
   });
 
   test('should navigate to user characters via user menu My characters link', async ({ page }) => {
     await page.goto('/');
-    
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
-    
+
+    // Open user menu dropdown with proper wait
+    await openUserMenu(page);
+
     // Click "My characters" link
     await page.click('a:has-text("My characters")');
-    
+
     // Verify navigation to user characters page
     await expect(page).toHaveURL(/\/account\/characters\/?/);
-    
+
     // Verify navbar is still visible
     await expect(page.locator('nav')).toBeVisible();
   });
 
   test('should navigate to messages via user menu Messages link', async ({ page }) => {
     await page.goto('/');
-    
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
-    
+
+    // Open user menu dropdown with proper wait
+    await openUserMenu(page);
+
     // Click "Messages" link
     await page.click('a:has-text("Messages")');
-    
+
     // Verify navigation to messages page
     await expect(page).toHaveURL(/\/messages\/?/);
-    
+
     // Verify navbar is still visible
     await expect(page.locator('nav')).toBeVisible();
   });
 
   test('should navigate to password change via user menu Change password link', async ({ page }) => {
     await page.goto('/');
-    
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
-    
+
+    // Open user menu dropdown with proper wait
+    await openUserMenu(page);
+
     // Click "Change password" link
     await page.click('a:has-text("Change password")');
-    
+
     // Verify navigation to password change page
     await expect(page).toHaveURL(/\/accounts\/password_change\/?/);
-    
+
     // Verify navbar is still visible
     await expect(page.locator('nav')).toBeVisible();
   });
 
   test('should show Admin Panel link for superuser only', async ({ page }) => {
     await page.goto('/');
-    
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
-    
+
+    // Open user menu dropdown with proper wait
+    await openUserMenu(page);
+
     // Check if Admin Panel link exists (regular user shouldn't have it)
     const adminLink = page.locator('a:has-text("Admin Panel"), a:has-text("admin")');
     const adminLinkCount = await adminLink.count();
-    
+
     // For regular user, Admin Panel should not be visible
     // Note: This test assumes we're logged in as regular user (not superuser)
     // If test user is superuser, the link should be visible
     if (adminLinkCount > 0) {
       // User is superuser - verify link is visible
       await expect(adminLink.first()).toBeVisible();
-      
+
       // Click Admin Panel link
       await adminLink.first().click();
-      
+
       // Verify navigation to admin page
       await expect(page).toHaveURL(/\/admin\/?/);
     } else {
