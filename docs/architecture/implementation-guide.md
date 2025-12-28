@@ -705,6 +705,84 @@ If you're stuck:
    - Review test files for examples
    - Check Django documentation
 
+## POKE System Implementation
+
+**Status**: 📋 Ready for Implementation  
+**Story Points**: 13  
+**Priority**: High
+
+### Overview
+
+The POKE system is a lightweight, spam-protected initial contact mechanism that unlocks full messaging after mutual acknowledgment. See detailed documentation:
+
+- **[POKE System Architecture](./poke-system-architecture.md)** - Complete technical architecture
+- **[POKE Feature Specification](../features/poke-system-specification.md)** - Detailed feature spec
+
+### Quick Implementation Steps
+
+1. **Read Documentation First**:
+   - Review [POKE System Architecture](./poke-system-architecture.md) for model design and business logic
+   - Review [POKE Feature Specification](../features/poke-system-specification.md) for functional requirements
+
+2. **Phase 1: Models & Migrations** (2-3 hours):
+   ```bash
+   # Create models: Poke, PokeBlock
+   # See architecture doc for model specifications
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+3. **Phase 2: Business Logic** (4-6 hours):
+   - Content filtering (URL/link detection, character limits)
+   - Rate limiting logic
+   - Status management (PENDING, RESPONDED, IGNORED, BLOCKED)
+   - Mutual POKE detection
+   - Message unlock logic
+
+4. **Phase 3: API/Views** (4-6 hours):
+   - API endpoints (send, list, respond, ignore, block)
+   - View classes (ListView, DetailView, FormView)
+   - Forms with validation
+
+5. **Phase 4: UI Templates** (4-6 hours):
+   - POKE list template
+   - Send POKE form/modal
+   - POKE detail view
+   - Status indicators
+
+6. **Phase 5: Integration** (2-3 hours):
+   - Update Message system to check POKE status
+   - Hide "Send Message" if not unlocked
+   - Show "Send POKE" instead
+   - Notifications
+
+7. **Phase 6: Testing** (6-8 hours):
+   - Unit tests (models, business logic)
+   - Integration tests (API, workflows)
+   - Playwright E2E tests (all user flows)
+
+**Total Estimated Time**: 22-32 hours (3-4 days for mid-level developer)
+
+### Key Implementation Notes
+
+- **Always validate content server-side** (never trust client)
+- **Use existing Character model** (no changes needed)
+- **Integrate with existing Message system** (check unlock status)
+- **Follow existing patterns** (see Message views/forms for reference)
+- **Write Playwright tests FIRST** (TDD approach)
+
+### Testing Checklist
+
+- [ ] Unit tests for content filtering
+- [ ] Unit tests for rate limiting
+- [ ] Unit tests for status transitions
+- [ ] API endpoint tests
+- [ ] Playwright: Send POKE flow
+- [ ] Playwright: Receive and respond flow
+- [ ] Playwright: Ignore flow
+- [ ] Playwright: Block flow
+- [ ] Playwright: Message unlocking flow
+
 ## Next Steps
 
 After completing a task:

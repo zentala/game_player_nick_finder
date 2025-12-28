@@ -12,6 +12,7 @@
    - ✅ MessageForm z privacy toggle
    - ✅ Message display z privacy indicators
    - ✅ Migracje utworzone
+   - 📋 **POKE System**: Specification ready, needs implementation (POKE required before messaging)
 
 2. **Epic 2: Character-Based Friend System** ✅
    - ✅ CharacterFriend model
@@ -46,7 +47,16 @@
 
 ### ⚠️ Co nie zostało zrobione / wymaga dalszej pracy
 
-1. **Testy Playwright** ⚠️
+1. **POKE System** ❌ (High Priority)
+   - Status: 📋 Specification ready (architecture + feature spec)
+   - ⚠️ **CRITICAL**: POKE is required before users can send full Messages
+   - Required: Models (Poke, PokeBlock), Business Logic, Views, Templates, Integration with Message system
+   - 📍 Dokumentacja: 
+     - `docs/architecture/poke-system-architecture.md` - Technical architecture
+     - `docs/features/poke-system-specification.md` - Feature specification
+   - 🎯 **Priorytet**: High (must implement before messaging works as designed)
+
+2. **Testy Playwright** ⚠️
    - ✅ Testy napisane dla większości funkcji (7 plików testowych)
    - ⚠️ **Status**: Testy wymagają weryfikacji (uruchomienia i sprawdzenia czy przechodzą)
    - 📍 Lokalizacja: `tests/e2e/`
@@ -93,7 +103,19 @@
 
 ### High Priority
 
-1. **Weryfikacja testów Playwright** ⚠️ (8 SP)
+1. **POKE System Implementation** ❌ (13 SP)
+   - Status: Specification ready, needs implementation
+   - **CRITICAL**: Users cannot send Messages until POKE system is implemented
+   - Required components:
+     - Models: Poke, PokeBlock
+     - Business Logic: Content filtering, rate limiting, mutual POKE detection
+     - Views: SendPokeView, PokeListView, RespondPokeView, BlockPokeView
+     - Templates: send_poke, poke_list, poke_detail
+     - Integration: Update Message system to check POKE unlock status
+   - 📍 Dokumentacja: `docs/architecture/poke-system-architecture.md`
+   - 🎯 **Priorytet**: CRITICAL - Required for messaging flow
+
+2. **Weryfikacja testów Playwright** ⚠️ (8 SP)
    - Status: Testy napisane, wymagają uruchomienia
    - Uruchomić wszystkie testy: `pnpm test:e2e`
    - Załadować fixtures: `pnpm load:fixtures` lub `.\load_fixtures.ps1`

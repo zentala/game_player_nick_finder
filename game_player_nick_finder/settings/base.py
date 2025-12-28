@@ -90,7 +90,7 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Sites
 SITE_ID = 1
@@ -115,11 +115,20 @@ REGISTRATION_OPEN = True
 
 # Django Allauth settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # 'none', 'optional', 'mandatory'
-# New django-allauth settings (replacing deprecated ones)
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Replaces ACCOUNT_AUTHENTICATION_METHOD
-ACCOUNT_SIGNUP_FIELDS = ['email', 'username*', 'password1*', 'password2*']  # Replaces ACCOUNT_EMAIL_REQUIRED and ACCOUNT_USERNAME_REQUIRED
-ACCOUNT_UNIQUE_EMAIL = True  # Required when using email as login method
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # 'username', 'email', 'username_email'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+
+# POKE System Settings
+POKE_MAX_CONTENT_LENGTH = 100
+POKE_MAX_PER_USER_PER_DAY = 5
+POKE_COOLDOWN_DAYS = 30  # Days between POKEs to same character
+POKE_CONTENT_FILTER_URLS = True
+POKE_CONTENT_FILTER_EMAILS = True
+POKE_PROFANITY_FILTER_ENABLED = True
+POKE_PROFANITY_WORDLIST = []  # Can be loaded from file or environment
 
 # Social Account Providers
 SOCIALACCOUNT_PROVIDERS = {

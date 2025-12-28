@@ -412,3 +412,109 @@ class CharacterProfile(models.Model):
     
     def __str__(self):
         return f"Profile for {self.character.nickname}"
+
+
+# POKE System (Epic 1 Enhancement)
+class Poke(models.Model):
+    """
+    POKE - lightweight, spam-protected initial contact mechanism.
+    Users must exchange mutual POKEs before full messaging is unlocked.
+    """
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),      # Sent, waiting for response
+        ('RESPONDED', 'Responded'),  # Recipient sent POKE back
+        ('IGNORED', 'Ignored'),      # Recipient ignored
+        ('BLOCKED', 'Blocked'),      # Blocked by recipient
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='sent_pokes'
+    )
+    receiver_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='received_pokes'
+    )
+    
+    # Content (strictly limited)
+    content = models.CharField(
+        max_length=100,
+        help_text='POKE content (max 100 characters, no URLs or links)'
+    )
+    
+    # Status tracking
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='PENDING'
+    )
+    sent_date = models.DateTimeField(auto_now_add=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+    is_read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
+    
+    # Moderation
+    reported_as_spam = models.BooleanField(default=False)
+    reported_at = models.DateTimeField(null=True, blank=True)
+    reported_by = models.ForeignKey(
+        get_user_model(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='reported_pokes'
+    )
+    
+    class Meta:
+        unique_together = ('sender_character', 'receiver_character')
+        ordering = ['-sent_date']
+        indexes = [
+            models.Index(fields=['receiver_character', 'status', '-sent_date']),
+            models.Index(fields=['sender_character', 'status']),
+        ]
+    
+    def can_send_full_message(self):
+        """Check if mutual POKE exchange completed"""
+        return self.status == 'RESPONDED' or self.is_mutual()
+    
+    def is_mutual(self):
+        """Check if receiver also sent a POKE back"""
+        return Poke.objects.filter(
+            sender_character=self.receiver_character,
+            receiver_character=self.sender_character,
+            status__in=['PENDING', 'RESPONDED']
+        ).exists()
+    
+    def __str__(self):
+        return f"{self.sender_character.nickname} -> {self.receiver_character.nickname} ({self.status})"
+
+
+class PokeBlock(models.Model):
+    """Block POKEs from specific character"""
+    blocker_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='blocked_poke_senders'
+    )
+    blocked_character = models.ForeignKey(
+        Character,
+        on_delete=models.CASCADE,
+        related_name='blocked_poke_receivers'
+    )
+    blocked_at = models.DateTimeField(auto_now_add=True)
+    reason = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text='Optional reason for blocking'
+    )
+    
+    class Meta:
+        unique_together = ('blocker_character', 'blocked_character')
+        indexes = [
+            models.Index(fields=['blocker_character', 'blocked_character']),
+        ]
+    
+    def __str__(self):
+        return f"{self.blocker_character.nickname} blocked {self.blocked_character.nickname}"

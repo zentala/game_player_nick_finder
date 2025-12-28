@@ -246,11 +246,25 @@ This directory contains comprehensive documentation for the Game Player Nick Fin
 The application uses a **character-based** approach where:
 - Users can have multiple characters (gaming personas)
 - Friendships are between characters, not users
-- Messaging is character-to-character
+- **POKE System**: Initial contact via POKE (required before full messaging)
+- **Messaging**: Character-to-character (unlocked after mutual POKE)
 - Privacy controls are per-character
 
+### Messaging Flow
+**POKE System (Required First)**:
+1. Users send POKE (short 100-char message, no links)
+2. Recipient can: Respond (send POKE back), Ignore, or Block
+3. **Mutual POKE exchange unlocks full messaging**
+4. Only after mutual POKE can users send full Messages
+
+**Full Messaging** (after POKE unlock):
+- Character-to-character messaging
+- Privacy controls (Anonymous vs Reveal Identity)
+- Message threading (thread_id)
+- Multiple conversations support
+
 ### Privacy Model
-Three privacy modes:
+Three privacy modes for full messages (after POKE unlock):
 1. **Anonymous**: Only character information visible
 2. **Reveal Identity**: Character + user information visible
 3. **Friends Only**: Restrict messaging to friends only (optional)
@@ -281,6 +295,7 @@ Three privacy modes:
 - Character creation and management
 - Game management
 - Messaging system with privacy controls (character-to-character)
+  - **Note**: Currently allows direct messaging (POKE system needs implementation)
 - Message threading (thread_id)
 - Character-based friend system ✅
 - Friend request system ✅
@@ -343,8 +358,10 @@ Three privacy modes:
 ## Priority Order
 
 1. **High Priority** (MVP):
-   - **POKE System** - Initial contact mechanism (📋 Specification ready)
-   - Privacy-controlled messaging
+   - **POKE System** - Initial contact mechanism (📋 Specification ready, ❌ CRITICAL - needs implementation)
+     - **REQUIRED**: Users must POKE before messaging
+     - See: `docs/architecture/poke-system-architecture.md`
+   - Privacy-controlled messaging (after POKE unlock)
    - Character-based friend system
    - Friend request management
    - Conversation list/management

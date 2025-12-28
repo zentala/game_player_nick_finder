@@ -2,8 +2,9 @@ from django import forms
 from django_registration.forms import RegistrationForm
 from .models import (
     Character, Game, CustomUser, Message, ProposedGame,
-    CharacterFriendRequest, CharacterProfile
+    CharacterFriendRequest, CharacterProfile, Poke
 )
+from .utils import validate_poke_content, can_send_poke
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -263,3 +264,88 @@ class CharacterProfileForm(forms.ModelForm):
     class Meta:
         model = CharacterProfile
         fields = ['custom_bio', 'is_public']
+
+
+class PokeForm(forms.ModelForm):
+    """Form for sending POKE (initial contact message)"""
+    
+    receiver_character = forms.ModelChoiceField(
+        queryset=Character.objects.all(),
+        required=True,
+        label='Character Recipient',
+        widget=forms.HiddenInput()  # Usually pre-filled from context
+    )
+    
+    content = forms.CharField(
+        max_length=100,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'maxlength': 100,
+            'placeholder': 'Send a short message (max 100 characters, no links)...',
+            'class': 'form-control poke-input'
+        }),
+        label='Message',
+        help_text='Maximum 100 characters. URLs and email addresses are not allowed.'
+    )
+    
+    class Meta:
+        model = Poke
+        fields = ['content', 'receiver_character']
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.sender_character = kwargs.pop('sender_character', None)
+        super(PokeForm, self).__init__(*args, **kwargs)
+        
+        if self.sender_character:
+            # Exclude sender's character and characters from same user
+            self.fields['receiver_character'].queryset = Character.objects.exclude(
+                models.Q(id=self.sender_character.id) |
+                models.Q(user=self.sender_character.user)
+            )
+    
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content:
+            raise forms.ValidationError("POKE content cannot be empty.")
+        
+        errors, cleaned_content = validate_poke_content(content)
+        if errors:
+            raise forms.ValidationError(errors[0])  # Show first error
+        
+        return cleaned_content
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        receiver_character = cleaned_data.get('receiver_character')
+        
+        if not self.user:
+            raise forms.ValidationError("User is required to send POKE.")
+        
+        if receiver_character:
+            can_send, reason = can_send_poke(self.user, receiver_character)
+            if not can_send:
+                raise forms.ValidationError(reason)
+        
+        return cleaned_data
+    
+    def save(self, commit=True):
+        poke = super().save(commit=False)
+        
+        # Set sender_character from user's characters
+        if self.sender_character:
+            poke.sender_character = self.sender_character
+        else:
+            # Try to find matching character from same game as receiver
+            receiver = self.cleaned_data['receiver_character']
+            matching_character = Character.objects.filter(
+                user=self.user,
+                game=receiver.game
+            ).first()
+            if not matching_character:
+                raise ValueError("No matching character found for sender")
+            poke.sender_character = matching_character
+        
+        if commit:
+            poke.save()
+        return poke

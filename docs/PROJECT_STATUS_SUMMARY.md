@@ -1,6 +1,7 @@
 # Project Status Summary - Game Player Nick Finder
 
 **Data utworzenia**: 2024-12-19  
+**Ostatnia aktualizacja**: 2025-12-28  
 **Status**: ✅ Większość funkcjonalności zaimplementowana, wymaga weryfikacji testów
 
 ## 📊 Ogólny Status Projektu
@@ -13,6 +14,9 @@
 - ✅ Message display z privacy indicators
 - ✅ Migracje utworzone
 - ⚠️ **Testy Playwright**: Napisane, wymagają weryfikacji
+- 📋 **POKE System**: Specification ready, ❌ needs implementation
+  - **CRITICAL**: POKE exchange is required before users can send full Messages
+  - See: `docs/architecture/poke-system-architecture.md`
 
 #### Epic 2: Character-Based Friend System ✅
 - ✅ CharacterFriend model (character-to-character friendships)
@@ -55,11 +59,38 @@
 - ❌ **Screenshots upload UI**: Backend ready, UI missing
 - ❌ **Memories management UI**: Backend ready, UI missing
 
+### ✅ Naprawione Problemy (2025-12-28)
+
+- [x] **Naprawiono konfigurację django-allauth**
+  - [x] Zmieniono nieprawidłowe `ACCOUNT_LOGIN_METHODS` na `ACCOUNT_AUTHENTICATION_METHOD = 'username_email'`
+  - [x] Dodano brakujące ustawienia: `ACCOUNT_EMAIL_REQUIRED`, `ACCOUNT_USERNAME_REQUIRED`, `ACCOUNT_UNIQUE_EMAIL`
+  - [x] Dodano brakujące rekordy `EmailAddress` dla wszystkich użytkowników w bazie danych
+  - [x] Wyłączono rate limiting logowania w development (`ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 0`)
+  - [x] Wyczyszczono Django cache aby zresetować rate limiting
+
+- [x] **Naprawiono szablon weryfikacji email**
+  - [x] Przywrócono zawartość `app/templates/account/verification_sent.html`
+  - [x] Szablon teraz poprawnie wyświetla komunikat o wysłaniu emaila weryfikacyjnego
+
+- [x] **Dodano system zarządzania sesjami**
+  - [x] Utworzono procedurę zapisywania sesji w `.cursor/sessions/`
+  - [x] Dodano dokumentację procedury do `.cursor/rules/always.mdc`
+
 ### ⚠️ Co Wymaga Dalszej Pracy
 
 #### High Priority
 
-1. **Weryfikacja Testów Playwright** ⚠️
+1. **POKE System Implementation** ❌ (13 SP)
+   - Status: 📋 Specification ready, needs implementation
+   - **CRITICAL**: Required for messaging flow - users must POKE before messaging
+   - Components needed:
+     - Models: Poke, PokeBlock
+     - Business Logic: Content filtering, rate limiting, unlock logic
+     - Views & Templates: Send, List, Respond, Block
+     - Integration: Message system unlock check
+   - Dokumentacja: `docs/architecture/poke-system-architecture.md`
+
+2. **Weryfikacja Testów Playwright** ⚠️
    - Status: Testy napisane, wymagają uruchomienia i weryfikacji
    - Lokalizacja: `tests/e2e/`
    - Testy dostępne:
@@ -214,6 +245,6 @@
 
 ---
 
-**Ostatnia aktualizacja**: 2024-12-19  
+**Ostatnia aktualizacja**: 2025-12-28  
 **Następna weryfikacja**: Po uruchomieniu testów Playwright
 

@@ -15,9 +15,39 @@ This document outlines everything needed to complete the Game Player Nick Finder
 
 ## Functional Requirements
 
-### 1. Messaging System Enhancement
+### 1. POKE System (REQUIRED BEFORE MESSAGING)
 
-#### 1.1 Privacy Controls
+**CRITICAL**: Users must complete mutual POKE exchange before sending full messages.
+
+#### 1.1 POKE Implementation
+- [ ] **Requirement**: Users can send POKE (short 100-char message) to characters
+  - **Priority**: CRITICAL - Required for messaging flow
+  - **Estimated Effort**: 3-4 days
+  - **Documentation**: `docs/architecture/poke-system-architecture.md`
+
+- [ ] **Requirement**: POKE content filtering (no URLs, no emails, max 100 chars)
+  - **Priority**: CRITICAL
+  - **Estimated Effort**: 1 day
+
+- [ ] **Requirement**: Rate limiting (5 POKEs per user per 24h, 1 POKE per character per 30 days)
+  - **Priority**: CRITICAL
+  - **Estimated Effort**: 1 day
+
+- [ ] **Requirement**: Mutual POKE exchange unlocks full messaging
+  - **Priority**: CRITICAL
+  - **Estimated Effort**: 1 day
+
+- [ ] **Requirement**: Users can respond, ignore, or block POKEs
+  - **Priority**: CRITICAL
+  - **Estimated Effort**: 1 day
+
+**See**: `docs/architecture/poke-system-architecture.md` for complete specification.
+
+### 2. Messaging System Enhancement (AFTER POKE UNLOCK)
+
+**Note**: Full messaging is only available after mutual POKE exchange.
+
+#### 2.1 Privacy Controls
 - [ ] **Requirement**: Users must be able to choose privacy mode when sending messages
   - **Options**: Anonymous (character only) or Reveal Identity (character + user info)
   - **Default**: Anonymous (privacy-first)

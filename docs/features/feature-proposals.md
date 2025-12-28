@@ -26,6 +26,16 @@ This document contains detailed feature proposals for completing the Game Player
 
 ## Feature Proposal 1: Enhanced Messaging with Privacy Controls
 
+### IMPORTANT: POKE System Required First
+
+**Before users can send full messages, they must complete a mutual POKE exchange:**
+1. User A sends a POKE to Character B (short 100-char message, no links)
+2. User B receives POKE and can: Respond (send POKE back), Ignore, or Block
+3. If both users send POKEs to each other, full messaging is unlocked
+4. Only after mutual POKE exchange can users send full Messages
+
+See [POKE System Architecture](../architecture/poke-system-architecture.md) and [POKE System Specification](./poke-system-specification.md) for complete details.
+
 ### Developer Perspective
 
 #### Current Implementation
@@ -33,6 +43,8 @@ The current messaging system uses:
 - `Message` model with `sender_character` and `receiver_character`
 - `thread_id` for grouping messages
 - Basic message sending and receiving
+
+**IMPORTANT**: The system needs to check for mutual POKE exchange before allowing full messages to be sent.
 
 #### Proposed Enhancements
 

@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import (
     Game, CustomUser, ProposedGame, Character, Message,
-    CharacterFriend, CharacterFriendRequest, CharacterProfile
+    CharacterFriend, CharacterFriendRequest, CharacterProfile,
+    Poke, PokeBlock
 )
 
 class CustomUserAdmin(UserAdmin):
@@ -50,6 +51,18 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ('privacy_mode', 'is_read', 'sent_date')
     search_fields = ('sender_character__nickname', 'receiver_character__nickname', 'content')
 
+class PokeAdmin(admin.ModelAdmin):
+    list_display = ('sender_character', 'receiver_character', 'status', 'sent_date', 'is_read', 'reported_as_spam')
+    list_filter = ('status', 'sent_date', 'is_read', 'reported_as_spam')
+    search_fields = ('sender_character__nickname', 'receiver_character__nickname', 'content')
+    readonly_fields = ('sent_date', 'responded_at', 'read_at', 'reported_at')
+
+class PokeBlockAdmin(admin.ModelAdmin):
+    list_display = ('blocker_character', 'blocked_character', 'blocked_at', 'reason')
+    list_filter = ('blocked_at',)
+    search_fields = ('blocker_character__nickname', 'blocked_character__nickname', 'reason')
+    readonly_fields = ('blocked_at',)
+
 # Register your models
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Game)
@@ -59,3 +72,5 @@ admin.site.register(Message, MessageAdmin)
 admin.site.register(CharacterFriend, CharacterFriendAdmin)
 admin.site.register(CharacterFriendRequest, CharacterFriendRequestAdmin)
 admin.site.register(CharacterProfile, CharacterProfileAdmin)
+admin.site.register(Poke, PokeAdmin)
+admin.site.register(PokeBlock, PokeBlockAdmin)
