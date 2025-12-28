@@ -5,7 +5,10 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: add comprehensive CLAUDE.md for future AI instances\n\nAdded CLAUDE.md file with:\n- Common development commands \\(setup, testing, database\\)\n- High-level architecture \\(character-centric system, POKE gateway\\)\n- Database relationships and key patterns\n- Testing requirements \\(TDD workflow, coverage\\)\n- Critical business rules and configurations\n- Status documentation update procedures\n- Common pitfalls to avoid\n- Development workflow summary\n\nThis file helps future Claude Code instances understand the\ncodebase architecture without needing to read multiple files.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: implement character blocking system\n\nAdded comprehensive character-to-character blocking functionality:\n\nBackend:\n- Add CharacterBlock model with reason, is_spam fields\n- Migration 0005_add_character_block.py\n- BlockCharacterView, UnblockCharacterView, BlockedCharactersListView\n- Integration with can_send_message\\(\\), can_send_poke\\(\\), friend requests\n\nFrontend:\n- Block button in character detail page \\(dropdown menu\\)\n- Blocked characters list page with pagination\n- Templates: blocked_list.html, blocked_list_content.html\n- Navigation link in navbar\n\nTests:\n- 4 E2E test files covering all blocking scenarios\n- Tests: block, unblock, blocked list, blocked interactions\n\nDocumentation:\n- Updated blocking-system-architecture.md\n\nBlocking prevents: POKEs, messages, and friend requests\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit:*)",
-      "Bash(python manage.py:*)"
+      "Bash(python manage.py:*)",
+      "Bash(git fetch:*)",
+      "Bash(cat:*)",
+      "Bash(git merge:*)"
     ]
   }
 }

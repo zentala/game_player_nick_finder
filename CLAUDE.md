@@ -301,8 +301,46 @@ Status symbols:
 
 7. **Migration Order**: Fixtures must be loaded in order: categories → games → users_and_characters
 
+## Key Recommendations
+
+### For Development
+1. **Always activate pipenv first**: Run `pipenv shell` before ANY Django commands
+2. **Follow character-centric pattern**: All social features are character-to-character, NOT user-to-user
+3. **Check blocking/POKE before actions**:
+   - Use `is_blocked()` before allowing any interaction
+   - Use `can_send_poke()` before sending POKEs
+   - Use `can_send_message()` before sending messages
+4. **Never skip POKE unlock check**: Messages require mutual POKE exchange first
+5. **Use hash_id in URLs**: Character URLs use `<nickname>-<hash_id>` format, not just ID
+
+### For Testing
+1. **ALWAYS load fixtures first**: Run `pnpm load:fixtures` before E2E tests (REQUIRED)
+2. **Use test users from fixtures**:
+   - `testuser/testpass123` - Main test user
+   - `otheruser/pass` - Secondary user for interactions
+   - `privateuser/testpass123` - User with private profile
+3. **Run server before tests**: Django dev server must be running on `localhost:8000`
+4. **Verify test passes 3 times**: Ensure consistency before considering test stable
+
+### For Commits
+1. **Update status docs ALWAYS**: After completing ANY task:
+   - `docs/STATUS_REPORT.md` - Change status symbols
+   - `docs/PROJECT_STATUS_SUMMARY.md` - Update statistics
+   - `docs/scrum/detailed-tasks.md` - Mark acceptance criteria
+2. **Group related changes**: Organize commits logically (feature + tests + docs together)
+3. **Include tests with features**: NEVER commit features without E2E tests
+4. **Follow commit message format**: Use conventional commits (feat, fix, test, docs, chore)
+
+### Critical Warnings
+⚠️ **NEVER** confuse User-level vs Character-level relationships
+⚠️ **NEVER** allow messaging without POKE unlock (use `can_send_message()`)
+⚠️ **NEVER** skip fixture loading before E2E tests
+⚠️ **NEVER** commit without updating status documentation
+⚠️ **NEVER** use primary keys or nicknames alone in URLs (use `hash_id`)
+
 ## Development Workflow Summary
 
+### Standard Feature Development (TDD)
 1. **Check Status**: Read `docs/PROJECT_STATUS_SUMMARY.md` to verify task isn't already done
 2. **Load Fixtures**: Run `pnpm load:fixtures` if database is empty
 3. **Write Test**: Create Playwright E2E test first (TDD red phase)
@@ -311,6 +349,47 @@ Status symbols:
 6. **Verify**: Run all tests (`pnpm test:e2e`)
 7. **Update Docs**: Update status documentation files
 8. **Commit**: Include code + tests + doc updates in single commit
+
+### Workflow for Existing Code (Current Situation)
+**CRITICAL**: All 7 epics are implemented but NEVER verified with E2E tests. We don't know if they actually work in production.
+
+**Recommended approach for testing existing features**:
+
+1. **First: Commit Current Work**
+   ```bash
+   # Organize and commit all uncommitted changes
+   git status
+   git add [files]
+   git commit -m "feat: [description]"
+   ```
+
+2. **Second: Delegate E2E Testing to Separate Agent**
+   - Create branch: `test/verify-e2e-all-features`
+   - Use Task tool with `subagent_type='general-purpose'` for parallel execution
+   - Agent responsibilities:
+     - Load fixtures: `pnpm load:fixtures`
+     - Start Django server: `python manage.py runserver`
+     - Run all 24 E2E tests: `pnpm test:e2e`
+     - Document results in `docs/testing/E2E_TEST_RESULTS_[date].md`
+     - Create failure report with screenshots
+     - Return to main agent with results
+
+3. **Third: Review Test Results**
+   - Categorize failures: CRITICAL vs MINOR
+   - Create GitHub Issues for each failure
+   - Prioritize fixes
+
+4. **Fourth: Fix Failures Systematically**
+   - Create fix branches: `fix/e2e-[feature-name]`
+   - Fix → Test → Commit → Repeat
+   - Merge when all tests pass
+
+**Why this workflow?**
+- ✅ Separates concerns: commit work vs verify work
+- ✅ Uses specialized agents for testing (runs in parallel/background)
+- ✅ Creates clear audit trail of what works vs what doesn't
+- ✅ Allows systematic bug fixing with test verification
+- ✅ Prevents mixing "implementation" with "testing" work
 
 ## Git Workflow
 
