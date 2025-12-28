@@ -57,7 +57,7 @@ test.describe('Login Flow', () => {
     await page.click('button[type="submit"]');
     
     // Verify error message displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /invalid/i })).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /correct|invalid/i }).first()).toBeVisible();
     
     // Verify still on login page
     await expect(page).toHaveURL(/\/accounts\/login\/?/);
@@ -78,7 +78,7 @@ test.describe('Login Flow', () => {
     await page.click('button[type="submit"]');
     
     // Verify error message displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /invalid|incorrect|wrong/i })).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /correct|invalid|incorrect|wrong/i }).first()).toBeVisible();
     
     // Verify still on login page
     await expect(page).toHaveURL(/\/accounts\/login\/?/);

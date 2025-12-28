@@ -14,13 +14,13 @@ test.describe('Password Change Flow', () => {
     await expect(page.locator('form.password_change')).toBeVisible();
     
     // Verify old password field is present
-    await expect(page.locator('#id_oldpassword, input[name="oldpassword"]')).toBeVisible();
+    await expect(page.locator('#id_old_password, input[name="old_password"]')).toBeVisible();
     
     // Verify new password field is present
-    await expect(page.locator('#id_password1, input[name="password1"]')).toBeVisible();
-    
+    await expect(page.locator('#id_new_password1, input[name="new_password1"]')).toBeVisible();
+
     // Verify new password confirmation field is present
-    await expect(page.locator('#id_password2, input[name="password2"]')).toBeVisible();
+    await expect(page.locator('#id_new_password2, input[name="new_password2"]')).toBeVisible();
     
     // Verify submit button is present
     await expect(page.locator('button[type="submit"], input[type="submit"]')).toBeVisible();
@@ -49,13 +49,13 @@ test.describe('Password Change Flow', () => {
     const newPassword = 'NewTestPassword123!';
     
     // Fill in old password (correct)
-    await page.fill('#id_oldpassword, input[name="oldpassword"]', oldPassword);
-    
+    await page.fill('#id_old_password, input[name="old_password"]', oldPassword);
+
     // Fill in new password
-    await page.fill('#id_password1, input[name="password1"]', newPassword);
-    
+    await page.fill('#id_new_password1, input[name="new_password1"]', newPassword);
+
     // Fill in new password confirmation (matches)
-    await page.fill('#id_password2, input[name="password2"]', newPassword);
+    await page.fill('#id_new_password2, input[name="new_password2"]', newPassword);
     
     // Submit form
     await page.click('button[type="submit"], input[type="submit"]');
@@ -94,13 +94,13 @@ test.describe('Password Change Flow', () => {
     const newPassword = 'NewTestPassword123!';
     
     // Fill in wrong old password
-    await page.fill('#id_oldpassword, input[name="oldpassword"]', wrongOldPassword);
+    await page.fill('#id_old_password, input[name="old_password"]', wrongOldPassword);
     
     // Fill in new password
-    await page.fill('#id_password1, input[name="password1"]', newPassword);
+    await page.fill('#id_new_password1, input[name="new_password1"]', newPassword);
     
     // Fill in new password confirmation
-    await page.fill('#id_password2, input[name="password2"]', newPassword);
+    await page.fill('#id_new_password2, input[name="new_password2"]', newPassword);
     
     // Submit form
     await page.click('button[type="submit"], input[type="submit"]');
@@ -119,13 +119,13 @@ test.describe('Password Change Flow', () => {
     const shortPassword = '123'; // Too short
     
     // Fill in old password (correct)
-    await page.fill('#id_oldpassword, input[name="oldpassword"]', oldPassword);
+    await page.fill('#id_old_password, input[name="old_password"]', oldPassword);
     
     // Fill in new password (too short)
-    await page.fill('#id_password1, input[name="password1"]', shortPassword);
+    await page.fill('#id_new_password1, input[name="new_password1"]', shortPassword);
     
     // Fill in new password confirmation
-    await page.fill('#id_password2, input[name="password2"]', shortPassword);
+    await page.fill('#id_new_password2, input[name="new_password2"]', shortPassword);
     
     // Submit form
     await page.click('button[type="submit"], input[type="submit"]');
@@ -145,13 +145,13 @@ test.describe('Password Change Flow', () => {
     const differentPassword = 'DifferentPassword456!';
     
     // Fill in old password (correct)
-    await page.fill('#id_oldpassword, input[name="oldpassword"]', oldPassword);
+    await page.fill('#id_old_password, input[name="old_password"]', oldPassword);
     
     // Fill in new password
-    await page.fill('#id_password1, input[name="password1"]', newPassword);
+    await page.fill('#id_new_password1, input[name="new_password1"]', newPassword);
     
     // Fill in different password confirmation
-    await page.fill('#id_password2, input[name="password2"]', differentPassword);
+    await page.fill('#id_new_password2, input[name="new_password2"]', differentPassword);
     
     // Submit form
     await page.click('button[type="submit"], input[type="submit"]');
@@ -214,13 +214,13 @@ test.describe('Password Change Flow', () => {
     const newPassword = 'NewTestPassword123!';
     
     // Fill in old password (correct)
-    await page.fill('#id_oldpassword, input[name="oldpassword"]', oldPassword);
+    await page.fill('#id_old_password, input[name="old_password"]', oldPassword);
     
     // Fill in new password
-    await page.fill('#id_password1, input[name="password1"]', newPassword);
+    await page.fill('#id_new_password1, input[name="new_password1"]', newPassword);
     
     // Fill in new password confirmation
-    await page.fill('#id_password2, input[name="password2"]', newPassword);
+    await page.fill('#id_new_password2, input[name="new_password2"]', newPassword);
     
     // Submit form
     await page.click('button[type="submit"], input[type="submit"]');

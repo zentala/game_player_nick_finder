@@ -6,11 +6,11 @@
 {% block content %}
 <div class="div col-lg-5">
   <h1>Register your account!</h1>
-  <form method="post" action=".">
+  <form class="signup" method="post" action=".">
     {% csrf_token %}
     {{ form | crispy }}
 
-    <input type="submit" value="{% trans 'Submit' %}" class="btn btn-primary btn-lg"/>
+    <button type="submit" class="btn btn-primary btn-lg">{% trans 'Submit' %}</button>
   </form>
 </div>
 {% endblock %}

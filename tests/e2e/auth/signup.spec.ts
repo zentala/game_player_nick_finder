@@ -3,7 +3,7 @@ import { isAuthenticated, isNotAuthenticated, TEST_USERS } from '../../helpers/a
 
 test.describe('Registration (Signup) Flow', () => {
   test('should display signup form with all required elements', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Verify form is present
     await expect(page.locator('form.signup, form#signup_form')).toBeVisible();
@@ -35,7 +35,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should successfully register new user', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Generate unique username/email to avoid conflicts
     const timestamp = Date.now();
@@ -81,7 +81,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should show validation errors for empty fields', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Submit form without filling fields
     await page.click('button[type="submit"]');
@@ -104,7 +104,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should show validation error for invalid email format', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     const timestamp = Date.now();
     const uniqueUsername = `testuser${timestamp}`;
@@ -141,7 +141,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should show validation error for password too short', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     const timestamp = Date.now();
     const uniqueUsername = `testuser${timestamp}`;
@@ -177,7 +177,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should show validation error for password mismatch', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     const timestamp = Date.now();
     const uniqueUsername = `testuser${timestamp}`;
@@ -217,7 +217,7 @@ test.describe('Registration (Signup) Flow', () => {
   });
 
   test('should show validation error for username already exists', async ({ page }) => {
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Use existing username from fixtures
     const existingUsername = TEST_USERS.main.username;
@@ -255,7 +255,7 @@ test.describe('Registration (Signup) Flow', () => {
   test('should show validation error for email already exists (if uniqueness enforced)', async ({ page }) => {
     // This test depends on ACCOUNT_UNIQUE_EMAIL setting
     // In base.py it's set to True, so we should test it
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Use existing email (assuming testuser has email in fixtures)
     // Note: This test may need adjustment based on actual fixture data
@@ -317,7 +317,7 @@ test.describe('Registration (Signup) Flow', () => {
     expect(authenticated).toBe(true);
     
     // Navigate to signup page
-    await page.goto('/accounts/signup/');
+    await page.goto('/accounts/register/');
     
     // Should redirect to home page (or appropriate page)
     await page.waitForURL('**/', { timeout: 3000 });
