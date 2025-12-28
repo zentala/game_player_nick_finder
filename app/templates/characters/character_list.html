@@ -169,7 +169,7 @@
 
 <script>
 	// Mapowanie ID gier do ich slugów
-	const gameSlugs = JSON.parse('{{ game_slugs_json|escapejs }}');
+	const gameSlugs = {{ game_slugs_json|safe }};
 	// Przechowuje aktualny slug gry z URL (jeśli istnieje)
 	const currentGameSlug = '{{ game_slug|default:"" }}';
 

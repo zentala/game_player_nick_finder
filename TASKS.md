@@ -15,6 +15,7 @@
 4. [Sprint 3: MEDIUM - Mobile Responsiveness](#sprint-3-medium---mobile-responsiveness)
 5. [Sprint 4+: LOW - Future Enhancements](#sprint-4-low---future-enhancements)
 6. [Task Assignment & Branching Strategy](#task-assignment--branching-strategy)
+7. [CI/CD & GitHub Actions](#cicd--github-actions)
 
 ---
 
@@ -50,11 +51,18 @@
 ## 🔴 SPRINT 1: CRITICAL - Test Verification
 **Priority**: HIGHEST
 **Duration**: 5-7 days
-**Effort**: 20-30 hours
+**Effort**: ~43 hours (based on detailed breakdown)
 **Assignee**: TBD
+**Strategy**: [E2E Test Strategy](docs/testing/E2E_TEST_STRATEGY.md)
 
 ### Goal
 Verify all 24 E2E tests pass and all implemented features work correctly.
+
+**IMPORTANT**: Follow the detailed strategy in [docs/testing/E2E_TEST_STRATEGY.md](docs/testing/E2E_TEST_STRATEGY.md) for:
+- 📋 Faza 1: IDENTYFIKACJA (Discovery Phase) - How to identify and categorize errors
+- 📊 Faza 2: PRIORYTETYZACJA (Triage Phase) - P0/P1/P2/P3 priority framework
+- 🔧 Faza 3: EXECUTION (Fix Phase) - Sprint breakdown and fix templates
+- 🎯 Faza 4: VERIFICATION (QA Phase) - Regression testing and manual QA
 
 ### Tasks
 
@@ -1101,6 +1109,38 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ---
 
+---
+
+## 🤖 CI/CD & GitHub Actions
+
+### GitHub Actions Configured ✅
+
+**Workflows Created**:
+1. **`.github/workflows/e2e-tests.yml`** - E2E testing on PR
+2. **`.github/workflows/django-ci.yml`** - Django unit tests + linting
+
+**How It Works with Render**:
+- **GitHub Actions** = Quality Gate (tests before merge)
+- **Render** = Deployment (auto-deploy after merge)
+- See: [CI/CD Strategy](docs/CI_CD_STRATEGY.md) for complete explanation
+
+**Features**:
+- ✅ Runs on every PR to `main`
+- ✅ Tests on 3 browsers (Chromium, Firefox, WebKit)
+- ✅ Blocks merge if tests fail
+- ✅ Uploads test reports as artifacts
+- ✅ Free tier (2000 min/month)
+
+**Branch Protection** (Recommended):
+1. Go to GitHub → Settings → Branches
+2. Add rule for `main` branch
+3. Enable: "Require status checks to pass before merging"
+4. Select: `e2e-tests` and `django-tests`
+5. Save → Now PRs cannot merge if tests fail
+
+---
+
 **Last Updated**: 2025-12-28
 **Maintained By**: Technical Project Manager (Claude Code)
 **Questions**: See [Technical Audit - Questions Section](TECHNICAL_AUDIT_2025-12-28.md#-pytania-jako-project-manager-do-zespołu-dev)
+**CI/CD Strategy**: See [CI/CD Strategy](docs/CI_CD_STRATEGY.md)
