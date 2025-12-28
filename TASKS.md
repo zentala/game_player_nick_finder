@@ -48,6 +48,109 @@
 
 ---
 
+## 🔴 SPRINT 0: CRITICAL - Security Vulnerabilities
+**Priority**: CRITICAL (BLOCKER)
+**Duration**: 1-2 days
+**Effort**: ~5-8 hours
+**Assignee**: TBD
+**GitHub Alert**: https://github.com/zentala/game_player_nick_finder/security/dependabot
+
+### Goal
+Fix 9 security vulnerabilities detected by GitHub Dependabot.
+
+### Vulnerability Summary
+- **1 Critical** - Requires immediate attention
+- **3 High** - Should be fixed ASAP
+- **4 Moderate** - Fix before MVP launch
+- **1 Low** - Can be addressed later
+
+### Tasks
+
+#### Task 0.1: Analyze Vulnerabilities
+**Branch**: `fix/security-vulnerabilities`
+**Effort**: 1 hour
+
+**Steps**:
+```bash
+# 1. Visit Dependabot alerts
+# https://github.com/zentala/game_player_nick_finder/security/dependabot
+
+# 2. Document each vulnerability
+# - Package name
+# - Current version
+# - Fixed version
+# - CVE number
+# - Severity
+# - Impact on project
+```
+
+**Deliverable**: Create `docs/security/VULNERABILITIES_2025-12-28.md` with analysis
+
+---
+
+#### Task 0.2: Fix Critical & High Vulnerabilities
+**Branch**: Same as 0.1
+**Effort**: 3-4 hours
+
+**Steps**:
+```bash
+# Update Python dependencies
+pipenv update [package-name]
+
+# Or update all
+pipenv update
+
+# Update Node dependencies
+pnpm update [package-name]
+
+# Or update all with security fixes
+pnpm audit fix
+```
+
+**Acceptance Criteria**:
+- [ ] All CRITICAL vulnerabilities fixed
+- [ ] All HIGH vulnerabilities fixed
+- [ ] Dependencies updated in Pipfile.lock and pnpm-lock.yaml
+- [ ] Application still works (run tests)
+- [ ] No breaking changes introduced
+
+---
+
+#### Task 0.3: Fix Moderate & Low Vulnerabilities
+**Branch**: Same as 0.1
+**Effort**: 2-3 hours
+
+**Similar to 0.2 but for lower priority issues**
+
+**Acceptance Criteria**:
+- [ ] All MODERATE vulnerabilities fixed
+- [ ] LOW vulnerability assessed (fix or accept risk)
+- [ ] All tests still passing
+- [ ] Documentation updated
+
+---
+
+#### Task 0.4: Verify & Document
+**Branch**: Same as 0.1
+**Effort**: 1 hour
+
+**Steps**:
+```bash
+# Run security audit
+pipenv check
+pnpm audit
+
+# Run all tests
+pnpm test:e2e
+
+# Check GitHub Dependabot
+# Should show 0 vulnerabilities
+```
+
+**Deliverable**: Update `docs/security/VULNERABILITIES_2025-12-28.md` with resolution
+
+---
+
 ## 🔴 SPRINT 1: CRITICAL - Test Verification
 **Priority**: HIGHEST
 **Duration**: 5-7 days
