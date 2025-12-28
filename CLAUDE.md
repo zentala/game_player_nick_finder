@@ -318,3 +318,17 @@ Status symbols:
 
 **Current Tech Stack**: Django 5.1.4, Bootstrap 5, SQLite (dev)/PostgreSQL (prod), Playwright (E2E)
 **Future Migration Target**: Next.js + Cloudflare Workers + D1 + Joy UI + Tailwind CSS
+
+## Important Documentation Links
+
+**MUST READ FIRST**:
+- 📋 **[TASKS.md](TASKS.md)** - Developer roadmap with detailed task breakdowns
+- 📊 **[Technical Audit 2025-12-28](TECHNICAL_AUDIT_2025-12-28.md)** - Complete project audit and findings
+- ✅ **[Project Status Summary](docs/PROJECT_STATUS_SUMMARY.md)** - Current implementation status
+- 📖 **[Status Report](docs/STATUS_REPORT.md)** - Detailed feature status
+
+**Quick Links**:
+- Developer tasks and specifications → [TASKS.md](TASKS.md)
+- What's done vs what's pending → [Project Status](docs/PROJECT_STATUS_SUMMARY.md)
+- Technical audit findings → [Technical Audit](TECHNICAL_AUDIT_2025-12-28.md)
+- Implementation guides → [docs/architecture/](docs/architecture/)

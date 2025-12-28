@@ -4,6 +4,18 @@
 **Ostatnia aktualizacja**: 2025-12-28 (Complete Audit)
 **Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete), wymaga weryfikacji testów
 
+## 📚 Kluczowa Dokumentacja
+
+**DLA DEVELOPERÓW - PRZECZYTAJ NAJPIERW**:
+- 📋 **[TASKS.md](../TASKS.md)** - Roadmapa developerska ze szczegółowymi taskami i specyfikacjami
+- 📊 **[Technical Audit 2025-12-28](../TECHNICAL_AUDIT_2025-12-28.md)** - Kompletny audyt projektu, odkrycia, korekty dokumentacji
+- 🔧 **[CLAUDE.md](../CLAUDE.md)** - Przewodnik po architekturze dla AI agents
+
+**Szybkie linki**:
+- Co jest do zrobienia? → [TASKS.md - Sprint Plans](../TASKS.md#-table-of-contents)
+- Jak działa Screenshots/Memories UI? → [TASKS.md - Sprint 2](../TASKS.md#-sprint-2-high---screenshots--memories-ui)
+- Jakie pytania do Product Ownera? → [Technical Audit - Questions](../TECHNICAL_AUDIT_2025-12-28.md#-pytania-jako-project-manager-do-zespołu-dev)
+
 ## 📊 Ogólny Status Projektu
 
 ### ✅ Co Działa (Zaimplementowane)

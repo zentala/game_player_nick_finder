@@ -191,9 +191,19 @@ Using this, you can get insights into the various options available in `manage.p
 
 ## Project Status
 
-**📊 For detailed project status, see:**
-- **[Project Status Summary](docs/PROJECT_STATUS_SUMMARY.md)** - Comprehensive status overview with all features
-- **[Status Report](docs/STATUS_REPORT.md)** - Current implementation status
+**📊 Current Status: 85% Complete (MVP Features)**
+
+**MUST READ FOR DEVELOPERS**:
+- 📋 **[TASKS.md](TASKS.md)** - Developer roadmap with detailed task breakdowns and specifications
+- 📊 **[Technical Audit 2025-12-28](TECHNICAL_AUDIT_2025-12-28.md)** - Complete project audit, findings, and corrections
+- ✅ **[Project Status Summary](docs/PROJECT_STATUS_SUMMARY.md)** - What's implemented vs what's pending
+- 📖 **[Status Report](docs/STATUS_REPORT.md)** - Detailed feature-by-feature status
+
+**Quick Summary**:
+- ✅ All 7 Epics FULLY implemented (Messaging+POKE, Friends, Profiles, Blocking, Identity Reveal, Layout Switcher)
+- ✅ 24 E2E tests written (need verification)
+- ❌ Missing: Screenshots/Memories UI (backend ready)
+- ⚠️ Needs: Test verification, mobile responsiveness polish
 
 **Quick Status:**
 - ✅ **Epic 1**: Enhanced Messaging with Privacy Controls (Backend + UI complete)
