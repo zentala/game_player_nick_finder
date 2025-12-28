@@ -52,12 +52,13 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   /* Note: Start Django server manually with: pipenv run python manage.py runserver */
+  /* Or use the test script: pnpm test:e2e:with-server */
   // webServer: {
   //   command: process.platform === 'win32' 
-  //     ? 'pipenv run python manage.py runserver'
-  //     : 'pipenv run python manage.py runserver',
+  //     ? 'pipenv run python manage.py runserver --noreload'
+  //     : 'pipenv run python manage.py runserver --noreload',
   //   url: 'http://localhost:8000',
   //   reuseExistingServer: !process.env.CI,
-  //   timeout: 180 * 1000,
+  //   timeout: 120 * 1000,
   // },
 });

@@ -34,3 +34,8 @@ CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Print emails to console in development
+
+# Django Allauth settings for development
+# Rate limiting for login attempts (0 = disabled in development)
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 0  # Disable rate limiting in development
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 0  # Disable timeout

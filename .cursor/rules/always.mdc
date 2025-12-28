@@ -437,6 +437,61 @@ When updating status documents, use these symbols:
 4. Review [Detailed Tasks](../docs/scrum/detailed-tasks.md) for implementation steps
 5. Always write Playwright tests first (TDD)
 
+## Session Management
+
+### Session Recording Procedure
+
+**CRITICAL**: Always record and update session information for tracking work progress.
+
+#### When to Create a New Session
+
+1. **New Chat**: When opening a completely new chat conversation
+2. **Topic Change**: When completely changing the topic/scope of work
+3. **Time Boundary**: Sessions start from 5:00 AM (4:00-6:00 AM window)
+
+#### Session Structure
+
+- **Location**: `.cursor/sessions/`
+- **Naming Format**: `YYYY-MM-DD_HH-MM.md` (start time of session)
+- **Initial State**: 
+  - Only contains start date/time (no title initially)
+  - Title is added/updated later when we understand what the session is about
+- **Updates**: Session file should be updated:
+  - After finishing conversation with user (before starting work)
+  - After completing work tasks
+
+#### Session File Format
+
+```markdown
+# Session: YYYY-MM-DD HH:MM
+
+**Started**: YYYY-MM-DD HH:MM
+**Title**: (initially empty, add/update later when scope is clear)
+
+## Work Done
+- [ ] Task 1
+- [ ] Task 2
+
+## Status
+- Completed tasks
+- Pending tasks
+- Notes
+```
+
+#### Project Status Summary Updates
+
+**CRITICAL**: After completing work, update `docs/PROJECT_STATUS_SUMMARY.md` using GitHub Flavored Markdown task checkboxes:
+
+- `- [x]` - Task completed
+- `- [ ]` - Task not completed
+- Use checkboxes to track what was done and what wasn't
+
+Update procedure:
+1. Mark completed tasks with `- [x]`
+2. Mark incomplete tasks with `- [ ]`
+3. Update status symbols (✅, ⚠️, ❌)
+4. Update "Co zostało zrobione" / "Co wymaga pracy" sections
+
 ---
 
 **Join the adventure and reconnect with your old gaming buddies!**

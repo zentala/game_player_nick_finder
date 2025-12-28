@@ -26,8 +26,10 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 /media
+/static
 /staticfiles
 # Note: migrations/ should NOT be ignored - they must be committed!
+# Note: /static contains collected static files (from collectstatic) - should not be committed
 
 # Virtual Environment
 venv/
