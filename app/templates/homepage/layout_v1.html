@@ -1,0 +1,270 @@
+{% load i18n %}
+
+<style>
+  .year-slider {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 20px 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .year-slider::-webkit-scrollbar {
+    height: 8px;
+  }
+  .year-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .year-slider::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  .year-item {
+    min-width: 80px;
+    padding: 10px 15px;
+    text-align: center;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .year-item:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+  }
+  .year-item.selected {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+    font-weight: bold;
+  }
+  .year-item.prominent {
+    min-width: 100px;
+    font-size: 1.1em;
+  }
+  .nickname-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9em;
+  }
+  .nickname-tag .remove {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .nickname-tag .remove:hover {
+    opacity: 0.7;
+  }
+  .searchable-select {
+    position: relative;
+  }
+  .searchable-select input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .searchable-select .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+  }
+  .searchable-select .dropdown.show {
+    display: block;
+  }
+  .searchable-select .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  .searchable-select .dropdown-item:hover {
+    background: #f8f9fa;
+  }
+</style>
+
+<div class="container my-4">
+  {# Hero Section #}
+  <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg mb-4" style="background: #fff;">
+    <div class="col-xl-12 p-3 p-lg-5 pt-lg-3 text-center">
+      <h1 class="display-4 fw-bold lh-1 mb-4">Reconnect with Old Gaming Buddies!</h1>
+      <p class="lead mb-4">Find your long-lost gaming friends from the past. Start by selecting a game, choosing a year, and entering nicknames.</p>
+    </div>
+  </div>
+
+  {# Step 1: Game Selection #}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="p-4 rounded-3 border shadow" style="background: #fff;">
+        <h3 class="mb-3">
+          <span class="badge bg-primary me-2">1</span>
+          Select Game
+        </h3>
+        <div class="searchable-select">
+          <input type="text" id="game-search" placeholder="Search for a game..." class="form-control form-control-lg" />
+          <div class="dropdown" id="game-dropdown">
+            {% for game in mock_games %}
+              <div class="dropdown-item" data-game-id="{{ game.id }}" data-game-name="{{ game.name }}">
+                {{ game.name }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Selected: <span id="selected-game">None</span></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Step 2: Time Machine #}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="p-4 rounded-3 border shadow" style="background: #fff;">
+        <h3 class="mb-3">
+          <span class="badge bg-primary me-2">2</span>
+          Time Machine - Choose Year
+        </h3>
+        <p class="text-muted mb-3">Select the year when you played together</p>
+        <div class="year-slider" id="year-slider">
+          {% for year in mock_years %}
+            <div class="year-item {% if year >= 2000 and year <= 2010 %}prominent{% endif %} {% if year == 2005 %}selected{% endif %}" data-year="{{ year }}">
+              {{ year }}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Selected: <span id="selected-year">2005</span></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Step 3: Friendship - Nicknames #}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="p-4 rounded-3 border shadow" style="background: #fff;">
+        <h3 class="mb-3">
+          <span class="badge bg-primary me-2">3</span>
+          Friendship - Enter Nicknames
+        </h3>
+        <p class="text-muted mb-3">Enter nicknames separated by space or press Enter</p>
+        <input type="text" id="nickname-input" placeholder="Enter nicknames (e.g., PlayerOne GamerPro OldFriend)" class="form-control form-control-lg" />
+        <div class="mt-3" id="nickname-tags">
+          {# Tags will be added here by JavaScript #}
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Entered: <span id="nickname-count">0</span> nickname(s)</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Action Button #}
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <button type="button" class="btn btn-primary btn-lg px-5" id="join-button" disabled>
+        <i class="bi bi-search"></i> Search & Join
+      </button>
+      <p class="mt-3 text-muted">
+        <small>You'll be able to register or login after clicking Search</small>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mock JavaScript for interactivity (not functional, just visual)
+  document.addEventListener('DOMContentLoaded', function() {
+    // Game selector mock
+    const gameSearch = document.getElementById('game-search');
+    const gameDropdown = document.getElementById('game-dropdown');
+    const selectedGame = document.getElementById('selected-game');
+    
+    if (gameSearch) {
+      gameSearch.addEventListener('focus', function() {
+        gameDropdown.classList.add('show');
+      });
+      
+      gameSearch.addEventListener('blur', function() {
+        setTimeout(() => gameDropdown.classList.remove('show'), 200);
+      });
+      
+      gameDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const gameName = this.dataset.gameName;
+          gameSearch.value = gameName;
+          selectedGame.textContent = gameName;
+          gameDropdown.classList.remove('show');
+        });
+      });
+    }
+    
+    // Year slider mock
+    const yearItems = document.querySelectorAll('.year-item');
+    const selectedYear = document.getElementById('selected-year');
+    
+    yearItems.forEach(item => {
+      item.addEventListener('click', function() {
+        yearItems.forEach(y => y.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedYear.textContent = this.dataset.year;
+      });
+    });
+    
+    // Nickname input mock
+    const nicknameInput = document.getElementById('nickname-input');
+    const nicknameTags = document.getElementById('nickname-tags');
+    const nicknameCount = document.getElementById('nickname-count');
+    let nicknames = [];
+    
+    if (nicknameInput) {
+      nicknameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim()) {
+          const nickname = this.value.trim();
+          if (!nicknames.includes(nickname)) {
+            nicknames.push(nickname);
+            const tag = document.createElement('span');
+            tag.className = 'nickname-tag';
+            tag.innerHTML = nickname + ' <span class="remove">×</span>';
+            nicknameTags.appendChild(tag);
+            nicknameCount.textContent = nicknames.length;
+            
+            tag.querySelector('.remove').addEventListener('click', function() {
+              nicknames = nicknames.filter(n => n !== nickname);
+              tag.remove();
+              nicknameCount.textContent = nicknames.length;
+            });
+            
+            this.value = '';
+          }
+        }
+      });
+    }
+    
+    // Join button mock
+    const joinButton = document.getElementById('join-button');
+    if (joinButton) {
+      // Enable button when all fields are filled (mock)
+      setTimeout(() => {
+        joinButton.disabled = false;
+        joinButton.addEventListener('click', function() {
+          alert('Mock: This would redirect to registration/login page with search parameters.');
+        });
+      }, 1000);
+    }
+  });
+</script>
+

@@ -1,0 +1,320 @@
+{% load i18n %}
+
+<style>
+  .wizard-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .wizard-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  .wizard-progress::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 0;
+  }
+  .wizard-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .wizard-step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .wizard-step.active .wizard-step-circle {
+    background: #0d6efd;
+    color: white;
+  }
+  .wizard-step.completed .wizard-step-circle {
+    background: #198754;
+    color: white;
+  }
+  .wizard-step.completed .wizard-step-circle::after {
+    content: '✓';
+  }
+  .wizard-content {
+    display: none;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: 400px;
+  }
+  .wizard-content.active {
+    display: block;
+  }
+  .wizard-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .year-slider-wizard {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 20px 0;
+    scroll-behavior: smooth;
+  }
+  .year-item-wizard {
+    min-width: 70px;
+    padding: 10px;
+    text-align: center;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .year-item-wizard:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+  }
+  .year-item-wizard.selected {
+    background: #0d6efd;
+    color: white;
+  }
+  .nickname-tag-wizard {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9em;
+  }
+  .nickname-tag-wizard .remove {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+</style>
+
+<div class="container my-4">
+  <div class="wizard-container">
+    {# Progress Indicator #}
+    <div class="wizard-progress">
+      <div class="wizard-step active" data-step="1">
+        <div class="wizard-step-circle">1</div>
+        <div class="small">Game</div>
+      </div>
+      <div class="wizard-step" data-step="2">
+        <div class="wizard-step-circle">2</div>
+        <div class="small">Year</div>
+      </div>
+      <div class="wizard-step" data-step="3">
+        <div class="wizard-step-circle">3</div>
+        <div class="small">Nicknames</div>
+      </div>
+    </div>
+
+    {# Step 1: Game Selection #}
+    <div class="wizard-content active" id="step-1">
+      <h2 class="mb-4">Step 1 of 3: Select Game</h2>
+      <p class="text-muted mb-4">Choose the game where you played with your friends</p>
+      
+      <div class="mb-4">
+        <label class="form-label">Search for a game:</label>
+        <input type="text" id="game-search-wizard" placeholder="Type game name..." class="form-control form-control-lg" />
+        <div class="list-group mt-2" id="game-list-wizard" style="max-height: 300px; overflow-y: auto;">
+          {% for game in mock_games %}
+            <a href="#" class="list-group-item list-group-item-action" data-game-id="{{ game.id }}" data-game-name="{{ game.name }}">
+              {{ game.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="wizard-navigation">
+        <div></div>
+        <button type="button" class="btn btn-primary" id="next-to-step-2" disabled>
+          Next <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    {# Step 2: Year Selection #}
+    <div class="wizard-content" id="step-2">
+      <h2 class="mb-4">Step 2 of 3: Choose Year</h2>
+      <p class="text-muted mb-4">Select the year when you played together</p>
+      
+      <div class="year-slider-wizard" id="year-slider-wizard">
+        {% for year in mock_years %}
+          <div class="year-item-wizard {% if year == 2005 %}selected{% endif %}" data-year="{{ year }}">
+            {{ year }}
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="mt-3">
+        <p class="text-muted">Selected year: <strong id="selected-year-wizard">2005</strong></p>
+      </div>
+      
+      <div class="wizard-navigation">
+        <button type="button" class="btn btn-outline-secondary" id="back-to-step-1">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-primary" id="next-to-step-3">
+          Next <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    {# Step 3: Nicknames #}
+    <div class="wizard-content" id="step-3">
+      <h2 class="mb-4">Step 3 of 3: Enter Nicknames</h2>
+      <p class="text-muted mb-4">Enter the nicknames of your friends (separated by space or press Enter)</p>
+      
+      <div class="mb-4">
+        <input type="text" id="nickname-input-wizard" placeholder="Enter nicknames..." class="form-control form-control-lg" />
+        <div class="mt-3" id="nickname-tags-wizard">
+          {# Tags will appear here #}
+        </div>
+      </div>
+      
+      <div class="wizard-navigation">
+        <button type="button" class="btn btn-outline-secondary" id="back-to-step-2">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-success btn-lg" id="finish-wizard">
+          <i class="bi bi-check-circle"></i> Search & Join
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let currentStep = 1;
+    const totalSteps = 3;
+    let selectedGame = null;
+    let selectedYear = 2005;
+    let nicknames = [];
+    
+    // Update progress indicator
+    function updateProgress() {
+      document.querySelectorAll('.wizard-step').forEach((step, index) => {
+        const stepNum = index + 1;
+        step.classList.remove('active', 'completed');
+        if (stepNum < currentStep) {
+          step.classList.add('completed');
+        } else if (stepNum === currentStep) {
+          step.classList.add('active');
+        }
+      });
+    }
+    
+    // Show step
+    function showStep(step) {
+      document.querySelectorAll('.wizard-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`step-${step}`).classList.add('active');
+      currentStep = step;
+      updateProgress();
+    }
+    
+    // Step 1: Game selection
+    const gameSearch = document.getElementById('game-search-wizard');
+    const gameList = document.getElementById('game-list-wizard');
+    const nextToStep2 = document.getElementById('next-to-step-2');
+    
+    if (gameSearch) {
+      gameSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        gameList.querySelectorAll('.list-group-item').forEach(item => {
+          const gameName = item.textContent.toLowerCase();
+          if (gameName.includes(searchTerm)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+      
+      gameList.querySelectorAll('.list-group-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          selectedGame = {
+            id: this.dataset.gameId,
+            name: this.dataset.gameName
+          };
+          gameSearch.value = selectedGame.name;
+          nextToStep2.disabled = false;
+        });
+      });
+    }
+    
+    // Step 2: Year selection
+    const yearItems = document.querySelectorAll('#year-slider-wizard .year-item-wizard');
+    const selectedYearEl = document.getElementById('selected-year-wizard');
+    const nextToStep3 = document.getElementById('next-to-step-3');
+    const backToStep1 = document.getElementById('back-to-step-1');
+    
+    yearItems.forEach(item => {
+      item.addEventListener('click', function() {
+        yearItems.forEach(y => y.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedYear = parseInt(this.dataset.year);
+        selectedYearEl.textContent = selectedYear;
+      });
+    });
+    
+    nextToStep3.addEventListener('click', () => showStep(3));
+    backToStep1.addEventListener('click', () => showStep(1));
+    
+    // Step 3: Nicknames
+    const nicknameInput = document.getElementById('nickname-input-wizard');
+    const nicknameTags = document.getElementById('nickname-tags-wizard');
+    const backToStep2 = document.getElementById('back-to-step-2');
+    const finishWizard = document.getElementById('finish-wizard');
+    
+    if (nicknameInput) {
+      nicknameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim()) {
+          const nickname = this.value.trim();
+          if (!nicknames.includes(nickname)) {
+            nicknames.push(nickname);
+            const tag = document.createElement('span');
+            tag.className = 'nickname-tag-wizard';
+            tag.innerHTML = nickname + ' <span class="remove">×</span>';
+            nicknameTags.appendChild(tag);
+            
+            tag.querySelector('.remove').addEventListener('click', function() {
+              nicknames = nicknames.filter(n => n !== nickname);
+              tag.remove();
+            });
+            
+            this.value = '';
+          }
+        }
+      });
+    }
+    
+    backToStep2.addEventListener('click', () => showStep(2));
+    finishWizard.addEventListener('click', function() {
+      alert(`Mock: Search would be performed with:\nGame: ${selectedGame?.name || 'None'}\nYear: ${selectedYear}\nNicknames: ${nicknames.join(', ') || 'None'}\n\nThis would redirect to registration/login.`);
+    });
+    
+    // Initialize
+    updateProgress();
+  });
+</script>
+

@@ -1,0 +1,201 @@
+{% load i18n %}
+
+<style>
+  .homepage-card {
+    height: 100%;
+    min-height: 400px;
+  }
+  .year-slider-horizontal {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 15px 0;
+    scroll-behavior: smooth;
+  }
+  .year-item-small {
+    min-width: 60px;
+    padding: 8px 12px;
+    text-align: center;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+  .year-item-small:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+  }
+  .year-item-small.selected {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+  }
+  .nickname-tag-small {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 3px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 15px;
+    font-size: 0.85em;
+  }
+  .nickname-tag-small .remove {
+    margin-left: 6px;
+    cursor: pointer;
+  }
+</style>
+
+<div class="container my-4">
+  {# Hero Section #}
+  <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg mb-4" style="background: #fff;">
+    <div class="col-xl-12 p-3 p-lg-5 pt-lg-3 text-center">
+      <h1 class="display-4 fw-bold lh-1 mb-3">Reconnect with Old Gaming Buddies!</h1>
+      <p class="lead">Find your long-lost gaming friends in three simple steps</p>
+    </div>
+  </div>
+
+  {# Three Cards Layout #}
+  <div class="row g-4 mb-4">
+    {# Card 1: Game Selection #}
+    <div class="col-md-4">
+      <div class="card homepage-card shadow">
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title mb-3">
+            <span class="badge bg-primary me-2">1</span>
+            Select Game
+          </h3>
+          <div class="mb-3">
+            <select class="form-select form-select-lg" id="game-select-v2">
+              <option value="">Choose a game...</option>
+              {% for game in mock_games %}
+                <option value="{{ game.id }}">{{ game.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mt-auto">
+            <small class="text-muted">Selected: <span id="selected-game-v2">None</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Card 2: Time Machine #}
+    <div class="col-md-4">
+      <div class="card homepage-card shadow">
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title mb-3">
+            <span class="badge bg-primary me-2">2</span>
+            Time Machine
+          </h3>
+          <p class="text-muted small mb-3">Choose the year</p>
+          <div class="year-slider-horizontal" id="year-slider-v2">
+            {% for year in mock_years %}
+              {% if year >= 1995 and year <= 2015 %}
+                <div class="year-item-small {% if year == 2005 %}selected{% endif %}" data-year="{{ year }}">
+                  {{ year }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="mt-auto">
+            <small class="text-muted">Selected: <span id="selected-year-v2">2005</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Card 3: Friendship #}
+    <div class="col-md-4">
+      <div class="card homepage-card shadow">
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title mb-3">
+            <span class="badge bg-primary me-2">3</span>
+            Friendship
+          </h3>
+          <p class="text-muted small mb-3">Enter nicknames</p>
+          <input type="text" id="nickname-input-v2" placeholder="Nick1 Nick2..." class="form-control mb-3" />
+          <div id="nickname-tags-v2" class="mb-3" style="min-height: 60px;">
+            {# Tags will appear here #}
+          </div>
+          <div class="mt-auto">
+            <small class="text-muted">Count: <span id="nickname-count-v2">0</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Action Button #}
+  <div class="row">
+    <div class="col-12 text-center">
+      <button type="button" class="btn btn-primary btn-lg px-5" id="join-button-v2">
+        <i class="bi bi-search"></i> Search & Join
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Game select
+    const gameSelect = document.getElementById('game-select-v2');
+    const selectedGame = document.getElementById('selected-game-v2');
+    if (gameSelect) {
+      gameSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        selectedGame.textContent = selectedOption.text || 'None';
+      });
+    }
+    
+    // Year slider
+    const yearItems = document.querySelectorAll('#year-slider-v2 .year-item-small');
+    const selectedYear = document.getElementById('selected-year-v2');
+    yearItems.forEach(item => {
+      item.addEventListener('click', function() {
+        yearItems.forEach(y => y.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedYear.textContent = this.dataset.year;
+      });
+    });
+    
+    // Nickname input
+    const nicknameInput = document.getElementById('nickname-input-v2');
+    const nicknameTags = document.getElementById('nickname-tags-v2');
+    const nicknameCount = document.getElementById('nickname-count-v2');
+    let nicknames = [];
+    
+    if (nicknameInput) {
+      nicknameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim()) {
+          const nickname = this.value.trim();
+          if (!nicknames.includes(nickname)) {
+            nicknames.push(nickname);
+            const tag = document.createElement('span');
+            tag.className = 'nickname-tag-small';
+            tag.innerHTML = nickname + ' <span class="remove">×</span>';
+            nicknameTags.appendChild(tag);
+            nicknameCount.textContent = nicknames.length;
+            
+            tag.querySelector('.remove').addEventListener('click', function() {
+              nicknames = nicknames.filter(n => n !== nickname);
+              tag.remove();
+              nicknameCount.textContent = nicknames.length;
+            });
+            
+            this.value = '';
+          }
+        }
+      });
+    }
+    
+    // Join button
+    const joinButton = document.getElementById('join-button-v2');
+    if (joinButton) {
+      joinButton.addEventListener('click', function() {
+        alert('Mock: This would redirect to registration/login page.');
+      });
+    }
+  });
+</script>
+

@@ -1,0 +1,45 @@
+{% load i18n %}
+
+<div class="container my-4">
+  <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg mb-2" style="background: #fff;">
+    <div class="col-xl-6 p-3 p-lg-5 pt-lg-3">
+      <h1 class="display-4 fw-bold lh-1">Reconnect with Old Gaming Buddies!</h1>
+      <p class="lead">Are you missing those unforgettable gaming sessions with your old buddies? Look no further! Our platform is here to help you revive the good old days by reuniting you with your gaming companions. Whether you used to conquer virtual realms together or embark on epic adventures, we bring back the camaraderie and thrill of gaming.</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+        <a href="{% url 'django_registration_register' %}" role="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">{% trans "Join now!" %}</a>
+        <a href="{% url 'character_list' %}" role="button" class="btn btn-outline-secondary btn-lg px-4">{% trans "Explore" %}</a>
+      </div>
+    </div>
+    <div class="col-xl-6 p-0 overflow-hidden">
+        <img class="rounded-lg-3" src="https://static.zentala.io/gpnf/home.webp" alt="" width="700">
+    </div>
+  </div>
+</div>
+
+<div class="row align-items-md-stretch">
+  <div class="col-md-6">
+    <div class="p-4 pb-0 pt-lg-5 align-items-center rounded-3 border shadow p-3 p-lg-5 pt-lg-3" style="background: #fff;">
+      <h2 class="display-6 fw-bold lh-1">Time machine</h2>
+      <p>Step into the extraordinary world of nostalgia as you reunite with your gaming companions. Embrace your unique synergy and continue the journey of shared excitement and triumphs! </p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="p-4 pb-0 pt-lg-5 align-items-center rounded-3 border shadow p-3 p-lg-5 pt-lg-3" style="background: #fff;">
+      <h2 class="display-6 fw-bold lh-1">Friendship</h2>
+      <p>Rediscover the essence of friendship as you reconnect with old gaming buddies. Forge new alliances and reignite the spirit of camaraderie. Our platform unites players from all corners of the gaming world.</p>
+    </div>
+  </div>
+</div>
+
+<div class="p-3 p-lg-5 align-items-center rounded-3 mt-5 mb-3 text-center">
+  <img class="" src="https://static.zentala.io/gpnf/friends.webp" alt="" width="900" />
+  <h1 class="display-4 mt-4 mb-4 fw-bold">Find Your Long-Lost Gaming Friends</h1>
+  <div class="col-lg-10 mx-auto">
+    <p class="lead mb-4">Rekindle the gaming magic as you search for your long-lost gaming companions. Our platform is a time machine that takes you back to those cherished moments when you conquered virtual realms and embarked on epic adventures together. Join now and rediscover the joy of gaming camaraderie!</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5 mt-3">
+      <a href="{% url 'character_list' %}" role="button" class="btn btn-outline-secondary btn-lg px-4">Search Now!</a>
+      <a href="{% url 'django_registration_register' %}" role="button" class="btn btn-primary btn-lg px-4 me-sm-3">Join the Adventure!</a>
+    </div>
+  </div>
+</div>
+
