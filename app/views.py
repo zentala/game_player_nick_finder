@@ -1865,9 +1865,20 @@ class HideIdentityView(LoginRequiredMixin, View):
             
         except Exception as e:
             messages.error(request, _("Failed to hide identity: {error}").format(error=str(e)))
-        
+
         # Redirect back to conversation
         redirect_url = f"{reverse('message_list')}?character={receiver_character_id}"
         if sender_character_id:
             redirect_url += f"&sender={sender_character_id}"
         return redirect(redirect_url)
+
+
+# Custom Login View with redirect for authenticated users
+from django.contrib.auth.views import LoginView as DjangoLoginView
+
+class CustomLoginView(DjangoLoginView):
+	"""
+	Custom login view that redirects authenticated users to home
+	"""
+	redirect_authenticated_user = True
+	template_name = 'registration/login.html'

@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from app import views
-from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView, PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView, RevealIdentityView, HideIdentityView, BlockCharacterView, UnblockCharacterView, BlockedCharactersListView
+from app.views import AccountProfileView, CharacterView, CharacterListView, CharacterEditView, GameListView, GameDetailView, GameCreateView, GameEditView, GameDeleteView, AboutView, CustomRegistrationView, MessageListView, RegistrationStep1View, RegistrationStep2View, RegistrationStep3View, RegistrationStep4View, UserCharactersListView, SendMessageView, GamePlayersView, PokeListView, SendPokeView, PokeDetailView, RespondPokeView, IgnorePokeView, BlockPokeView, RevealIdentityView, HideIdentityView, BlockCharacterView, UnblockCharacterView, BlockedCharactersListView, CustomLoginView
 from django_registration.backends.one_step.views import RegistrationView
 from rest_framework.routers import DefaultRouter
 # from django.contrib.auth.views import LoginView
@@ -43,7 +43,8 @@ urlpatterns = [
     path('games/<slug:slug>/delete/', GameDeleteView.as_view(), name='game_delete'),
 
     # Django Auth & Django Registration
-    path('accounts/', include('allauth.urls')),
+    # DISABLED: allauth conflicts with django.contrib.auth
+    # path('accounts/', include('allauth.urls')),
 
     # overwriting the default registration view; TODO not sure if this should be done this way
     # path('accounts/register/', CustomRegistrationView.as_view(), name='django_registration_register'),
@@ -68,11 +69,14 @@ urlpatterns = [
     # accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
     # accounts/reset/done/ [name='password_reset_complete']
 
+    # Custom login view with redirect for authenticated users (MUST BE FIRST)
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
+    # Standard Django auth (MUST BE FIRST to handle login/logout/password URLs)
+    path('accounts/', include('django.contrib.auth.urls')),
+
     # Choose one between those two:
     path('accounts/', include('django_registration.backends.one_step.urls')), # no email verification:
     # path('accounts/', include('django_registration.backends.activation.urls')), # with email verification
-
-    path('accounts/', include('django.contrib.auth.urls')),
 
     path('messages/', MessageListView.as_view(), name='message_list'),
     path('messages/send/', SendMessageView.as_view(), name='send_message'),

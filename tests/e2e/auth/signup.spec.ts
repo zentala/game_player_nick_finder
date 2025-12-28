@@ -333,21 +333,21 @@ test.describe('Registration (Signup) Flow', () => {
   test('should have register link in navbar for unauthenticated users', async ({ page }) => {
     // Navigate to site without logging in
     await page.goto('/');
-    
+
     // Verify user is not authenticated
     const notAuthenticated = await isNotAuthenticated(page);
     expect(notAuthenticated).toBe(true);
-    
+
     // Verify "Register" link is visible in navbar
     const registerLink = page.locator('a:has-text("Register"), a:has-text("register")');
     await expect(registerLink.first()).toBeVisible();
-    
+
     // Click "Register" link
     await registerLink.first().click();
-    
-    // Verify navigation to signup page
-    await expect(page).toHaveURL(/\/accounts\/signup\/?/);
-    
+
+    // Verify navigation to signup page (register_step1 is /register/step1/)
+    await expect(page).toHaveURL(/\/register\/step1\/?/);
+
     // Verify signup form is present
     await expect(page.locator('form.signup, form#signup_form')).toBeVisible();
   });
