@@ -39,6 +39,15 @@ pnpm test:e2e:debug
 ```
 tests/
 ├── e2e/
+│   ├── auth/                          # Authentication flow tests
+│   │   ├── login.spec.ts              # (TODO: Login flow tests)
+│   │   ├── logout.spec.ts             # (TODO: Logout flow tests)
+│   │   ├── signup.spec.ts             # (TODO: Registration flow tests)
+│   │   ├── password-reset.spec.ts     # (TODO: Password reset flow tests)
+│   │   └── password-change.spec.ts    # (TODO: Password change flow tests)
+│   ├── navigation/                    # Navigation menu tests
+│   │   ├── navbar-authenticated.spec.ts    # (TODO: Navbar links for logged-in users)
+│   │   └── navbar-unauthenticated.spec.ts  # (TODO: Navbar links for guest users)
 │   ├── friends/
 │   │   ├── friend-request-button.spec.ts
 │   │   ├── friend-request-list.spec.ts
@@ -49,11 +58,13 @@ tests/
 │   └── characters/
 │       ├── character-profile-edit.spec.ts
 │       └── character-profile-display.spec.ts
+├── helpers/                           # Shared test utilities
+│   └── auth-helpers.ts                # Authentication helper functions
 ```
 
 ## Test Coverage
 
-All implemented features have E2E tests:
+### ✅ Implemented Tests
 
 - ✅ Task 2.3.1: Friend Request Button
 - ✅ Task 2.3.2: Friend Request List
@@ -62,6 +73,26 @@ All implemented features have E2E tests:
 - ✅ Task 3.2.2: User Profile Display
 - ✅ Task 4.2.1: Character Profile Edit
 - ✅ Task 4.2.2: Character Profile Display
+
+### ❌ Missing Tests (TODO)
+
+**Authentication & Navigation Tests** - See [Authentication Testing Architecture](../../docs/architecture/authentication-testing-architecture.md):
+- ❌ Login flow tests
+- ❌ Logout flow tests
+- ❌ Registration (signup) flow tests
+- ❌ Password reset flow tests
+- ❌ Password change flow tests
+- ❌ Navigation menu tests (authenticated users)
+- ❌ Navigation menu tests (unauthenticated users)
+
+## Helper Functions
+
+**Authentication Helpers** (`tests/helpers/auth-helpers.ts`):
+- `login(page, username, password)` - Login user and wait for redirect
+- `logout(page)` - Logout user and wait for redirect
+- `isAuthenticated(page)` - Check if user is logged in
+- `isNotAuthenticated(page)` - Check if user is not logged in
+- `TEST_USERS` - Test user credentials from fixtures
 
 ## Requirements
 
