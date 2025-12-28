@@ -134,7 +134,7 @@ test.describe('Registration (Signup) Flow', () => {
     await page.click('button[type="submit"]');
     
     // Verify email validation error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/email|invalid/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /email|invalid/i })).toBeVisible();
     
     // Verify still on signup page
     await expect(page).toHaveURL(/\/accounts\/signup\/?/);
@@ -170,7 +170,7 @@ test.describe('Registration (Signup) Flow', () => {
     await page.click('button[type="submit"]');
     
     // Verify password validation error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/password|short|minimum/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /password|short|minimum/i })).toBeVisible();
     
     // Verify still on signup page
     await expect(page).toHaveURL(/\/accounts\/signup\/?/);
@@ -206,7 +206,7 @@ test.describe('Registration (Signup) Flow', () => {
       await page.click('button[type="submit"]');
       
       // Verify password mismatch error displayed
-      await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/match|confirm|password/i')).toBeVisible();
+      await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /match|confirm|password/i })).toBeVisible();
       
       // Verify still on signup page
       await expect(page).toHaveURL(/\/accounts\/signup\/?/);
@@ -246,7 +246,7 @@ test.describe('Registration (Signup) Flow', () => {
     await page.click('button[type="submit"]');
     
     // Verify username already exists error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/username|already|exists|taken/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /username|already|exists|taken/i })).toBeVisible();
     
     // Verify still on signup page
     await expect(page).toHaveURL(/\/accounts\/signup\/?/);
@@ -291,7 +291,7 @@ test.describe('Registration (Signup) Flow', () => {
     
     // Verify email already exists error displayed (if email uniqueness is enforced)
     // Note: This may not trigger if email doesn't exist, so we check conditionally
-    const errorElement = page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/email|already|exists|taken/i');
+    const errorElement = page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /email|already|exists|taken/i });
     const currentUrl = page.url();
     
     // If error is shown, verify it. If not, user was created successfully (email was unique)
@@ -307,7 +307,7 @@ test.describe('Registration (Signup) Flow', () => {
   test('should redirect logged in user away from signup page', async ({ page }) => {
     // Login first
     await page.goto('/accounts/login/');
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
     await page.click('button[type="submit"]');
     await page.waitForURL('**/');

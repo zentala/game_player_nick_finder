@@ -10,7 +10,7 @@ test.describe('Blocked Characters List', () => {
     await page.goto('/characters/blocked/');
     
     // Verify page title
-    await expect(page.locator('h1, h2, h5:has-text("Blocked Characters")')).toBeVisible();
+    await expect(page.locator('h1, h2, h5:has-text("Blocked Characters")').first()).toBeVisible();
   });
 
   test('should show empty state when no blocked characters', async ({ page }) => {

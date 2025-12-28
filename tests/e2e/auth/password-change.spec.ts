@@ -63,10 +63,10 @@ test.describe('Password Change Flow', () => {
     // Verify redirect to password change done page
     await page.waitForURL(/\/accounts\/password_change\/done\/?/, { timeout: 5000 });
     await expect(page).toHaveURL(/\/accounts\/password_change\/done\/?/);
-    
+
     // Verify success message displayed
-    await expect(page.locator('text=/success|changed|password/i')).toBeVisible();
-    
+    await expect(page.getByText(/success|changed|password/i)).toBeVisible();
+
     // Logout and login with new password
     await page.click('nav .dropdown-toggle');
     await page.click('a:has-text("Log out")');
@@ -74,7 +74,7 @@ test.describe('Password Change Flow', () => {
     
     // Login with new password
     await page.goto('/accounts/login/');
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', newPassword);
     await page.click('button[type="submit"]');
     await page.waitForURL('**/');
@@ -106,7 +106,7 @@ test.describe('Password Change Flow', () => {
     await page.click('button[type="submit"], input[type="submit"]');
     
     // Verify error message displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/old password|incorrect|wrong/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /old password|incorrect|wrong/i })).toBeVisible();
     
     // Verify still on password change page
     await expect(page).toHaveURL(/\/accounts\/password_change\/?/);
@@ -131,7 +131,7 @@ test.describe('Password Change Flow', () => {
     await page.click('button[type="submit"], input[type="submit"]');
     
     // Verify password validation error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/password|short|minimum/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /password|short|minimum/i })).toBeVisible();
     
     // Verify still on password change page
     await expect(page).toHaveURL(/\/accounts\/password_change\/?/);
@@ -157,7 +157,7 @@ test.describe('Password Change Flow', () => {
     await page.click('button[type="submit"], input[type="submit"]');
     
     // Verify password mismatch error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/match|confirm|password/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /match|confirm|password/i })).toBeVisible();
     
     // Verify still on password change page
     await expect(page).toHaveURL(/\/accounts\/password_change\/?/);
@@ -199,7 +199,7 @@ test.describe('Password Change Flow', () => {
     await expect(page.locator('form.login')).toBeVisible();
     
     // After login, should redirect back to password change page
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
     await page.click('button[type="submit"]');
     
@@ -228,10 +228,10 @@ test.describe('Password Change Flow', () => {
     // Verify redirect to password change done page
     await page.waitForURL(/\/accounts\/password_change\/done\/?/, { timeout: 5000 });
     await expect(page).toHaveURL(/\/accounts\/password_change\/done\/?/);
-    
+
     // Verify success message displayed
-    await expect(page.locator('text=/success|changed|password/i')).toBeVisible();
-    
+    await expect(page.getByText(/success|changed|password/i)).toBeVisible();
+
     // Verify page content is visible
     await expect(page.locator('body')).toBeVisible();
   });

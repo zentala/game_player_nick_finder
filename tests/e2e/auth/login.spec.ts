@@ -9,7 +9,7 @@ test.describe('Login Flow', () => {
     await expect(page.locator('form.login')).toBeVisible();
     
     // Verify username/email field is present
-    await expect(page.locator('#id_login')).toBeVisible();
+    await expect(page.locator('#id_username')).toBeVisible();
     
     // Verify password field is present
     await expect(page.locator('#id_password')).toBeVisible();
@@ -28,7 +28,7 @@ test.describe('Login Flow', () => {
     await page.goto('/accounts/login/');
     
     // Fill in valid credentials
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
     
     // Submit form
@@ -50,14 +50,14 @@ test.describe('Login Flow', () => {
     await page.goto('/accounts/login/');
     
     // Fill in invalid username with valid password
-    await page.fill('#id_login', 'nonexistentuser');
+    await page.fill('#id_username', 'nonexistentuser');
     await page.fill('#id_password', TEST_USERS.main.password);
     
     // Submit form
     await page.click('button[type="submit"]');
     
     // Verify error message displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/invalid/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /invalid/i })).toBeVisible();
     
     // Verify still on login page
     await expect(page).toHaveURL(/\/accounts\/login\/?/);
@@ -71,14 +71,14 @@ test.describe('Login Flow', () => {
     await page.goto('/accounts/login/');
     
     // Fill in valid username with invalid password
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', 'wrongpassword123');
     
     // Submit form
     await page.click('button[type="submit"]');
     
     // Verify error message displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/invalid|incorrect|wrong/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /invalid|incorrect|wrong/i })).toBeVisible();
     
     // Verify still on login page
     await expect(page).toHaveURL(/\/accounts\/login\/?/);
@@ -121,7 +121,7 @@ test.describe('Login Flow', () => {
     await expect(page).toHaveURL(/\/accounts\/login\/?/);
     
     // Login with valid credentials
-    await page.fill('#id_login', TEST_USERS.main.username);
+    await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
     await page.click('button[type="submit"]');
     
@@ -142,7 +142,7 @@ test.describe('Login Flow', () => {
     
     if (await rememberMeCheckbox.count() > 0) {
       // Fill in credentials
-      await page.fill('#id_login', TEST_USERS.main.username);
+      await page.fill('#id_username', TEST_USERS.main.username);
       await page.fill('#id_password', TEST_USERS.main.password);
       
       // Check "Remember me" checkbox
@@ -160,7 +160,7 @@ test.describe('Login Flow', () => {
       // would require more complex setup and is typically tested in integration tests
     } else {
       // If remember me checkbox doesn't exist, just verify normal login works
-      await page.fill('#id_login', TEST_USERS.main.username);
+      await page.fill('#id_username', TEST_USERS.main.username);
       await page.fill('#id_password', TEST_USERS.main.password);
       await page.click('button[type="submit"]');
       

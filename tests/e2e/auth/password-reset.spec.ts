@@ -32,10 +32,10 @@ test.describe('Password Reset Flow', () => {
     // Verify redirect to password reset done page
     await page.waitForURL(/\/accounts\/password_reset\/done\/?/, { timeout: 5000 });
     await expect(page).toHaveURL(/\/accounts\/password_reset\/done\/?/);
-    
+
     // Verify success message displayed
-    await expect(page.locator('text=/email|sent|reset/i')).toBeVisible();
-    
+    await expect(page.getByText(/email|sent|reset/i)).toBeVisible();
+
     // Note: In development, email is printed to console
     // Full email token testing would require email mock setup or management command
   });
@@ -97,7 +97,7 @@ test.describe('Password Reset Flow', () => {
     await page.click('button[type="submit"], input[type="submit"]');
     
     // Verify email validation error displayed
-    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback, text=/email|invalid/i')).toBeVisible();
+    await expect(page.locator('.alert-danger, .errorlist, .invalid-feedback').filter({ hasText: /email|invalid/i })).toBeVisible();
     
     // Verify still on password reset page
     await expect(page).toHaveURL(/\/accounts\/password_reset\/?/);
@@ -135,10 +135,10 @@ test.describe('Password Reset Flow', () => {
     // Verify redirect to password reset done page
     await page.waitForURL(/\/accounts\/password_reset\/done\/?/, { timeout: 5000 });
     await expect(page).toHaveURL(/\/accounts\/password_reset\/done\/?/);
-    
+
     // Verify success message displayed
-    await expect(page.locator('text=/email|sent|reset/i')).toBeVisible();
-    
+    await expect(page.getByText(/email|sent|reset/i)).toBeVisible();
+
     // Verify page content is visible
     await expect(page.locator('body')).toBeVisible();
   });
