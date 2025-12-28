@@ -1,26 +1,73 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4 px-0">
     {% if error_message %}
-        <div class="alert alert-warning">
-            {{ error_message }}
-            <a href="{% url 'add_character' %}" class="btn btn-primary btn-sm ml-3">Create Character</a>
+        <div class="container">
+            <div class="alert alert-warning">
+                {{ error_message }}
+                <a href="{% url 'add_character' %}" class="btn btn-primary btn-sm ml-3">Create Character</a>
+            </div>
         </div>
     {% else %}
-        {% if receiver_character or thread_id %}
+        <div class="row g-0">
+            <!-- Conversation List Sidebar -->
+            <div class="col-md-3 col-lg-3 conversation-sidebar border-end bg-light">
+                <div class="sticky-top" style="top: 76px; max-height: calc(100vh - 76px); overflow-y: auto;">
+                    <div class="p-3 border-bottom bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{% trans "Conversations" %}</h5>
+                            <!-- Mobile toggle button -->
+                            <button class="btn btn-sm btn-outline-secondary d-md-none" 
+                                    type="button" 
+                                    id="conversation-sidebar-toggle"
+                                    aria-label="{% trans 'Toggle conversations' %}">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% include 'messages/conversation_list.html' %}
+                </div>
+            </div>
+            
+            <!-- Message Thread Area -->
+            <div class="col-12 col-md-9 col-lg-9">
+                <div class="container mt-4">
+                    <!-- Mobile: Show toggle button when no conversation selected -->
+                    {% if not receiver_character and not thread_id %}
+                        <div class="d-md-none mb-3">
+                            <button class="btn btn-outline-primary w-100" 
+                                    type="button" 
+                                    id="conversation-sidebar-toggle-mobile"
+                                    aria-label="{% trans 'Show conversations' %}">
+                                <i class="bi bi-list"></i> {% trans "Show Conversations" %}
+                            </button>
+                        </div>
+                    {% endif %}
+                    
+                    {% if receiver_character or thread_id %}
             {# Chat View #}
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        {% if receiver_character %}
-                            {% trans "Chat with" %} {{ receiver_character.nickname }} ({{ receiver_character.game.name }})
-                        {% else %}
-                            {% trans "Chat" %}
-                        {% endif %}
-                    </h5>
+                    <div class="d-flex align-items-center">
+                        <!-- Mobile: Toggle button -->
+                        <button class="btn btn-sm btn-light me-2 d-md-none" 
+                                type="button" 
+                                id="conversation-sidebar-toggle-header"
+                                aria-label="{% trans 'Toggle conversations' %}">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h5 class="mb-0">
+                            {% if receiver_character %}
+                                {% trans "Chat with" %} {{ receiver_character.nickname }} ({{ receiver_character.game.name }})
+                            {% else %}
+                                {% trans "Chat" %}
+                            {% endif %}
+                        </h5>
+                    </div>
                     <a href="{% url 'message_list' %}" class="btn btn-light btn-sm">{% trans "Back to Conversations" %}</a>
                 </div>
 
@@ -232,62 +279,123 @@
                 </div>
             </div>
         {% else %}
-            {# Conversations List View #}
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">{% trans "Your Characters' Conversations" %}</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    {% for message in messages %}
-                        {% if message.sender_character.user == user %}
-                            {% with other_character=message.receiver_character %}
-                                <a href="{% url 'message_list' %}?character={{ other_character.id }}"
-                                   class="list-group-item list-group-item-action">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="mb-1">
-                                                <span class="text-primary">{{ message.sender_character.nickname }}</span>
-                                                <i class="bi bi-arrow-right"></i>
-                                                <span class="text-success">{{ other_character.nickname }}</span>
-                                                <small class="text-muted">({{ other_character.game.name }})</small>
-                                            </h6>
-                                            <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
-                                        </div>
-                                        <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
-                                    </div>
-                                </a>
-                            {% endwith %}
-                        {% else %}
-                            {% with other_character=message.sender_character %}
-                                <a href="{% url 'message_list' %}?character={{ other_character.id }}"
-                                   class="list-group-item list-group-item-action">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="mb-1">
-                                                <span class="text-success">{{ other_character.nickname }}</span>
-                                                <i class="bi bi-arrow-right"></i>
-                                                <span class="text-primary">{{ message.receiver_character.nickname }}</span>
-                                                <small class="text-muted">({{ other_character.game.name }})</small>
-                                            </h6>
-                                            <p class="mb-1 text-muted">{{ message.content|truncatechars:50 }}</p>
-                                        </div>
-                                        <small class="text-muted">{{ message.sent_date|date:"M d, H:i" }}</small>
-                                    </div>
-                                </a>
-                            {% endwith %}
-                        {% endif %}
-                    {% empty %}
-                        <div class="list-group-item text-center text-muted">
-                            {% trans "No conversations yet." %}
-                        </div>
-                    {% endfor %}
+            {# Empty State - No conversation selected #}
+            <div class="d-flex align-items-center justify-content-center" style="min-height: 60vh;">
+                <div class="text-center text-muted">
+                    <i class="bi bi-chat-dots" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">{% trans "Select a conversation" %}</h4>
+                    <p>{% trans "Choose a conversation from the list to view messages" %}</p>
                 </div>
             </div>
         {% endif %}
+                </div>
+            </div>
+        </div>
     {% endif %}
 </div>
 
+<!-- Mobile backdrop for sidebar -->
+<div class="conversation-backdrop d-md-none"></div>
+
 <style>
+/* Conversation List Styles */
+.conversation-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.conversation-item {
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.conversation-item:hover {
+    background-color: #f8f9fa;
+    border-left-color: #0d6efd;
+    text-decoration: none;
+    color: inherit;
+}
+
+.conversation-item.active {
+    background-color: #0d6efd;
+    color: white;
+    border-left-color: #0a58ca;
+}
+
+.conversation-item.active .conversation-name,
+.conversation-item.active .conversation-game,
+.conversation-item.active .conversation-preview,
+.conversation-item.active .conversation-time {
+    color: white !important;
+}
+
+.conversation-avatar {
+    flex-shrink: 0;
+}
+
+.conversation-name {
+    font-weight: 600;
+    color: #212529;
+}
+
+.conversation-item.active .conversation-name {
+    color: white;
+}
+
+.unread-badge {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+}
+
+.conversation-preview {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.conversation-time {
+    font-size: 0.75rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767.98px) {
+    .conversation-sidebar {
+        position: fixed;
+        top: 56px; /* Navbar height */
+        left: -100%;
+        width: 280px;
+        height: calc(100vh - 56px);
+        background: white;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        overflow-y: auto;
+    }
+    
+    .conversation-sidebar.show {
+        left: 0;
+    }
+    
+    .conversation-backdrop {
+        display: none;
+        position: fixed;
+        top: 56px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 56px);
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    
+    .conversation-backdrop.show {
+        display: block;
+    }
+}
+
 .chat-messages {
     display: flex;
     flex-direction: column;
@@ -513,10 +621,64 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Mobile sidebar toggle
+    const sidebarToggle = document.getElementById('conversation-sidebar-toggle');
+    const sidebarToggleMobile = document.getElementById('conversation-sidebar-toggle-mobile');
+    const sidebarToggleHeader = document.getElementById('conversation-sidebar-toggle-header');
+    const sidebar = document.querySelector('.conversation-sidebar');
+    const backdrop = document.querySelector('.conversation-backdrop');
+    
+    function toggleSidebar() {
+        if (sidebar) {
+            sidebar.classList.toggle('show');
+            if (backdrop) {
+                backdrop.classList.toggle('show');
+            }
+        }
+    }
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    }
+    
+    if (sidebarToggleMobile) {
+        sidebarToggleMobile.addEventListener('click', toggleSidebar);
+    }
+    
+    if (sidebarToggleHeader) {
+        sidebarToggleHeader.addEventListener('click', toggleSidebar);
+    }
+    
+    // Close sidebar when clicking backdrop
+    if (backdrop) {
+        backdrop.addEventListener('click', toggleSidebar);
+    }
+    
+    // Close sidebar when clicking conversation item (mobile)
+    const conversationItems = document.querySelectorAll('.conversation-item');
+    conversationItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+                if (sidebar) {
+                    sidebar.classList.remove('show');
+                }
+                if (backdrop) {
+                    backdrop.classList.remove('show');
+                }
+            }
+        });
+    });
+    
     // Przewiń do ostatniej wiadomości
     const chatMessages = document.querySelector('.chat-messages');
     if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Highlight active conversation on load
+    const activeConversation = document.querySelector('.conversation-item.active');
+    if (activeConversation) {
+        activeConversation.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     // Auto-resize textarea
