@@ -26,6 +26,7 @@
               <li><a class="dropdown-item" href="{% url 'account_characters_list' %}">{% trans "My characters" %}</a></li>
               <li><a class="dropdown-item" href="{% url 'poke_list' %}">{% trans "POKEs" %} <span class="badge rounded-pill bg-warning" id="poke-badge">0</span></a></li>
               <li><a class="dropdown-item" href="{% url 'message_list' %}">{% trans "Messages" %} <span class="badge rounded-pill bg-danger">0</span></a></li>
+              <li><a class="dropdown-item" href="{% url 'blocked_characters_list' %}"><i class="bi bi-shield-x"></i> {% trans "Blocked Characters" %}</a></li>
               <li><a class="dropdown-item" href="{% url 'password_change' %}">{% trans "Change password" %}</a></li>
               {% if user.is_superuser %}
                 <li><a class="dropdown-item" href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>

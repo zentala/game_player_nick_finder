@@ -5,6 +5,18 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
 
+
+def is_blocked(blocker_character, blocked_character):
+    """
+    Check if blocker_character has blocked blocked_character.
+    Returns True if blocked, False otherwise.
+    """
+    from app.models import CharacterBlock
+    return CharacterBlock.objects.filter(
+        blocker_character=blocker_character,
+        blocked_character=blocked_character
+    ).exists()
+
 def get_gravatar_url(email, size=40):
     email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
     return f"https://www.gravatar.com/avatar/{email_hash}?s={size}&d=identicon"
@@ -62,7 +74,7 @@ def can_send_poke(user, receiver_character):
     Check if user can send POKE to receiver_character.
     Returns (can_send: bool, reason: str or None)
     """
-    from app.models import Poke, PokeBlock, Character
+    from app.models import Poke, PokeBlock, Character, CharacterBlock
     
     # Check if user has characters
     user_characters = Character.objects.filter(user=user)
@@ -73,7 +85,15 @@ def can_send_poke(user, receiver_character):
     if receiver_character.user == user:
         return False, "You cannot send POKE to your own character"
     
-    # Check for blocks
+    # Check for general block (CharacterBlock) - takes precedence
+    is_blocked = CharacterBlock.objects.filter(
+        blocker_character=receiver_character,
+        blocked_character__in=user_characters
+    ).exists()
+    if is_blocked:
+        return False, "You have been blocked by this character"
+    
+    # Check for POKE-specific blocks (legacy)
     is_blocked = PokeBlock.objects.filter(
         blocker_character=receiver_character,
         blocked_character__user=user
@@ -126,9 +146,17 @@ def can_send_message(sender_character, receiver_character):
     Check if sender_character can send full Message to receiver_character.
     Full messaging is unlocked after mutual POKE exchange.
     """
-    from app.models import Poke, PokeBlock
+    from app.models import Poke, PokeBlock, CharacterBlock
     
-    # Check for blocks (even if POKE was exchanged, block can prevent messaging)
+    # Check for general block (CharacterBlock) - takes precedence
+    is_blocked = CharacterBlock.objects.filter(
+        blocker_character=receiver_character,
+        blocked_character=sender_character
+    ).exists()
+    if is_blocked:
+        return False, "You have been blocked by this character"
+    
+    # Check for POKE-specific blocks (legacy)
     is_blocked = PokeBlock.objects.filter(
         blocker_character=receiver_character,
         blocked_character=sender_character

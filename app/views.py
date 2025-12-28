@@ -12,8 +12,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
+import json
 
 from .forms import (
     AddCharacterForm, CharacterFilterForm, UserEditForm, GameForm,
@@ -23,7 +25,7 @@ from .forms import (
 from .models import (
     Game, Character, Message, CustomUser, GameCategory, ProposedGame, Vote,
     CharacterFriend, CharacterFriendRequest, CharacterProfile, Poke, PokeBlock,
-    CharacterIdentityReveal
+    CharacterIdentityReveal, CharacterBlock
 )
 from .utils import can_send_poke, can_send_message
 
@@ -45,6 +47,101 @@ class BaseViewMixin:
 class IndexView(BaseViewMixin, TemplateView):
 	current_page = 'home'
 	template_name = 'index.html'
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		
+		# Get layout variant with priority: URL param > Session > Default
+		layout = self.get_user_layout()
+		
+		context['layout'] = layout
+		context['layout_variants'] = ['v0', 'v1', 'v2', 'v3']
+		context['show_layout_switcher'] = self.should_show_switcher()
+		context['debug'] = settings.DEBUG  # For template to show DEBUG badge
+		
+		# Mock data for testing (only for v1-v3)
+		if layout != 'v0':
+			context['mock_games'] = self.get_mock_games()
+			context['mock_years'] = self.get_mock_years()
+		
+		return context
+	
+	def get_user_layout(self):
+		"""
+		Get layout for user with priority:
+		1. URL param (highest priority, saves to session)
+		2. Session storage (if user has saved preference)
+		3. Default (v0)
+		"""
+		# Check URL param first
+		url_layout = self.request.GET.get('layout', None)
+		
+		if url_layout:
+			# Handle reset
+			if url_layout == 'reset':
+				if 'homepage_layout' in self.request.session:
+					del self.request.session['homepage_layout']
+					self.request.session.save()
+				return 'v0'
+			
+			# Validate and save to session
+			if url_layout in ['v0', 'v1', 'v2', 'v3']:
+				self.request.session['homepage_layout'] = url_layout
+				self.request.session.save()  # Explicitly save session
+				return url_layout
+		
+		# Check session storage
+		session_layout = self.request.session.get('homepage_layout', None)
+		if session_layout and session_layout in ['v0', 'v1', 'v2', 'v3']:
+			return session_layout
+		
+		# Default layout
+		return 'v0'
+	
+	def should_show_switcher(self):
+		"""
+		Determine if layout switcher should be visible.
+		Show switcher if:
+		- URL param is present (user is actively switching)
+		- User has saved layout preference (not default)
+		- In development mode (DEBUG=True)
+		- User is staff/superuser (developers)
+		"""
+		# Always show if URL param is present
+		if self.request.GET.get('layout'):
+			return True
+		
+		# Show if user has saved preference (not default)
+		saved_layout = self.request.session.get('homepage_layout', None)
+		if saved_layout and saved_layout != 'v0':
+			return True
+		
+		# Always show in development mode
+		if settings.DEBUG:
+			return True
+		
+		# Show for staff/superuser (developers)
+		if self.request.user.is_authenticated and (self.request.user.is_staff or self.request.user.is_superuser):
+			return True
+		
+		return False
+	
+	def get_mock_games(self):
+		"""Return mock games data for testing"""
+		return [
+			{'id': 1, 'name': 'Counter-Strike', 'slug': 'counter-strike'},
+			{'id': 2, 'name': 'World of Warcraft', 'slug': 'world-of-warcraft'},
+			{'id': 3, 'name': 'League of Legends', 'slug': 'league-of-legends'},
+			{'id': 4, 'name': 'Minecraft', 'slug': 'minecraft'},
+			{'id': 5, 'name': 'Diablo II', 'slug': 'diablo-ii'},
+			{'id': 6, 'name': 'StarCraft', 'slug': 'starcraft'},
+			{'id': 7, 'name': 'Warcraft III', 'slug': 'warcraft-iii'},
+			{'id': 8, 'name': 'Quake', 'slug': 'quake'},
+		]
+	
+	def get_mock_years(self):
+		"""Return years for Time Machine slider"""
+		return list(range(1990, 2025))  # 1990-2024
 
 class AboutView(BaseViewMixin, TemplateView):
 	current_page = 'about'
@@ -110,10 +207,6 @@ class RegistrationStep4View(BaseViewMixin, FormView):
 
 	def get_success_url(self):
 		return reverse('register_step3')  # URL do kroku 3
-
-class IndexView(BaseViewMixin, TemplateView):
-	current_page = 'home'
-	template_name = 'index.html'
 
 class UserProfileDisplayView(DetailView):
 	"""Display public user profile with visibility checks"""
@@ -348,8 +441,9 @@ class CharacterListView(BaseViewMixin, ListView):
 			except Game.DoesNotExist:
 				pass
 
-		# Dodaj mapowanie ID gier do ich slugów
-		context['game_slugs_json'] = {str(g.id): g.slug for g in Game.objects.all()}
+		# Dodaj mapowanie ID gier do ich slugów (serialized as JSON string)
+		game_slugs_dict = {str(g.id): g.slug for g in Game.objects.all()}
+		context['game_slugs_json'] = json.dumps(game_slugs_dict)
 
 		# Stosuj wszystkie ustalone initial_data
 		if initial_data:
@@ -415,12 +509,24 @@ class CharacterView(BaseViewMixin, DetailView):
 				if matching_character:
 					can_send_full_message, _ = can_send_message(matching_character, character)
 			
+			# Check if character is blocked by any of user's characters
+			is_blocked_by_user = False
+			blocking_block = None
+			if character.user != user and user_characters.exists():
+				blocking_block = CharacterBlock.objects.filter(
+					blocker_character__in=user_characters,
+					blocked_character=character
+				).first()
+				is_blocked_by_user = blocking_block is not None
+			
 			context['is_friend'] = is_friend
 			context['pending_request'] = pending_request
 			context['can_send_request'] = can_send_request
 			context['user_characters'] = user_characters  # For selecting which character sends request
 			context['can_send_full_message'] = can_send_full_message
 			context['matching_character'] = matching_character
+			context['is_blocked_by_user'] = is_blocked_by_user
+			context['blocking_block'] = blocking_block
 		
 		# Get character profile if exists
 		try:
@@ -535,6 +641,14 @@ class SendFriendRequestView(LoginRequiredMixin, View):
 			status='PENDING'
 		).exists():
 			messages.info(request, 'Friend request already sent.')
+			return redirect('character_detail', nickname=nickname, hash_id=hash_id)
+		
+		# Check if receiver has blocked sender
+		if CharacterBlock.objects.filter(
+			blocker_character=receiver_character,
+			blocked_character=sender_character
+		).exists():
+			messages.error(request, _('You cannot send a friend request to this character.'))
 			return redirect('character_detail', nickname=nickname, hash_id=hash_id)
 		
 		# Create friend request
@@ -841,6 +955,21 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = 'messages/message_list.html'
     paginate_by = 50
 
+    def get(self, request, *args, **kwargs):
+        """Mark messages as read when viewing a thread"""
+        response = super().get(request, *args, **kwargs)
+        
+        thread_id = request.GET.get('thread_id')
+        if thread_id:
+            user_characters = Character.objects.filter(user=request.user)
+            Message.objects.filter(
+                thread_id=thread_id,
+                receiver_character__in=user_characters,
+                is_read=False
+            ).update(is_read=True, read_at=timezone.now())
+        
+        return response
+
     def get_queryset(self):
         thread_id = self.request.GET.get('thread_id')
         receiver_character_id = self.request.GET.get('character')
@@ -866,46 +995,9 @@ class MessageListView(LoginRequiredMixin, ListView):
             except Character.DoesNotExist:
                 return Message.objects.none()
         else:
-            # Zamiast wszystkich wiadomości, zwróć tylko najnowsze z każdej konwersacji
-            conversations = []
-
-            # Pobierz unikalne pary rozmówców
-            pairs = set()
-            user_character_ids = list(user_characters.values_list('id', flat=True))
-
-            # Pobierz wszystkie wiadomości gdzie użytkownik jest nadawcą lub odbiorcą
-            all_messages = Message.objects.filter(
-                models.Q(sender_character__in=user_characters) |
-                models.Q(receiver_character__in=user_characters)
-            ).select_related('sender_character', 'receiver_character', 'sender_character__game', 'receiver_character__game')
-
-            # Grupuj wiadomości według par rozmówców
-            for message in all_messages:
-                # Upewnij się, że pierwszy element pary to zawsze postać użytkownika
-                if message.sender_character.id in user_character_ids:
-                    pair = (message.sender_character.id, message.receiver_character.id)
-                else:
-                    pair = (message.receiver_character.id, message.sender_character.id)
-
-                # Dodaj parę do zbioru jeśli jeszcze jej nie ma
-                if pair not in pairs:
-                    pairs.add(pair)
-                    # Znajdź najnowszą wiadomość dla tej pary
-                    latest_message = Message.objects.filter(
-                        models.Q(
-                            sender_character=Character.objects.get(id=pair[0]),
-                            receiver_character=Character.objects.get(id=pair[1])
-                        ) | models.Q(
-                            sender_character=Character.objects.get(id=pair[1]),
-                            receiver_character=Character.objects.get(id=pair[0])
-                        )
-                    ).order_by('-sent_date').first()
-
-                    if latest_message:
-                        conversations.append(latest_message)
-
-            # Posortuj konwersacje według daty ostatniej wiadomości (najnowsze na górze)
-            return sorted(conversations, key=lambda m: m.sent_date, reverse=True)
+            # No thread_id or character_id - return empty queryset
+            # Conversation list is now handled in get_context_data() for sidebar display
+            return Message.objects.none()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -917,6 +1009,62 @@ class MessageListView(LoginRequiredMixin, ListView):
         if not user_characters.exists():
             context['error_message'] = _("You need to create a character first to send messages.")
             return context
+
+        # Build conversation list for sidebar
+        user_threads = Message.objects.filter(
+            models.Q(sender_character__in=user_characters) |
+            models.Q(receiver_character__in=user_characters)
+        ).values_list('thread_id', flat=True).distinct()
+
+        conversations = []
+        for thread_id_value in user_threads:
+            thread_messages = Message.objects.filter(
+                thread_id=thread_id_value
+            ).select_related(
+                'sender_character',
+                'receiver_character',
+                'sender_character__game',
+                'receiver_character__game'
+            ).order_by('-sent_date')
+
+            if thread_messages.exists():
+                latest_message = thread_messages.first()
+
+                # Determine other character (not user's character)
+                if latest_message.sender_character in user_characters:
+                    other_character = latest_message.receiver_character
+                else:
+                    other_character = latest_message.sender_character
+
+                # Count unread messages for this thread
+                unread_count = Message.objects.filter(
+                    thread_id=thread_id_value,
+                    receiver_character__in=user_characters,
+                    is_read=False
+                ).count()
+
+                # Get message preview (first 100 chars)
+                preview = latest_message.content[:100]
+                if len(latest_message.content) > 100:
+                    preview += "..."
+
+                conversations.append({
+                    'thread_id': thread_id_value,
+                    'other_character': other_character,
+                    'latest_message': latest_message,
+                    'unread_count': unread_count,
+                    'message_preview': preview,
+                })
+
+        # Sort by latest message date (newest first)
+        conversations.sort(
+            key=lambda x: x['latest_message'].sent_date,
+            reverse=True
+        )
+
+        context['conversations'] = conversations
+        context['current_thread_id'] = thread_id
+        context['current_character_id'] = receiver_character_id
 
         if receiver_character_id:
             try:
@@ -1441,6 +1589,129 @@ class BlockPokeView(LoginRequiredMixin, View):
         
         messages.success(request, _("Sender blocked. You will not receive more POKEs from this character."))
         return redirect('poke_list')
+
+
+class BlockCharacterView(LoginRequiredMixin, View):
+    """Block a character from all interactions"""
+    
+    def post(self, request, *args, **kwargs):
+        character_id = request.POST.get('character_id')
+        reason = request.POST.get('reason', '')
+        report_spam = request.POST.get('report_spam') == 'on'
+        
+        try:
+            character_to_block = get_object_or_404(Character, id=character_id)
+            user_characters = Character.objects.filter(user=request.user)
+            
+            # Cannot block own character
+            if character_to_block.user == request.user:
+                messages.error(request, _("You cannot block your own character."))
+                return redirect(request.META.get('HTTP_REFERER', 'character_list'))
+            
+            # Find which of user's characters should block
+            blocking_character_id = request.POST.get('blocking_character_id')
+            if blocking_character_id:
+                blocking_character = get_object_or_404(
+                    Character,
+                    id=blocking_character_id,
+                    user=request.user
+                )
+            else:
+                # Default: block from character in same game
+                blocking_character = user_characters.filter(
+                    game=character_to_block.game
+                ).first()
+                
+                # If no character in same game, use first character
+                if not blocking_character:
+                    blocking_character = user_characters.first()
+            
+            if not blocking_character:
+                messages.error(request, _("You need a character to block from."))
+                return redirect(request.META.get('HTTP_REFERER', 'character_list'))
+            
+            # Create block
+            from django.utils import timezone
+            block, created = CharacterBlock.objects.get_or_create(
+                blocker_character=blocking_character,
+                blocked_character=character_to_block,
+                defaults={
+                    'reason': reason,
+                    'reported_as_spam': report_spam,
+                    'reported_at': timezone.now() if report_spam else None
+                }
+            )
+            
+            if created:
+                messages.success(request, _("Character blocked successfully."))
+            else:
+                messages.info(request, _("Character was already blocked."))
+            
+            return redirect(request.META.get('HTTP_REFERER', 'character_list'))
+            
+        except Exception as e:
+            messages.error(request, _("Failed to block character: {error}").format(error=str(e)))
+            return redirect('character_list')
+
+
+class UnblockCharacterView(LoginRequiredMixin, View):
+    """Unblock a previously blocked character"""
+    
+    def post(self, request, *args, **kwargs):
+        block_id = request.POST.get('block_id')
+        character_id = request.POST.get('character_id')
+        
+        try:
+            if block_id:
+                block = get_object_or_404(
+                    CharacterBlock,
+                    id=block_id,
+                    blocker_character__user=request.user
+                )
+                block.delete()
+            elif character_id:
+                # Unblock by character ID
+                user_characters = Character.objects.filter(user=request.user)
+                CharacterBlock.objects.filter(
+                    blocker_character__in=user_characters,
+                    blocked_character_id=character_id
+                ).delete()
+            
+            messages.success(request, _("Character unblocked successfully."))
+            return redirect('blocked_characters_list')
+            
+        except Exception as e:
+            messages.error(request, _("Failed to unblock character: {error}").format(error=str(e)))
+            return redirect('blocked_characters_list')
+
+
+class BlockedCharactersListView(LoginRequiredMixin, ListView):
+    """List all characters blocked by current user's characters"""
+    model = CharacterBlock
+    template_name = 'characters/blocked_list.html'
+    context_object_name = 'blocks'
+    paginate_by = 20
+    current_page = 'characters'
+    
+    def get_queryset(self):
+        user_characters = Character.objects.filter(user=self.request.user)
+        return CharacterBlock.objects.filter(
+            blocker_character__in=user_characters
+        ).select_related(
+            'blocker_character',
+            'blocker_character__game',
+            'blocked_character',
+            'blocked_character__game',
+            'blocked_character__user'
+        ).order_by('-blocked_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Blocked Characters')
+        context['back_url'] = reverse('account_profile')
+        context['back_label'] = _('Back to Profile')
+        context['content_template'] = 'characters/blocked_list_content.html'
+        return context
 
 
 @login_required

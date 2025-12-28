@@ -1,0 +1,84 @@
+{% load i18n %}
+
+<div class="blocked-characters-list">
+  <div class="card">
+    <div class="card-header bg-danger text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-shield-x"></i> {% trans "Blocked Characters" %}
+      </h5>
+    </div>
+    <div class="list-group list-group-flush">
+      {% for block in blocks %}
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+              <h6 class="mb-1">
+                <a href="{% url 'character_detail' nickname=block.blocked_character.nickname hash_id=block.blocked_character.hash_id %}">
+                  {{ block.blocked_character.nickname }}
+                </a>
+                <small class="text-muted">({{ block.blocked_character.game.name }})</small>
+              </h6>
+              <small class="text-muted d-block">
+                <strong>{% trans "Blocked from" %}:</strong> {{ block.blocker_character.nickname }}
+                <br>
+                <strong>{% trans "Blocked on" %}:</strong> {{ block.blocked_at|date:"M d, Y H:i" }}
+                {% if block.reason %}
+                  <br>
+                  <strong>{% trans "Reason" %}:</strong> {{ block.reason }}
+                {% endif %}
+                {% if block.reported_as_spam %}
+                  <br>
+                  <span class="badge bg-warning text-dark">{% trans "Reported as spam" %}</span>
+                {% endif %}
+              </small>
+            </div>
+            <form method="post" action="{% url 'unblock_character' %}" class="d-inline ms-3">
+              {% csrf_token %}
+              <input type="hidden" name="block_id" value="{{ block.id }}">
+              <button type="submit" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-shield-check"></i> {% trans "Unblock" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      {% empty %}
+        <div class="list-group-item text-center text-muted py-5">
+          <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
+          <p class="mt-3 mb-0">{% trans "No blocked characters." %}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+  {# Pagination #}
+  {% if is_paginated %}
+    <nav aria-label="{% trans 'Blocked characters pagination' %}" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1">{% trans "First" %}</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+          </li>
+        {% endif %}
+        
+        <li class="page-item active">
+          <span class="page-link">
+            {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+          </span>
+        </li>
+        
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+
