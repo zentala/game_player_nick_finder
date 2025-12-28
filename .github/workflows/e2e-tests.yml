@@ -1,13 +1,13 @@
 name: E2E Tests
 
 on:
-  # Run on every push to main
+  # Run on every push to dev or main
   push:
-    branches: [ main ]
+    branches: [ dev, main ]
 
-  # Run on every pull request to main
+  # Run on every pull request to dev or main
   pull_request:
-    branches: [ main ]
+    branches: [ dev, main ]
 
   # Allow manual trigger
   workflow_dispatch:

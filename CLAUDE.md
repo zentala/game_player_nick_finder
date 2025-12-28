@@ -312,6 +312,194 @@ Status symbols:
 7. **Update Docs**: Update status documentation files
 8. **Commit**: Include code + tests + doc updates in single commit
 
+## Git Workflow
+
+**CRITICAL**: This project uses a **protected main branch** strategy with a `dev` branch for development.
+
+### Branch Strategy: Dev → Main
+
+**Branch Structure**:
+```
+main (production-ready, protected)
+  ↑
+  PR (after tests pass)
+  ↑
+dev (development, CI/CD testing)
+  ↑
+  merge
+  ↑
+feature/* (individual features)
+```
+
+**Daily Development Workflow**:
+
+```bash
+# 1. Start from dev branch
+git checkout dev
+git pull origin dev
+
+# 2. Make your changes
+# Edit files...
+
+# 3. Commit to dev
+git add .
+git commit -m "feat: add new feature"
+
+# 4. Push to dev
+git push origin dev
+
+# 5. GitHub Actions runs automatically on dev
+#    - Runs E2E tests (~15 minutes)
+#    - Runs Django CI tests (~5 minutes)
+#    - If tests FAIL: Fix issues and push to dev again
+#    - If tests PASS: Proceed to next step
+
+# 6. Create PR: dev → main (on GitHub)
+#    - Tests run again on PR
+#    - If pass: Merge to main
+#    - If fail: Fix and push to dev
+
+# 7. After merge to main:
+#    - Render automatically deploys to production
+#    - Production updated in ~5-10 minutes
+```
+
+### Feature Branch Workflow (for larger features)
+
+```bash
+# 1. Create feature branch from dev
+git checkout dev
+git pull origin dev
+git checkout -b feature/feature-name
+
+# 2. Work on feature (multiple commits)
+git add .
+git commit -m "feat: implement feature part 1"
+# ... more commits ...
+
+# 3. Push feature branch
+git push -u origin feature/feature-name
+
+# 4. Create PR: feature/feature-name → dev
+#    - GitHub Actions runs tests
+#    - Merge to dev after tests pass
+
+# 5. When ready for production:
+#    - Create PR: dev → main
+#    - Merge after tests pass
+#    - Render deploys to production
+```
+
+### CRITICAL RULES
+
+**NEVER**:
+- ❌ NEVER commit directly to `main` branch
+- ❌ NEVER push to `main` branch
+- ❌ NEVER bypass branch protection rules
+- ❌ NEVER skip tests before merging
+
+**ALWAYS**:
+- ✅ ALWAYS work on `dev` branch (or feature branches)
+- ✅ ALWAYS push to `dev` first
+- ✅ ALWAYS wait for GitHub Actions tests to pass
+- ✅ ALWAYS use Pull Requests for dev → main
+- ✅ ALWAYS update documentation in commits
+
+### GitHub Actions Integration
+
+**What triggers tests**:
+- Push to `dev` branch → E2E + Django tests run
+- Push to `main` branch → E2E + Django tests run
+- Pull Request to `dev` or `main` → Tests run
+
+**Test workflows**:
+- `e2e-tests.yml`: Playwright E2E tests on 3 browsers (~15 min)
+- `django-ci.yml`: Django unit tests + linting (~5 min)
+
+**What happens**:
+1. You push to `dev` → GitHub Actions starts testing
+2. Tests complete → PR shows ✅ (pass) or ❌ (fail)
+3. If ✅: Create PR to `main`
+4. If ❌: Fix issues, push to `dev` again, repeat
+
+### Render Deployment
+
+**Auto-deploy configuration**:
+- Render watches `main` branch ONLY
+- When `main` is updated (via PR merge), Render deploys
+- `dev` branch changes do NOT trigger deploy
+- Deployment takes ~5-10 minutes
+- Auto rollback if deploy fails
+
+**Complete Flow**:
+```
+Developer → Commit to dev → Push to dev
+    ↓
+GitHub Actions runs tests on dev
+    ↓ PASS
+Create PR: dev → main
+    ↓
+GitHub Actions runs tests on PR
+    ↓ PASS
+Merge PR to main
+    ↓
+Render detects main branch update
+    ↓
+Render builds and deploys
+    ↓
+Production updated ✅
+```
+
+### Emergency Hotfix Procedure
+
+**If production is broken and needs immediate fix**:
+
+```bash
+# 1. Create hotfix branch from main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-bug
+
+# 2. Fix the bug
+# Edit files...
+
+# 3. Commit and push
+git add .
+git commit -m "hotfix: fix critical production bug"
+git push -u origin hotfix/critical-bug
+
+# 4. Create PR: hotfix/critical-bug → main
+#    - Tests must pass even for hotfixes
+#    - No bypassing tests allowed
+
+# 5. After deploy, merge back to dev
+git checkout dev
+git merge main
+git push origin dev
+```
+
+### Branch Protection Rules
+
+**Main branch protection** (configured on GitHub):
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass (e2e-tests, django-tests)
+- ✅ Require branches to be up to date before merging
+- ✅ Include administrators (even admins must follow rules)
+- ❌ Cannot push directly to main (blocked)
+- ❌ Cannot merge if tests fail
+
+**Dev branch** (less strict):
+- ✅ Can push directly to dev for quick iterations
+- ✅ Tests run automatically on push
+- ✅ PR required for dev → main
+
+### Additional Resources
+
+See complete workflow documentation:
+- **[Git Workflow Guide](docs/GIT_WORKFLOW.md)** - Complete dev→main strategy with examples
+- **[CI/CD Strategy](docs/CI_CD_STRATEGY.md)** - GitHub Actions + Render integration explained
+- **[E2E Test Strategy](docs/testing/E2E_TEST_STRATEGY.md)** - How to fix failing E2E tests
+
 ## Project Context
 
 **Game Player Nick Finder** is a privacy-focused social platform helping gamers reconnect with old friends from various games. The character-centric architecture allows users to manage multiple gaming personas while maintaining privacy control through the POKE system and identity reveal features.

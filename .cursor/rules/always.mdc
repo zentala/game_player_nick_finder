@@ -492,6 +492,227 @@ Update procedure:
 3. Update status symbols (✅, ⚠️, ❌)
 4. Update "Co zostało zrobione" / "Co wymaga pracy" sections
 
+## Git Workflow Rules
+
+**CRITICAL**: This project uses a **protected main branch** strategy. ALWAYS work on `dev` branch, NEVER commit directly to `main`.
+
+### Default Branch for Development
+- **Development branch**: `dev`
+- **Production branch**: `main` (protected)
+- **Feature branches**: `feature/feature-name` (created from `dev`)
+- **Hotfix branches**: `hotfix/bug-name` (created from `main`, emergency only)
+
+### Daily Development Workflow
+
+**MANDATORY**: Follow this workflow for ALL development work:
+
+```bash
+# 1. Start from dev branch
+git checkout dev
+git pull origin dev
+
+# 2. Make your changes
+# Edit files...
+
+# 3. Commit to dev
+git add .
+git commit -m "feat: description of changes"
+
+# 4. Push to dev
+git push origin dev
+
+# 5. GitHub Actions runs automatically
+#    - E2E tests run (~15 minutes)
+#    - Django CI tests run (~5 minutes)
+#    - Wait for tests to complete
+
+# 6. If tests PASS:
+#    - Go to GitHub
+#    - Create PR: dev → main
+#    - Wait for tests to run on PR
+#    - Merge PR to main
+
+# 7. If tests FAIL:
+#    - Fix the issues
+#    - Commit to dev again
+#    - Push to dev
+#    - Repeat until tests pass
+```
+
+### Feature Branch Workflow (Larger Features)
+
+For features requiring multiple commits:
+
+```bash
+# 1. Create feature branch from dev
+git checkout dev
+git pull origin dev
+git checkout -b feature/feature-name
+
+# 2. Work on feature (multiple commits allowed)
+git add .
+git commit -m "feat: implement part 1"
+# ... more commits ...
+
+# 3. Push feature branch
+git push -u origin feature/feature-name
+
+# 4. Create PR: feature/feature-name → dev
+#    - Tests run automatically
+#    - Merge to dev after tests pass
+
+# 5. When ready for production:
+#    - Create PR: dev → main
+#    - Merge after tests pass
+```
+
+### Critical Git Rules
+
+**NEVER**:
+- ❌ **NEVER** commit directly to `main` branch
+- ❌ **NEVER** push to `main` branch
+- ❌ **NEVER** bypass branch protection rules
+- ❌ **NEVER** skip tests before merging to `main`
+- ❌ **NEVER** force push to `main` or `dev`
+- ❌ **NEVER** use `git push --force` on shared branches
+
+**ALWAYS**:
+- ✅ **ALWAYS** work on `dev` branch (or feature branches created from `dev`)
+- ✅ **ALWAYS** push to `dev` first
+- ✅ **ALWAYS** wait for GitHub Actions tests to pass
+- ✅ **ALWAYS** use Pull Requests for `dev → main`
+- ✅ **ALWAYS** update documentation in commits
+- ✅ **ALWAYS** run tests locally before pushing: `pnpm test:e2e`
+
+### Emergency Hotfix Workflow
+
+**ONLY** for critical production bugs requiring immediate fix:
+
+```bash
+# 1. Create hotfix branch from main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-bug-name
+
+# 2. Fix the bug
+# Edit files...
+
+# 3. Commit and push
+git add .
+git commit -m "hotfix: fix critical production bug"
+git push -u origin hotfix/critical-bug-name
+
+# 4. Create PR: hotfix/critical-bug-name → main
+#    - Tests MUST pass even for hotfixes
+#    - NO bypassing tests allowed
+
+# 5. After merge and deploy:
+#    - Sync dev with main
+git checkout dev
+git merge main
+git push origin dev
+```
+
+### GitHub Actions Integration
+
+**Automatic Testing Triggers**:
+- Push to `dev` → Tests run automatically
+- Push to `main` → Tests run automatically
+- Pull Request to `dev` or `main` → Tests run automatically
+
+**Test Workflows**:
+- `e2e-tests.yml` - Playwright E2E tests on 3 browsers (~15 min)
+- `django-ci.yml` - Django unit tests + linting (~5 min)
+
+**Test Results**:
+- ✅ Green check mark = All tests passed, safe to merge
+- ❌ Red X = Tests failed, must fix before merging
+- ⏳ Yellow dot = Tests still running, wait for completion
+
+### Render Deployment
+
+**Auto-Deploy Configuration**:
+- Render watches **`main` branch ONLY**
+- When `main` is updated (via PR merge), Render deploys automatically
+- `dev` branch changes **DO NOT** trigger deployment
+- Deployment takes ~5-10 minutes
+- Render automatically rolls back if deploy fails
+
+**Complete Workflow**:
+```
+Developer → Commit to dev → Push to dev
+    ↓
+GitHub Actions runs tests on dev
+    ↓ PASS
+Create PR: dev → main
+    ↓
+GitHub Actions runs tests on PR
+    ↓ PASS
+Merge PR to main
+    ↓
+Render detects main branch update
+    ↓
+Render builds and deploys to production
+    ↓
+Production updated ✅
+```
+
+### Branch Protection Rules
+
+**Main Branch Protection** (configured on GitHub):
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass (e2e-tests, django-tests)
+- ✅ Require branches to be up to date before merging
+- ✅ Include administrators (even admins must follow rules)
+- ❌ Direct push to main is BLOCKED
+- ❌ Merge is BLOCKED if tests fail
+
+**Dev Branch** (less strict):
+- ✅ Can push directly to dev for quick iterations
+- ✅ Tests run automatically on every push
+- ✅ Pull Request required for `dev → main` (enforced by main branch protection)
+
+### Commit Message Guidelines
+
+Follow conventional commits format:
+
+```
+feat: add new feature
+fix: fix bug in existing feature
+test: add or update tests
+docs: update documentation
+refactor: refactor code without changing functionality
+style: code style changes (formatting, etc.)
+chore: maintenance tasks
+hotfix: critical production bug fix
+```
+
+**Examples**:
+- `feat: implement character blocking system`
+- `fix: resolve login selector timeout in E2E tests`
+- `test: add E2E tests for POKE system`
+- `docs: update project status summary`
+- `hotfix: fix critical database migration error`
+
+### Before Every Commit
+
+**MANDATORY CHECKLIST**:
+- [ ] All Playwright tests pass locally (`pnpm test:e2e`)
+- [ ] Database fixtures loaded (`pnpm load:fixtures`)
+- [ ] New features have Playwright E2E tests
+- [ ] Status documentation updated (if feature complete)
+- [ ] No console errors in browser
+- [ ] Code follows Django style guide (PEP 8)
+- [ ] Committing to `dev` branch (NOT `main`)
+
+### Additional Resources
+
+Complete workflow documentation:
+- **[Git Workflow Guide](../docs/GIT_WORKFLOW.md)** - Complete dev→main strategy with detailed examples
+- **[CI/CD Strategy](../docs/CI_CD_STRATEGY.md)** - GitHub Actions + Render integration explained
+- **[E2E Test Strategy](../docs/testing/E2E_TEST_STRATEGY.md)** - How to fix failing E2E tests
+- **[E2E Test Results](../docs/testing/E2E_RESULTS_2025-12-28.md)** - Current test status and fixes needed
+
 ---
 
 **Join the adventure and reconnect with your old gaming buddies!**
