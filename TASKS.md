@@ -226,6 +226,47 @@ Verify all 24 E2E tests pass and all implemented features work correctly.
 - 🔧 Faza 3: EXECUTION (Fix Phase) - Sprint breakdown and fix templates
 - 🎯 Faza 4: VERIFICATION (QA Phase) - Regression testing and manual QA
 
+### ⚠️ CRITICAL: Login Issues (P0 - Must Fix First)
+
+**Problem**: Login functionality in E2E tests is failing - ~12+ tests blocked by login helper failures.
+
+**Status**: ⚠️ **WYMAGA NAPRAWY** - Passing rate: ~30% (34-48 passed / 104-118 failed)
+
+**Main Issues**:
+1. **Login Helper Failures** (P0 - Critical)
+   - `login()` helper function fails in `beforeEach` hooks
+   - Error: "Login failed - still on login page after redirect wait"
+   - Affected files: `logout.spec.ts`, `password-change.spec.ts`, `login.spec.ts`
+   - **Root Cause**: `CustomLoginView` has `redirect_authenticated_user = True`, causing race conditions
+
+2. **Authentication Verification Failures** (P0 - Critical)
+   - `isAuthenticated()` returns `false` after successful login
+   - Timing issues with user menu visibility
+
+**📋 Dokumentacja do przeczytania przed naprawą**:
+- **[docs/testing/LOGIN_FAILURE_ANALYSIS.md](docs/testing/LOGIN_FAILURE_ANALYSIS.md)** - Szczegółowa analiza problemów z logowaniem
+- **[docs/testing/E2E_REMAINING_ISSUES.md](docs/testing/E2E_REMAINING_ISSUES.md)** - Lista pozostałych problemów (P0/P1/P2/P3)
+- **[docs/testing/FIX_ATTEMPTS_AND_RESULTS.md](docs/testing/FIX_ATTEMPTS_AND_RESULTS.md)** - Wszystkie próby naprawy i ich wyniki
+- **[docs/testing/LOGIN_HELPER_FIX_STATUS.md](docs/testing/LOGIN_HELPER_FIX_STATUS.md)** - Status naprawy funkcji `login()` helper
+- **[docs/architecture/restore-allauth/RESTORE_ALLAUTH_AGENTS_WORKFLOW.md](docs/architecture/restore-allauth/RESTORE_ALLAUTH_AGENTS_WORKFLOW.md)** - Plan przywracania allauth (jeśli potrzebne)
+
+**🔧 Plan naprawy**:
+1. **Przeczytaj dokumentację** - szczególnie `LOGIN_FAILURE_ANALYSIS.md` i `E2E_REMAINING_ISSUES.md`
+2. **Zidentyfikuj root cause** - sprawdź czy problem jest w:
+   - `CustomLoginView` configuration
+   - `login()` helper function (`tests/helpers/auth-helpers.ts`)
+   - Test fixtures/users setup
+   - Django allauth configuration
+3. **Napraw login helper** - zobacz `docs/testing/LOGIN_HELPER_FIX_STATUS.md` dla prób naprawy
+4. **Przetestuj lokalnie** - użyj `pnpm test:e2e` (szybkie) do iteracji
+5. **Przed commitem** - użyj `pnpm test:e2e:all` (wszystkie przeglądarki)
+
+**📍 Lokalizacja kodu**:
+- Login helper: `tests/helpers/auth-helpers.ts`
+- Login view: `app/views.py` (szukaj `CustomLoginView`)
+- Login template: `app/templates/account/login.html`
+- Test users: `app/fixtures/users_and_characters.json`
+
 ### Tasks
 
 #### Task 1.1: Test Environment Setup
