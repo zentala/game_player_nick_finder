@@ -129,6 +129,38 @@
               "group": "Django",
               "reveal": "always"
           }
+      },
+      {
+          "label": "Run E2E Tests",
+          "type": "shell",
+          "command": "pnpm",
+          "args": ["test:e2e"],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "presentation": {
+              "group": "Tests",
+              "reveal": "always",
+              "panel": "new"
+          },
+          "detail": "Fast E2E tests - only Chromium (~2-3 min). Use for daily development and quick iterations."
+      },
+      {
+          "label": "Run E2E Tests (All Browsers)",
+          "type": "shell",
+          "command": "pnpm",
+          "args": ["test:e2e:all"],
+          "options": {
+              "cwd": "${workspaceFolder}"
+          },
+          "problemMatcher": [],
+          "presentation": {
+              "group": "Tests",
+              "reveal": "always",
+              "panel": "new"
+          },
+          "detail": "Slow E2E tests - all browsers (Chromium, Firefox, WebKit) (~7-9 min). Use before commit/merge to main. Tests marked with @allbrowsers tag will be tested on all browsers."
       }
   ]
 }
