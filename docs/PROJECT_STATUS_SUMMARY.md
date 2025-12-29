@@ -1,14 +1,14 @@
 # Project Status Summary - Game Player Nick Finder
 
 **Data utworzenia**: 2024-12-19
-**Ostatnia aktualizacja**: 2025-12-28 (Complete Audit + Pre-Production Checklist)
-**Status**: ✅ MVP Zaimplementowany (85% complete), ⛔ NIE GOTOWY NA PRODUCTION (brak email validation, 27% E2E pass rate)
+**Ostatnia aktualizacja**: 2025-12-28 (Naprawa login.spec.ts, analiza problemu z login() helper)
+**Status**: ✅ MVP Zaimplementowany (85% complete), ⛔ NIE GOTOWY NA PRODUCTION (brak email validation, 39% E2E pass rate na Chromium)
 
 ## 🚨 PRODUCTION READINESS: NOT READY
 
 **Critical Blockers**:
 1. ❌ Email validation disabled (development mode only)
-2. ❌ E2E test pass rate: 27% (need 100%)
+2. ❌ E2E test pass rate: 39% (59/152 na Chromium, need 100%)
 3. ❌ Using SQLite (need PostgreSQL)
 4. ❌ Security settings not production-ready (DEBUG=True, no HTTPS headers)
 
@@ -146,8 +146,12 @@
 #### CRITICAL Priority
 
 1. **Weryfikacja Testów Playwright** ⚠️ (High Priority)
-   - Status: Testy napisane, wymagają uruchomienia i weryfikacji
+   - Status: Testy napisane, uruchomione - 139/456 testów przechodzi (30% na Chromium)
    - Lokalizacja: `tests/e2e/`
+   - ⚡ **Szybkie testowanie**: Domyślnie tylko Chromium (~2-3 min), użyj `pnpm test:e2e:all` dla wszystkich przeglądarek
+   - 📋 **Dokumentacja**: `docs/testing/FAST_TESTING_GUIDE.md` - przewodnik szybkiego testowania
+   - ⚠️ **KRYTYCZNE**: Logowanie nie działa - błąd "Please enter a correct username and password"
+   - 📋 **Analiza**: `docs/testing/FIX_ATTEMPTS_AND_RESULTS.md` - wszystkie próby napraw
    - Testy dostępne:
      - `characters/character-profile-display.spec.ts`
      - `characters/character-profile-edit.spec.ts`

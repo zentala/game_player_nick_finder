@@ -65,11 +65,22 @@ pnpm load:fixtures
 
 ### Testing
 ```bash
-# Run all Playwright E2E tests
+# Run all Playwright E2E tests (FAST - only Chromium, ~2-3 min)
 pnpm test:e2e
+
+# Run all browsers (before commit, ~7 min)
+pnpm test:e2e:all
+
+# Fastest option (Chromium + line reporter)
+pnpm test:e2e:fast
 
 # Run specific test file
 pnpm test:e2e tests/e2e/feature-name.spec.ts
+
+# Run specific browser
+pnpm test:e2e:chromium
+pnpm test:e2e:firefox
+pnpm test:e2e:webkit
 
 # Run tests in UI mode (interactive)
 pnpm test:e2e:ui
@@ -83,6 +94,14 @@ pnpm test:e2e:debug
 # CRITICAL: Load fixtures before running E2E tests
 pnpm load:fixtures
 ```
+
+**⚡ Szybkie testowanie (domyślne)**:
+- Domyślnie testuje tylko **Chromium** (najszybsze, ~2-3 min)
+- Używa `line` reportera (prostsze komunikaty)
+- Idealne do szybkich iteracji podczas naprawiania testów
+- Przed commitem użyj `pnpm test:e2e:all` (wszystkie przeglądarki)
+
+**📋 Zobacz**: `docs/testing/FAST_TESTING_GUIDE.md` - pełny przewodnik szybkiego testowania
 
 ### Test Users (from fixtures)
 - `testuser` / `testpass123` - Main test user with multiple characters

@@ -1,8 +1,8 @@
 # Status Report - Game Player Nick Finder Documentation
 
 **Data utworzenia**: 2024
-**Ostatnia aktualizacja**: 2025-12-28 (testy E2E uruchomione, naprawy selektorów wdrożone)
-**Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete), Testy E2E: 37% passing (167/456)
+**Ostatnia aktualizacja**: 2025-12-28 (konfiguracja szybkiego testowania, naprawy selektorów)
+**Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete), Testy E2E: 39% passing (59/152 na Chromium)
 
 ## 📊 Podsumowanie
 
@@ -95,13 +95,27 @@
 ### ⚠️ Co nie zostało zrobione / wymaga dalszej pracy
 
 1. **Testy Playwright** ⚠️ (CRITICAL - High Priority)
-   - ✅ Testy napisane dla WSZYSTKICH funkcji (24 pliki testowe - NOT 11!)
+   - ✅ Testy napisane dla WSZYSTKICH funkcji (24 pliki testowe)
    - ⚠️ **Status**: Testy częściowo działają - wymagają napraw błędów
-   - 📊 **Wyniki ostatniego uruchomienia** (2025-12-28):
-     - ✅ **167 testów przeszło** (37% passing rate - 456 testów łącznie)
-     - ⏭️ **60 testów pominiętych** (skip)
-     - ❌ **229 testów nie przeszło** (wszystkie przeglądarki)
-     - 📈 **Postęp**: Naprawiono selektory formularzy (usunięto `form:has()`), ale pozostały inne problemy (timeouty, logika logowania/logowania)
+   - 📊 **Wyniki ostatniego uruchomienia** (2025-12-28, Chromium only):
+     - ✅ **59 passed** / ❌ **93 failed** (39% passing rate)
+     - ✅ **`login.spec.ts`**: 8/8 passed (100%) - naprawione przez dodanie timing checks
+     - ❌ **Funkcja `login()` helper**: 80+ testów failed - password field nie jest wypełniany
+     - 📋 **Dokumentacja**: 
+       - `docs/testing/E2E_TEST_STATUS_2025-12-28.md` - aktualny status testów
+       - `docs/testing/LOGIN_HELPER_FIX_ANALYSIS.md` - analiza problemu z login() helper
+       - `docs/testing/E2E_FIX_SUMMARY_2025-12-28.md` - podsumowanie napraw
+     - 📈 **Postęp**: 
+       - ✅ Naprawiono `login.spec.ts` (8/8 passed)
+       - ✅ Naprawiono selektory formularzy (usunięto `form:has()`)
+       - ✅ Skonfigurowano szybkie testowanie (tylko Chromium domyślnie)
+       - ✅ Automatyzacja setup test users
+       - ⚠️ **Pozostały problem**: Funkcja `login()` helper nie wypełnia password field (80+ testów failed)
+   - ⚡ **Szybkie testowanie**: Domyślnie testuje tylko Chromium (~2-3 min zamiast ~7 min)
+     - `pnpm test:e2e` - tylko Chromium (szybkie)
+     - `pnpm test:e2e:all` - wszystkie przeglądarki (przed commit)
+     - `pnpm test:e2e:fast` - tylko Chromium z line reporterem (najszybsze)
+   - 📋 **Dokumentacja szybkiego testowania**: `docs/testing/FAST_TESTING_GUIDE.md`
    - 📍 Lokalizacja: `tests/e2e/`
    - 📋 Testy dostępne (COMPLETE LIST):
      - **Authentication (5 tests):**
@@ -149,8 +163,14 @@
    - 📋 Instrukcja napraw: `docs/testing/E2E_TEST_FIXES_GUIDE.md`
    - 📋 Podsumowanie napraw: `docs/testing/E2E_FIXES_SUMMARY.md`
    - 📋 Dokumentacja błędów: `docs/testing/E2E_ERRORS_CATEGORIZED.md`
+   - 📋 Szybkie testowanie: `docs/testing/FAST_TESTING_GUIDE.md`
+   - 📋 Analiza prób napraw: `docs/testing/FIX_ATTEMPTS_AND_RESULTS.md`
+   - 📋 Analiza formularza logowania: `docs/testing/LOGIN_FORM_INVESTIGATION.md`
    - 🎯 **Akcja wymagana**: 
-     - Naprawić selektory CSS w testach (głównie w Chromium)
+     - **KRYTYCZNE**: Naprawić logowanie - błąd "Please enter a correct username and password"
+     - Sprawdzić faktyczne pola formularza w HTML (CustomLoginView używa AuthenticationForm z `username`, nie `login`)
+     - Zweryfikować czy skrypty `setup_test_users.ps1` działają poprawnie
+     - Sprawdzić czy użytkownicy testowi mają poprawne hasła w bazie
      - Zweryfikować i poprawić testy formularzy
      - Upewnić się że wszystkie testy przechodzą we wszystkich przeglądarkach
 
@@ -248,7 +268,11 @@ Wszystkie pliki zostały ponumerowane:
 ## 🎯 Następne kroki
 
 ### Immediate (CRITICAL)
-1. **Testy**: ✅ Uruchomione - 167/456 testów przechodzi (37%). Naprawione selektory formularzy, pozostałe problemy z logowaniem/logowaniem i timeoutami
+1. **Testy**: ⚠️ Uruchomione - 139/456 testów przechodzi (30% na Chromium). 
+   - ✅ Naprawione selektory formularzy
+   - ✅ Skonfigurowane szybkie testowanie (tylko Chromium domyślnie)
+   - ⚠️ **KRYTYCZNE**: Logowanie nie działa - błąd "Please enter a correct username and password"
+   - 📋 Zobacz: `docs/testing/FIX_ATTEMPTS_AND_RESULTS.md` - szczegółowa analiza wszystkich prób napraw
 
 ### Week 1-2: Medium Priority
 2. **Screenshots/Memories UI**: Zaimplementować upload i management UI (Task 3)
