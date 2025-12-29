@@ -42,6 +42,28 @@ echo "  - Categories: 7 objects"
 echo "  - Games: 17 objects"
 echo "  - Users, Characters, Messages, Friend Requests, Friendships"
 
+# Set passwords for test users
+echo ""
+echo "Setting passwords for test users..."
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SETUP_TEST_USERS_SCRIPT="$SCRIPT_DIR/setup_test_users.sh"
+
+if [ -f "$SETUP_TEST_USERS_SCRIPT" ]; then
+    bash "$SETUP_TEST_USERS_SCRIPT"
+    if [ $? -ne 0 ]; then
+        echo ""
+        echo "Warning: Failed to set test user passwords"
+        echo "Run './setup_test_users.sh' manually to set passwords"
+    fi
+else
+    echo ""
+    echo "Note: setup_test_users.sh not found. Skipping password setup."
+    echo "Run './setup_test_users.sh' manually to set test user passwords"
+fi
+echo "  - Categories: 7 objects"
+echo "  - Games: 17 objects"
+echo "  - Users, Characters, Messages, Friend Requests, Friendships"
+
 # Create superuser automatically if credentials file exists
 echo ""
 echo "Creating superuser..."

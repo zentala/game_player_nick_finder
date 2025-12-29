@@ -39,6 +39,28 @@ Write-Host "  - Categories: 7 objects" -ForegroundColor Cyan
 Write-Host "  - Games: 17 objects" -ForegroundColor Cyan
 Write-Host "  - Users, Characters, Messages, Friend Requests, Friendships" -ForegroundColor Cyan
 
+# Set passwords for test users
+Write-Host "`nSetting passwords for test users..." -ForegroundColor Yellow
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if (-not $scriptDir) {
+    $scriptDir = Get-Location
+}
+
+$setupTestUsersScript = Join-Path $scriptDir "setup_test_users.ps1"
+if (Test-Path $setupTestUsersScript) {
+    & $setupTestUsersScript
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Warning: Failed to set test user passwords" -ForegroundColor Yellow
+        Write-Host "Run '.\setup_test_users.ps1' manually to set passwords" -ForegroundColor Cyan
+    }
+} else {
+    Write-Host "Note: setup_test_users.ps1 not found. Skipping password setup." -ForegroundColor Yellow
+    Write-Host "Run '.\setup_test_users.ps1' manually to set test user passwords" -ForegroundColor Cyan
+}
+Write-Host "  - Categories: 7 objects" -ForegroundColor Cyan
+Write-Host "  - Games: 17 objects" -ForegroundColor Cyan
+Write-Host "  - Users, Characters, Messages, Friend Requests, Friendships" -ForegroundColor Cyan
+
 # Create superuser automatically if credentials file exists
 Write-Host "`nCreating superuser..." -ForegroundColor Yellow
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
