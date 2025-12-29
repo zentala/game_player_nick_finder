@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ CRITICAL: Development Server Port
+
+**ALWAYS use port 7600** for Django development server:
+- Django dev server: `python manage.py runserver 7600`
+- E2E tests base URL: `http://localhost:7600`
+- **NEVER use port 8000** (conflicts with Kong API Gateway and other services)
+- Port 7600 is configured in: `playwright.config.ts`, `.github/workflows/e2e-tests.yml`, `start.js`
+
 ## Common Development Commands
 
 ### Environment Setup
@@ -24,10 +32,10 @@ pnpm load:fixtures
 
 ### Development Server
 ```bash
-# Run Django development server
-python manage.py runserver
+# Run Django development server (ALWAYS on port 7600)
+python manage.py runserver 7600
 
-# Server will be available at http://localhost:8000
+# Server will be available at http://localhost:7600
 ```
 
 ### Database Management
@@ -319,7 +327,7 @@ Status symbols:
    - `testuser/testpass123` - Main test user
    - `otheruser/pass` - Secondary user for interactions
    - `privateuser/testpass123` - User with private profile
-3. **Run server before tests**: Django dev server must be running on `localhost:8000`
+3. **Run server before tests**: Django dev server must be running on `localhost:7600`
 4. **Verify test passes 3 times**: Ensure consistency before considering test stable
 
 ### For Commits

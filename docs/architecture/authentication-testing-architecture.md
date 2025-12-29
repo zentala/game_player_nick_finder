@@ -958,7 +958,7 @@ Implement tasks in this order:
 
 ## Dependencies
 
-- Django server running on `http://localhost:8000`
+- Django server running on `http://localhost:7600`
 - Test fixtures loaded (`pnpm load:fixtures`)
 - Playwright browsers installed (`pnpx playwright install`)
 - All dependencies installed (`pnpm install`, `pipenv install`)
@@ -989,4 +989,5 @@ All authentication and navigation flows are covered by E2E tests:
 **Last Updated**: 2024-12-19  
 **Author**: Software Architect  
 **Reviewers**: Tech Lead, QA Lead
+
 

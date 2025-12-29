@@ -14,7 +14,7 @@
 **Dla Testing**:
 - ZAWSZE ładować fixtures przed testami E2E
 - Używać testowych userów: testuser, otheruser, privateuser
-- Serwer Django musi być uruchomiony na localhost:8000
+- Serwer Django musi być uruchomiony na localhost:7600
 - Weryfikować testy 3 razy dla pewności
 
 **Dla Commits**:

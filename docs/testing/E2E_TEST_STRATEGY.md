@@ -68,7 +68,7 @@ pnpm test:e2e tests/e2e/navigation/ --reporter=list
 # Initial E2E Test Results - 2025-12-28
 
 ## Environment
-- Django Server: ✅ Running on localhost:8000
+- Django Server: ✅ Running on localhost:7600
 - Fixtures: ✅ Loaded
 - Browser: Chromium (Playwright default)
 
@@ -318,7 +318,7 @@ git checkout -b fix/p3-low-fixes         # From test/e2e-fixes-sprint-1
 
 3. **Fix**:
    - Edit code (views.py, models.py, templates, etc.)
-   - Test manually first: Open http://localhost:8000 in browser
+   - Test manually first: Open http://localhost:7600 in browser
    - Verify fix works manually
 
 4. **Test**:

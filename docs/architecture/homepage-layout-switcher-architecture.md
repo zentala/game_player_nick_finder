@@ -296,13 +296,13 @@ Switcher pokazuje:
 ### Basic Usage
 ```
 # Wybierz layout v1 (zapisze się w sesji)
-http://127.0.0.1:8000/?layout=v1
+http://127.0.0.1:7600/?layout=v1
 
 # Po odświeżeniu strony, layout v1 będzie nadal aktywny
-http://127.0.0.1:8000/
+http://127.0.0.1:7600/
 
 # Reset do domyślnego
-http://127.0.0.1:8000/?layout=reset
+http://127.0.0.1:7600/?layout=reset
 ```
 
 ### A/B Testing Scenario

@@ -384,3 +384,4 @@ joinButton.addEventListener('click', () => {
 **Last Updated**: 2024-12-19  
 **Maintained By**: UX Engineer, Development Team
 
+

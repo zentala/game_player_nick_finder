@@ -40,7 +40,7 @@ Developer → Create PR → GitHub Actions (Tests) → Merge to main → Render 
 4. ✅ Install Playwright browsers (chromium, firefox, webkit)
 5. ✅ Run Django migrations
 6. ✅ Load test fixtures
-7. ✅ Start Django server (localhost:8000)
+7. ✅ Start Django server (localhost:7600)
 8. ✅ Run E2E tests (all 24 tests)
 9. ✅ Upload test reports (artifacts)
 10. ✅ Upload screenshots on failure

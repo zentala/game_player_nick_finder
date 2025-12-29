@@ -11,7 +11,7 @@
 
 **Possible Causes**:
 - Django server not running during tests
-- Server not accessible at `http://localhost:8000`
+- Server not accessible at `http://localhost:7600`
 - Login page structure changed
 
 **Solution Needed**:

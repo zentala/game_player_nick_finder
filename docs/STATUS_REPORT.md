@@ -1,8 +1,8 @@
 # Status Report - Game Player Nick Finder Documentation
 
 **Data utworzenia**: 2024
-**Ostatnia aktualizacja**: 2025-12-28
-**Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete)
+**Ostatnia aktualizacja**: 2025-12-28 (testy E2E uruchomione, naprawy selektorów wdrożone)
+**Status**: ✅ Wszystkie główne funkcjonalności zaimplementowane (85% complete), Testy E2E: 37% passing (167/456)
 
 ## 📊 Podsumowanie
 
@@ -96,7 +96,12 @@
 
 1. **Testy Playwright** ⚠️ (CRITICAL - High Priority)
    - ✅ Testy napisane dla WSZYSTKICH funkcji (24 pliki testowe - NOT 11!)
-   - ⚠️ **Status**: Testy wymagają weryfikacji (uruchomienia i sprawdzenia czy przechodzą)
+   - ⚠️ **Status**: Testy częściowo działają - wymagają napraw błędów
+   - 📊 **Wyniki ostatniego uruchomienia** (2025-12-28):
+     - ✅ **167 testów przeszło** (37% passing rate - 456 testów łącznie)
+     - ⏭️ **60 testów pominiętych** (skip)
+     - ❌ **229 testów nie przeszło** (wszystkie przeglądarki)
+     - 📈 **Postęp**: Naprawiono selektory formularzy (usunięto `form:has()`), ale pozostały inne problemy (timeouty, logika logowania/logowania)
    - 📍 Lokalizacja: `tests/e2e/`
    - 📋 Testy dostępne (COMPLETE LIST):
      - **Authentication (5 tests):**
@@ -132,7 +137,22 @@
        - `navigation/navbar-unauthenticated.spec.ts` ✅
        - `navigation/homepage-layout-switcher.spec.ts` ✅
    - **TOTAL: 24 E2E Test Files** (previously documented as 11-12)
-   - 🎯 **Akcja wymagana**: Uruchomić `pnpm test:e2e` z załadowanymi fixtures i działającym serwerem Django
+   - ✅ **Naprawione (2025-12-28):**
+     - Zastosowano bardziej elastyczne selektory CSS z fallbackami dla wszystkich formularzy (form.login, form.password_change, form.password_reset, form.signup)
+     - Usunięto selektory `form:has()` (nie wspierane) i zastąpiono prostszym podejściem z `if/else` i `count()`
+     - Poprawiono test przekierowania zalogowanego użytkownika z login page
+     - Wszystkie selektory używają teraz sprawdzania `count()` i fallbacków dla niezawodności
+   - ⚠️ **Pozostałe problemy:**
+     - Niektóre testy mają problemy z logowaniem/logowaniem (isAuthenticated zwraca false)
+     - Timeouty w niektórych testach (może być problem z serwerem/testami równoległymi)
+     - Testy password-change nadal nie znajdują formularzy (może być problem z template/view)
+   - 📋 Instrukcja napraw: `docs/testing/E2E_TEST_FIXES_GUIDE.md`
+   - 📋 Podsumowanie napraw: `docs/testing/E2E_FIXES_SUMMARY.md`
+   - 📋 Dokumentacja błędów: `docs/testing/E2E_ERRORS_CATEGORIZED.md`
+   - 🎯 **Akcja wymagana**: 
+     - Naprawić selektory CSS w testach (głównie w Chromium)
+     - Zweryfikować i poprawić testy formularzy
+     - Upewnić się że wszystkie testy przechodzą we wszystkich przeglądarkach
 
 2. **Character Profile - Zaawansowane funkcje** ❌ (Medium Priority)
    - ❌ Screenshots upload UI (backend ready - JSONField istnieje, UI potrzebne)
@@ -161,12 +181,14 @@
 
 ### CRITICAL Priority
 
-1. **Weryfikacja testów Playwright** ⚠️ (8 SP)
-   - Status: Testy napisane, wymagają uruchomienia
-   - Uruchomić wszystkie testy: `pnpm test:e2e`
-   - Załadować fixtures: `pnpm load:fixtures` lub `.\load_fixtures.ps1`
-   - Naprawić ewentualne błędy
-   - Zapewnić że wszystkie testy przechodzą
+1. **Naprawa błędów w testach Playwright** ⚠️ (5 SP) - **POSTĘP: 37% passing (167/456)**
+   - ✅ Status: Testy uruchomione, selektory naprawione (167 passed)
+   - ⚠️ Pozostałe problemy:
+     - Niektóre testy mają problemy z logowaniem/logowaniem (isAuthenticated zwraca false)
+     - Timeouty w niektórych testach (może być problem z serwerem/testami równoległymi)
+     - Testy password-change nadal nie znajdują formularzy (może być problem z template/view - komentarz "INFO this view is not in use!")
+   - 📋 Dokumentacja błędów: `docs/testing/E2E_ERRORS_CATEGORIZED.md`
+   - 🎯 Cel: Dojść do 90%+ passing rate (410+/456 testów)
    - 📋 Dokumentacja: `docs/scrum/005-pending-tasks-implementation.md` - Task 1
 
 ### Medium Priority
@@ -226,7 +248,7 @@ Wszystkie pliki zostały ponumerowane:
 ## 🎯 Następne kroki
 
 ### Immediate (CRITICAL)
-1. **Testy**: Uruchomić i zweryfikować wszystkie 24 testy Playwright (`pnpm test:e2e`)
+1. **Testy**: ✅ Uruchomione - 167/456 testów przechodzi (37%). Naprawione selektory formularzy, pozostałe problemy z logowaniem/logowaniem i timeoutami
 
 ### Week 1-2: Medium Priority
 2. **Screenshots/Memories UI**: Zaimplementować upload i management UI (Task 3)
