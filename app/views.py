@@ -1347,26 +1347,29 @@ class PokeListView(BaseViewMixin, LoginRequiredMixin, ListView):
         user_characters = Character.objects.filter(user=self.request.user)
         status_filter = self.request.GET.get('status', 'all')
         
-        # Get received POKEs
-        received_pokes = Poke.objects.filter(
-            receiver_character__in=user_characters
-        ).select_related('sender_character', 'sender_character__game', 'sender_character__user')
+        # Build base queryset with all necessary select_related
+        # This avoids SQLite's limitation with ORDER BY in UNION subqueries
+        queryset = Poke.objects.select_related(
+            'sender_character', 'sender_character__game', 'sender_character__user',
+            'receiver_character', 'receiver_character__game', 'receiver_character__user'
+        )
         
-        # Get sent POKEs
-        sent_pokes = Poke.objects.filter(
-            sender_character__in=user_characters
-        ).select_related('receiver_character', 'receiver_character__game', 'receiver_character__user')
-        
-        # Filter by status
+        # Filter by status and type
         if status_filter == 'received':
-            queryset = received_pokes
+            queryset = queryset.filter(receiver_character__in=user_characters)
         elif status_filter == 'sent':
-            queryset = sent_pokes
+            queryset = queryset.filter(sender_character__in=user_characters)
         elif status_filter == 'pending':
-            queryset = received_pokes.filter(status='PENDING')
+            queryset = queryset.filter(
+                receiver_character__in=user_characters,
+                status='PENDING'
+            )
         else:
-            # Combine both, prioritizing received
-            queryset = received_pokes.union(sent_pokes, all=True)
+            # Combine both: received OR sent
+            queryset = queryset.filter(
+                Q(receiver_character__in=user_characters) |
+                Q(sender_character__in=user_characters)
+            )
         
         return queryset.order_by('-sent_date')
     
