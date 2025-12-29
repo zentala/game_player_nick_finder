@@ -96,7 +96,7 @@ tests/
 
 ## Requirements
 
-- Django server running on `http://localhost:8000`
+- Django server running on `http://localhost:7600`
 - **MANDATORY**: Test data must be loaded from fixtures before running tests
 - Load fixtures using: `pnpm load:fixtures` or `.\load_fixtures.ps1` (Windows) / `./load_fixtures.sh` (Unix)
 - Playwright will automatically start the server if configured

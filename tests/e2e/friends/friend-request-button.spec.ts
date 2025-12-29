@@ -5,7 +5,7 @@ test.describe('Friend Request Button', () => {
     // Login as test user
     await page.goto('/accounts/login/');
     // django-allauth uses id_login and id_password
-    await page.fill('#id_login', 'testuser');
+    await page.fill('#id_username', 'testuser');
     await page.fill('#id_password', 'testpass123');
     await page.click('button[type="submit"]');
     await page.waitForURL('**/');

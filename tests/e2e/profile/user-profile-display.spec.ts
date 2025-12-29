@@ -39,7 +39,7 @@ test.describe('User Profile Display', () => {
   test('should block private profile from non-friends', async ({ page }) => {
     // Login as different user
     await page.goto('/accounts/login/');
-    await page.fill('#id_login', 'otheruser');
+    await page.fill('#id_username', 'otheruser');
     await page.fill('#id_password', 'pass');
     await page.click('button[type="submit"]');
     await page.waitForURL('**/');
