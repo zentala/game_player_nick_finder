@@ -8,37 +8,53 @@ test.describe('Password Change Flow', () => {
   });
 
   test('should display password change form with all required fields', async ({ page }) => {
+    // Explicit wait before verification
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500); // Additional wait for UI
+    
+    // Verify user is authenticated before accessing password change
+    const authenticated = await isAuthenticated(page);
+    expect(authenticated).toBe(true);
+    
     await page.goto('/accounts/password_change/');
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for URL to ensure we're on the right page (not redirected)
+    await page.waitForURL(/\/accounts\/password_change\/?/, { timeout: 5000 });
     
     // Verify form is present (use multiple fallback selectors for reliability)
     // First try class-based selector, then action-based
     const passwordChangeForm = page.locator('form.password_change, form[action*="password_change"]').first();
     const formExists = await passwordChangeForm.count() > 0;
     if (formExists) {
-      await expect(passwordChangeForm).toBeVisible();
+      await expect(passwordChangeForm).toBeVisible({ timeout: 10000 });
     } else {
       // Fallback: if specific form selectors don't work, verify old password input exists (form must be present)
-      await expect(page.locator('input[name*="old"], input[name="old_password"]').first()).toBeVisible();
+      await expect(page.locator('input[name*="old"], input[name="old_password"], #id_old_password').first()).toBeVisible({ timeout: 10000 });
     }
     
     // Verify old password field is present
-    await expect(page.locator('#id_old_password, input[name="old_password"]')).toBeVisible();
+    await expect(page.locator('#id_old_password, input[name="old_password"]').first()).toBeVisible({ timeout: 10000 });
     
     // Verify new password field is present
-    await expect(page.locator('#id_new_password1, input[name="new_password1"]')).toBeVisible();
+    await expect(page.locator('#id_new_password1, input[name="new_password1"]').first()).toBeVisible({ timeout: 10000 });
 
     // Verify new password confirmation field is present
-    await expect(page.locator('#id_new_password2, input[name="new_password2"]')).toBeVisible();
+    await expect(page.locator('#id_new_password2, input[name="new_password2"]').first()).toBeVisible({ timeout: 10000 });
     
     // Verify submit button is present
-    await expect(page.locator('button[type="submit"], input[type="submit"]')).toBeVisible();
+    await expect(page.locator('button[type="submit"], input[type="submit"]').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should navigate to password change page via user menu', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     
-    // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
+    // Click user menu dropdown - with improved selector and wait
+    const userMenu = page.locator('a.nav-link.dropdown-toggle, a.dropdown-toggle, [data-toggle="dropdown"]').first();
+    await expect(userMenu).toBeVisible({ timeout: 10000 }); // Increased timeout
+    await userMenu.click();
+    await page.waitForTimeout(300); // Wait for dropdown to open
     
     // Click "Change password" link
     await page.click('a:has-text("Change password")');

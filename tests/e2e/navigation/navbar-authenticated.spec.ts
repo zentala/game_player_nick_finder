@@ -11,13 +11,13 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await page.goto('/');
     
     // Verify navbar is visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
     
     // Verify user menu dropdown is visible
-    await expect(page.locator('nav .dropdown-toggle')).toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).toBeVisible();
     
     // Verify user avatar/name is visible
-    await expect(page.locator('nav .dropdown-toggle')).toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).toBeVisible();
     
     // Verify user is authenticated
     const authenticated = await isAuthenticated(page);
@@ -34,7 +34,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/$/);
     
     // Verify correct page content loaded (navbar should still be visible)
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to characters list via Characters link', async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/characters\/?/);
     
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to games list via Games link', async ({ page }) => {
@@ -60,7 +60,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/games\/?/);
     
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to profile via user menu Profile link', async ({ page }) => {
@@ -76,7 +76,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/accounts\/profile\/?/);
 
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to user characters via user menu My characters link', async ({ page }) => {
@@ -92,7 +92,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/account\/characters\/?/);
 
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to messages via user menu Messages link', async ({ page }) => {
@@ -108,7 +108,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/messages\/?/);
 
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to password change via user menu Change password link', async ({ page }) => {
@@ -124,7 +124,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await expect(page).toHaveURL(/\/accounts\/password_change\/?/);
 
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should show Admin Panel link for superuser only', async ({ page }) => {
@@ -161,7 +161,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     await page.goto('/');
     
     // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
+    await page.click('a.nav-link.dropdown-toggle');
     
     // Check if Admin Panel link exists
     const adminLink = page.locator('a:has-text("Admin Panel")');
@@ -189,7 +189,7 @@ test.describe('Navigation Menu - Authenticated Users', () => {
     expect(authenticated).toBe(true);
     
     // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
+    await page.click('a.nav-link.dropdown-toggle');
     
     // Click "Log out" link
     await page.click('a:has-text("Log out")');

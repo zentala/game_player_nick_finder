@@ -1,12 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USERS } from '../../helpers/auth-helpers';
 
 test.describe('Character Profile Edit', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/accounts/login/');
-    await page.fill('#id_username', 'testuser');
-    await page.fill('#id_password', 'testpass123');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/');
+    await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
   });
 
   test('should display character profile edit form', async ({ page }) => {

@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USERS } from '../../helpers/auth-helpers';
 
 test.describe('Conversation List', () => {
     test.beforeEach(async ({ page }) => {
-        // Load fixtures first (assumes fixtures are loaded)
-        // Login as testuser
-        await page.goto('/login');
-        await page.fill('input[name="login"]', 'testuser');
-        await page.fill('input[name="password"]', 'testpass123');
-        await page.click('button[type="submit"]');
-        await page.waitForURL('**/');
+        // Login as testuser using login helper
+        await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
     });
 
     test('should display conversation list', async ({ page }) => {

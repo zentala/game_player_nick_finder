@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USERS } from '../../helpers/auth-helpers';
 
 test.describe('User Profile Display', () => {
   test('should display public profile', async ({ page }) => {
@@ -38,11 +39,7 @@ test.describe('User Profile Display', () => {
 
   test('should block private profile from non-friends', async ({ page }) => {
     // Login as different user
-    await page.goto('/accounts/login/');
-    await page.fill('#id_username', 'otheruser');
-    await page.fill('#id_password', 'pass');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/');
+    await login(page, TEST_USERS.other.username, TEST_USERS.other.password);
     
     // Try to view private profile
     await page.goto('/profile/privateuser/');

@@ -6,12 +6,16 @@ test.describe('Logout Flow', () => {
     // Login first
     await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
     
+    // Explicit wait before verification
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500); // Additional wait for UI
+    
     // Verify user is authenticated
     let authenticated = await isAuthenticated(page);
     expect(authenticated).toBe(true);
     
     // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
+    await page.click('a.nav-link.dropdown-toggle');
     
     // Click logout link
     await page.click('a:has-text("Log out")');
@@ -20,7 +24,7 @@ test.describe('Logout Flow', () => {
     await page.waitForURL('**/');
     
     // Verify user menu no longer visible
-    await expect(page.locator('nav .dropdown-toggle')).not.toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).not.toBeVisible();
     
     // Verify login/register links visible
     const loginLink = page.locator('a:has-text("Log in")');
@@ -40,7 +44,7 @@ test.describe('Logout Flow', () => {
     await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
     
     // Verify user menu dropdown is visible
-    const userMenu = page.locator('nav .dropdown-toggle');
+    const userMenu = page.locator('a.nav-link.dropdown-toggle').first();
     await expect(userMenu).toBeVisible();
     
     // Click dropdown to open menu
@@ -112,7 +116,7 @@ test.describe('Logout Flow', () => {
     expect(authenticated).toBe(true);
     
     // Verify user menu is visible
-    await expect(page.locator('nav .dropdown-toggle')).toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).toBeVisible();
   });
 
   test('should not show logout link for unauthenticated users', async ({ page }) => {
@@ -127,7 +131,7 @@ test.describe('Logout Flow', () => {
     await expect(loginLink).toBeVisible();
     
     // Verify user menu dropdown is NOT visible
-    await expect(page.locator('nav .dropdown-toggle')).not.toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).not.toBeVisible();
     
     // Try to access logout URL directly (if it exists)
     // Note: django-allauth logout typically redirects unauthenticated users

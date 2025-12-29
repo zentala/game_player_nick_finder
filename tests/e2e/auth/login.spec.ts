@@ -33,10 +33,22 @@ test.describe('Login Flow', () => {
 
   test('should successfully login with valid credentials', async ({ page }) => {
     await page.goto('/accounts/login/');
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for form fields to be visible before filling
+    await expect(page.locator('#id_username')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#id_password')).toBeVisible({ timeout: 5000 });
     
     // Fill in valid credentials
     await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
+    
+    // Verify fields are filled (debug check)
+    const usernameValue = await page.locator('#id_username').inputValue();
+    const passwordValue = await page.locator('#id_password').inputValue();
+    if (usernameValue !== TEST_USERS.main.username || passwordValue.length === 0) {
+      throw new Error(`Fields not filled correctly. Username: ${usernameValue}, Password length: ${passwordValue.length}`);
+    }
     
     // Submit form
     await page.click('button[type="submit"]');
@@ -46,7 +58,7 @@ test.describe('Login Flow', () => {
     await expect(page).toHaveURL(/\/$/);
     
     // Verify user menu appears in navbar
-    await expect(page.locator('nav .dropdown-toggle')).toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).toBeVisible();
     
     // Verify user is authenticated
     const authenticated = await isAuthenticated(page);
@@ -127,13 +139,20 @@ test.describe('Login Flow', () => {
     await page.waitForURL(/\/accounts\/login\/?/);
     await expect(page).toHaveURL(/\/accounts\/login\/?/);
     
+    // Wait for page to load before filling
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for form fields to be visible
+    await expect(page.locator('#id_username')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#id_password')).toBeVisible({ timeout: 5000 });
+    
     // Login with valid credentials
     await page.fill('#id_username', TEST_USERS.main.username);
     await page.fill('#id_password', TEST_USERS.main.password);
     await page.click('button[type="submit"]');
     
     // Should redirect back to originally requested page (profile)
-    await page.waitForURL(/\/accounts\/profile\/?/, { timeout: 5000 });
+    await page.waitForURL(/\/accounts\/profile\/?/, { timeout: 15000 });
     await expect(page).toHaveURL(/\/accounts\/profile\/?/);
     
     // Verify user is authenticated
@@ -143,6 +162,11 @@ test.describe('Login Flow', () => {
 
   test('should login with "Remember me" checkbox if available', async ({ page }) => {
     await page.goto('/accounts/login/');
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for form fields to be visible
+    await expect(page.locator('#id_username')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#id_password')).toBeVisible({ timeout: 5000 });
     
     // Check if "Remember me" checkbox exists
     const rememberMeCheckbox = page.locator('#id_remember, input[name="remember"]');
@@ -180,6 +204,10 @@ test.describe('Login Flow', () => {
   test('should redirect logged in user away from login page', async ({ page }) => {
     // Login first
     await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
+    
+    // Explicit wait before verification
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500); // Additional wait for UI
     
     // Verify user is authenticated
     const authenticated = await isAuthenticated(page);

@@ -86,7 +86,7 @@ test.describe('POKE List', () => {
     await page.goto('/');
     
     // Click user menu dropdown
-    await page.click('nav .dropdown-toggle');
+    await page.click('a.nav-link.dropdown-toggle');
     
     // Verify POKEs link is present in menu
     const pokeLink = page.locator('a:has-text("POKEs")');

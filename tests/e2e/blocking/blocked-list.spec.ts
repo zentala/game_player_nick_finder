@@ -78,7 +78,7 @@ test.describe('Blocked Characters List', () => {
     await page.goto('/');
     
     // Click user menu
-    const userMenu = page.locator('nav .dropdown-toggle');
+    const userMenu = page.locator('a.nav-link.dropdown-toggle').first();
     if (await userMenu.count() > 0) {
       await userMenu.click();
       

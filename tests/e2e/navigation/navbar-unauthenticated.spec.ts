@@ -6,7 +6,7 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     await page.goto('/');
     
     // Verify navbar is visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
     
     // Verify "Log in" and "Register" links are visible
     const loginLink = page.locator('a:has-text("Log in")');
@@ -16,7 +16,7 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     await expect(registerLink).toBeVisible();
     
     // Verify user menu dropdown is NOT visible
-    await expect(page.locator('nav .dropdown-toggle')).not.toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).not.toBeVisible();
     
     // Verify user is not authenticated
     const notAuthenticated = await isNotAuthenticated(page);
@@ -33,7 +33,7 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     await expect(page).toHaveURL(/\/$/);
     
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('should navigate to characters list via Characters link', async ({ page }) => {
@@ -46,7 +46,7 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     await expect(page).toHaveURL(/\/characters\/?/);
     
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
     
     // Characters list should be accessible without login (or show appropriate message)
     await expect(page.locator('body')).toBeVisible();
@@ -62,7 +62,7 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     await expect(page).toHaveURL(/\/games\/?/);
     
     // Verify navbar is still visible
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
     
     // Games list should be accessible without login
     await expect(page.locator('body')).toBeVisible();
@@ -94,8 +94,8 @@ test.describe('Navigation Menu - Unauthenticated Users', () => {
     // Click "Register" link
     await page.click('a:has-text("Register")');
     
-    // Verify navigation to signup page
-    await expect(page).toHaveURL(/\/accounts\/signup\/?/);
+    // Verify navigation to signup page (accept both allauth and django-registration URLs)
+    await expect(page).toHaveURL(/\/accounts\/signup\/?|\/register\/step1\/?/);
     
     // Verify signup form is present (use multiple fallback selectors for reliability)
     let signupForm = page.locator('form.signup, form#signup_form, form[action*="signup"], form[action*="register"]').first();

@@ -84,7 +84,7 @@ test.describe('Registration (Signup) Flow', () => {
     expect(authenticated).toBe(true);
     
     // Verify user menu appears in navbar
-    await expect(page.locator('nav .dropdown-toggle')).toBeVisible();
+    await expect(page.locator('a.nav-link.dropdown-toggle').first()).toBeVisible();
   });
 
   test('should show validation errors for empty fields', async ({ page }) => {

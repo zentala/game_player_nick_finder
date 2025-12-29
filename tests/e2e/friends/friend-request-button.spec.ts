@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USERS } from '../../helpers/auth-helpers';
 
 test.describe('Friend Request Button', () => {
   test.beforeEach(async ({ page }) => {
-    // Login as test user
-    await page.goto('/accounts/login/');
-    // django-allauth uses id_login and id_password
-    await page.fill('#id_username', 'testuser');
-    await page.fill('#id_password', 'testpass123');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/');
+    // Login as test user using login helper
+    await login(page, TEST_USERS.main.username, TEST_USERS.main.password);
   });
 
   test('should display Add Friend button on character detail page', async ({ page }) => {
