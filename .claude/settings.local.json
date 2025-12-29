@@ -8,7 +8,20 @@
       "Bash(python manage.py:*)",
       "Bash(git fetch:*)",
       "Bash(cat:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(timeout /t 5)",
+      "Bash(pipenv run python:*)",
+      "Bash(pnpm test:e2e:*)",
+      "Bash(curl:*)",
+      "Bash(pipenv run pip list:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(pnpm exec playwright test:*)",
+      "Bash(powershell:*)",
+      "Bash(ls:*)",
+      "Bash(tee:*)",
+      "Bash(dir:*)"
     ]
   }
 }
