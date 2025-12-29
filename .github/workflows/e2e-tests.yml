@@ -65,10 +65,10 @@ jobs:
 
       - name: Start Django server
         run: |
-          pipenv run python manage.py runserver &
+          pipenv run python manage.py runserver 7600 &
           sleep 5
           # Verify server is running
-          curl http://localhost:8000 || exit 1
+          curl http://localhost:7600 || exit 1
 
       - name: Run E2E tests
         run: |
