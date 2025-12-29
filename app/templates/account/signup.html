@@ -11,7 +11,7 @@ trans "Sign Up" %}{% endblock %} {% block partial %}
     class="signup"
     id="signup_form"
     method="post"
-    action="{% url 'account_signup' %}"
+    action="{% url 'register_step1' %}"
 >
     {% csrf_token %}
     <!-- {{ form.as_p }} -->
