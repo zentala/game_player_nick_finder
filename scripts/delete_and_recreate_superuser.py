@@ -60,7 +60,7 @@ def delete_and_recreate_superuser(username, email, password):
         
         print(f"Superuser '{username}' created successfully!")
         print(f"User is_active: {user.is_active}")
-        print(f"\nYou can now login at: http://localhost:8000/accounts/login/")
+        print(f"\nYou can now login at: http://localhost:7600/accounts/login/")
         print(f"Username: {username}")
         print(f"Email: {email}")
         return True

@@ -40,7 +40,7 @@ if [[ $? -eq 0 ]]; then
     echo ""
     echo "Superuser recreated successfully!"
     echo ""
-    echo "Django Admin Panel: http://localhost:8000/admin/"
+    echo "Django Admin Panel: http://localhost:7600/admin/"
 else
     echo ""
     echo "Error: Failed to recreate superuser"

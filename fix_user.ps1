@@ -30,7 +30,7 @@ pipenv run python $scriptPath $Username
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`nUser fixed successfully!" -ForegroundColor Green
-    Write-Host "`nTry logging in at: http://localhost:8000/accounts/login/" -ForegroundColor Cyan
+    Write-Host "`nTry logging in at: http://localhost:7600/accounts/login/" -ForegroundColor Cyan
 } else {
     Write-Host "`nError: Failed to fix user" -ForegroundColor Red
     exit 1

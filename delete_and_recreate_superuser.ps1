@@ -42,7 +42,7 @@ pipenv run python $scriptPath "$username" "$email" "$passwordEscaped"
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`nSuperuser recreated successfully!" -ForegroundColor Green
-    Write-Host "`nDjango Admin Panel: http://localhost:8000/admin/" -ForegroundColor Cyan
+    Write-Host "`nDjango Admin Panel: http://localhost:7600/admin/" -ForegroundColor Cyan
 } else {
     Write-Host "`nError: Failed to recreate superuser" -ForegroundColor Red
     exit 1
