@@ -122,16 +122,49 @@ Refer to Django documentation for best practices in views, models, forms, and se
 - All UI components must have Playwright component tests
 
 ### Running Tests
+
+**⚡ SZYBKIE TESTOWANIE (Domyślne - dla szybkich iteracji)**:
 ```bash
-# Run all Playwright tests
+# Run all Playwright tests (FAST - only Chromium, ~2-3 min)
 pnpm test:e2e
 
-# Run specific test file
-pnpm test:e2e tests/e2e/feature-name.spec.ts
+# Fastest option (Chromium + line reporter)
+pnpm test:e2e:fast
 
+# Run specific test file (very fast, ~5-10 sec)
+pnpm test:e2e tests/e2e/feature-name.spec.ts
+```
+
+**🌐 WSZYSTKIE PRZEGLĄDARKI (Przed commitem)**:
+```bash
+# Run all browsers (Chromium, Firefox, WebKit - ~7 min)
+pnpm test:e2e:all
+
+# Run specific browser
+pnpm test:e2e:chromium
+pnpm test:e2e:firefox
+pnpm test:e2e:webkit
+```
+
+**🔧 DEBUGGING**:
+```bash
 # Run in UI mode (interactive)
 pnpm test:e2e:ui
+
+# Run in headed mode (see browser)
+pnpm test:e2e:headed
+
+# Debug tests
+pnpm test:e2e:debug
 ```
+
+**📋 Dokumentacja**: Zobacz `docs/testing/FAST_TESTING_GUIDE.md` - pełny przewodnik szybkiego testowania
+
+**⚠️ WAŻNE**:
+- **Domyślnie** (`pnpm test:e2e`) testuje tylko **Chromium** (najszybsze, ~2-3 min)
+- Używa `line` reportera (prostsze komunikaty)
+- Idealne do szybkich iteracji podczas naprawiania testów
+- **Przed commitem** użyj `pnpm test:e2e:all` (wszystkie przeglądarki, ~7 min)
 
 ### Test Structure
 ```
@@ -157,12 +190,16 @@ tests/
   - `privateuser` / `testpass123` - User with private profile
 
 ### Before Every Commit
-- [ ] All Playwright tests pass (with seeded data)
+- [ ] All Playwright tests pass locally (`pnpm test:e2e` - fast, Chromium only)
+- [ ] Before pushing to dev: Run `pnpm test:e2e:all` (all browsers) if making significant changes
 - [ ] New features have Playwright tests
-- [ ] Database fixtures are up to date
+- [ ] Database fixtures are up to date (`pnpm load:fixtures`)
 - [ ] No console errors
 - [ ] ESLint passes
 - [ ] TypeScript compiles without errors
+
+**⚡ Szybkie iteracje**: Używaj `pnpm test:e2e` (tylko Chromium) podczas naprawiania testów
+**🌐 Przed commitem**: Używaj `pnpm test:e2e:all` (wszystkie przeglądarki) przed push do dev
 
 ## Database Seeding and Superuser Management (CRITICAL)
 
