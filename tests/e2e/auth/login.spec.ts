@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login, isAuthenticated, isNotAuthenticated, TEST_USERS } from '../../helpers/auth-helpers';
 
+// @allbrowsers - All tests in this file should be verified on all browsers before merge
 test.describe('Login Flow', () => {
   test('should display login form with all required elements', async ({ page }) => {
     await page.goto('/accounts/login/');
