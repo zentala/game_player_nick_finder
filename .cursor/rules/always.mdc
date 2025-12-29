@@ -166,6 +166,34 @@ pnpm test:e2e:debug
 - Idealne do szybkich iteracji podczas naprawiania testów
 - **Przed commitem** użyj `pnpm test:e2e:all` (wszystkie przeglądarki, ~7 min)
 
+### E2E Test Results Files (CRITICAL - Gitignored)
+
+**MANDATORY**: Pliki wyników testów E2E są **GITIGNOROWANE** i **NIE POWINNY** być komitowane do repozytorium.
+
+**Nazewnictwo plików wyników testów**:
+- Format: `test-results-YYYY-MM-DD_HH-mm-ss.txt` (data-godzina rozpoczęcia testów)
+- Przykład: `test-results-2025-12-29_19-26-06.txt`
+- Format daty: `YYYY-MM-DD_HH-mm-ss` (rok-miesiąc-dzień_godzina-minuta-sekunda)
+- Użyj: `Get-Date -Format "yyyy-MM-dd_HH-mm-ss"` (PowerShell) lub `date +"%Y-%m-%d_%H-%M-%S"` (Bash) do wygenerowania timestampu
+
+**Gitignore**:
+- Wszystkie pliki `test-results-*.txt` są automatycznie ignorowane przez `.gitignore`
+- **NIGDY** nie komituj plików wyników testów
+- Pliki wyników testów są artefaktami lokalnymi i nie powinny być w repozytorium
+
+**Przykład użycia**:
+```powershell
+# PowerShell
+$timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+pnpm test:e2e > "test-results-$timestamp.txt" 2>&1
+```
+
+```bash
+# Bash
+timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+pnpm test:e2e > "test-results-$timestamp.txt" 2>&1
+```
+
 ### Test Structure
 ```
 tests/

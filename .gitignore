@@ -75,6 +75,8 @@ htmlcov/
 .coverage.*
 .tox/
 *.cover
+# E2E test results (timestamped files)
+test-results-*.txt
 
 # PM2 (local config, not committed)
 ecosystem.config.js
