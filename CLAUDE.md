@@ -68,11 +68,11 @@ pnpm load:fixtures
 # Run all Playwright E2E tests (FAST - only Chromium, ~2-3 min)
 pnpm test:e2e
 
-# Run all browsers (before commit, ~7 min)
+# Run all browsers (before commit/merge, ~7-9 min)
 pnpm test:e2e:all
 
-# Fastest option (Chromium + line reporter)
-pnpm test:e2e:fast
+# Alias (wolne testy)
+pnpm test:e2e:slow
 
 # Run specific test file
 pnpm test:e2e tests/e2e/feature-name.spec.ts
@@ -99,7 +99,8 @@ pnpm load:fixtures
 - Domyślnie testuje tylko **Chromium** (najszybsze, ~2-3 min)
 - Używa `line` reportera (prostsze komunikaty)
 - Idealne do szybkich iteracji podczas naprawiania testów
-- Przed commitem użyj `pnpm test:e2e:all` (wszystkie przeglądarki)
+- **Używaj zawsze podczas codziennej pracy na komputerze**
+- Przed commitem/merge do main użyj `pnpm test:e2e:all` (wszystkie przeglądarki, ~7-9 min)
 
 **📋 Zobacz**: `docs/testing/FAST_TESTING_GUIDE.md` - pełny przewodnik szybkiego testowania
 

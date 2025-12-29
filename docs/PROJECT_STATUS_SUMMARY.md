@@ -148,7 +148,7 @@
 1. **Weryfikacja Testów Playwright** ⚠️ (High Priority)
    - Status: Testy napisane, uruchomione - 139/456 testów przechodzi (30% na Chromium)
    - Lokalizacja: `tests/e2e/`
-   - ⚡ **Szybkie testowanie**: Domyślnie tylko Chromium (~2-3 min), użyj `pnpm test:e2e:all` dla wszystkich przeglądarek
+   - ⚡ **Szybkie testowanie**: Domyślnie tylko Chromium (~2-3 min), użyj `pnpm test:e2e:all` dla wszystkich przeglądarek (przed commit/merge)
    - 📋 **Dokumentacja**: `docs/testing/FAST_TESTING_GUIDE.md` - przewodnik szybkiego testowania
    - ⚠️ **KRYTYCZNE**: Logowanie nie działa - błąd "Please enter a correct username and password"
    - 📋 **Analiza**: `docs/testing/FIX_ATTEMPTS_AND_RESULTS.md` - wszystkie próby napraw

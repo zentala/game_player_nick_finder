@@ -130,7 +130,7 @@ await expect(page).toHaveURL(/\/accounts\/signup\/?|\/register\/step1\/?/);
 
 - [ ] Napraw funkcję `login()` helper - zmień `Promise.all()` na sekwencyjne `click()` + `waitForURL()`
 - [ ] Napraw URL mismatch w `navbar-unauthenticated.spec.ts`
-- [ ] Uruchom testy ponownie: `pnpm test:e2e:fast`
+- [ ] Uruchom testy ponownie: `pnpm test:e2e`
 - [ ] Sprawdź czy wszystkie testy używające `login()` helper teraz przechodzą
 - [ ] Zaktualizuj dokumentację z nowymi wynikami
 

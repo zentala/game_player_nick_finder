@@ -9,7 +9,7 @@
 Uruchom komendę z wyłączonym prediction view:
 
 ```powershell
-$env:PSReadLinePredictionViewStyle = 'None'; pnpm test:e2e:fast tests/e2e/auth/login.spec.ts
+$env:PSReadLinePredictionViewStyle = 'None'; pnpm test:e2e tests/e2e/auth/login.spec.ts
 ```
 
 ## Trwałe Rozwiązanie

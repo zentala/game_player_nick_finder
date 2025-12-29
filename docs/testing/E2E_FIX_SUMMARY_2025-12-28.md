@@ -44,8 +44,8 @@ if (usernameValue !== TEST_USERS.main.username || passwordValue.length === 0) {
 ### 2. Konfiguracja Szybkiego Testowania
 
 **Dodano**:
-- `pnpm test:e2e:fast` - tylko Chromium, line reporter (~2-3 min)
-- `pnpm test:e2e:all` - wszystkie przeglądarki (~7 min)
+- `pnpm test:e2e` - tylko Chromium, line reporter (~2-3 min, domyślne - używaj podczas codziennej pracy)
+- `pnpm test:e2e:all` - wszystkie przeglądarki (~7-9 min, przed commit/merge)
 - `playwright.config.ts` - warunkowe uruchamianie przeglądarek (CI vs local)
 
 **Dokumentacja**: `docs/testing/FAST_TESTING_GUIDE.md`
@@ -132,8 +132,8 @@ if (passwordValue.length === 0) {
 
 ### KROK 2: Weryfikacja
 
-1. Uruchom test: `pnpm test:e2e:fast tests/e2e/pokes/poke-list.spec.ts`
-2. Jeśli działa, uruchom pełny zestaw: `pnpm test:e2e:fast`
+1. Uruchom test: `pnpm test:e2e tests/e2e/pokes/poke-list.spec.ts`
+2. Jeśli działa, uruchom pełny zestaw: `pnpm test:e2e`
 3. Sprawdź czy wszystkie testy używające `login()` helper teraz przechodzą
 
 ### KROK 3: Aktualizacja Dokumentacji

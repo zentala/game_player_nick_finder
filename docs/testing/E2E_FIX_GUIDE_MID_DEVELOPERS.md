@@ -24,8 +24,8 @@ Naprawić wszystkie problemy P0 i P1 w testach E2E, aby osiągnąć **90%+ passi
 - Dostęp do projektu i możliwość uruchamiania testów
 
 ### Narzędzia
-- `pnpm test:e2e:fast` - uruchamianie testów (Chromium only, fast)
-- `pnpm test:e2e:all` - uruchamianie wszystkich testów (wszystkie przeglądarki)
+- `pnpm test:e2e` - uruchamianie testów (Chromium only, szybkie, domyślne - używaj podczas codziennej pracy)
+- `pnpm test:e2e:all` - uruchamianie wszystkich testów (wszystkie przeglądarki, wolne - przed commit/merge)
 
 ### Dokumentacja
 - `docs/testing/E2E_REMAINING_ISSUES.md` - lista problemów
@@ -122,7 +122,7 @@ export async function login(
 
 5. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/logout.spec.ts
+pnpm test:e2e tests/e2e/auth/logout.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -178,7 +178,7 @@ export async function isAuthenticated(page: Page): Promise<boolean> {
 
 5. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/login.spec.ts
+pnpm test:e2e tests/e2e/auth/login.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -223,7 +223,7 @@ expect(authenticated).toBe(true);
 
 6. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/logout.spec.ts tests/e2e/auth/password-change.spec.ts
+pnpm test:e2e tests/e2e/auth/logout.spec.ts tests/e2e/auth/password-change.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -266,7 +266,7 @@ await page.waitForTimeout(300); // Wait for dropdown to open
 
 5. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/logout.spec.ts
+pnpm test:e2e tests/e2e/auth/logout.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -310,7 +310,7 @@ await page.waitForTimeout(500); // Dodatkowy wait
 
 6. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/login.spec.ts
+pnpm test:e2e tests/e2e/auth/login.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -347,7 +347,7 @@ expect(currentUrl).toMatch(/\/accounts\/signup\/?|\/register\/step1\/?/);
 
 5. **Uruchom testy**, aby sprawdzić, czy poprawka działa:
 ```bash
-pnpm test:e2e:fast tests/e2e/auth/signup.spec.ts
+pnpm test:e2e tests/e2e/auth/signup.spec.ts
 ```
 
 **Oczekiwany wynik**: Testy powinny przechodzić (lub przynajmniej mniej failować)
@@ -359,7 +359,7 @@ pnpm test:e2e:fast tests/e2e/auth/signup.spec.ts
 ### Krok 1: Uruchom pełny zestaw testów
 
 ```bash
-pnpm test:e2e:fast
+pnpm test:e2e
 ```
 
 ### Krok 2: Sprawdź wyniki

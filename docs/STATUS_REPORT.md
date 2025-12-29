@@ -112,9 +112,9 @@
        - ✅ Automatyzacja setup test users
        - ⚠️ **Pozostały problem**: Funkcja `login()` helper nie wypełnia password field (80+ testów failed)
    - ⚡ **Szybkie testowanie**: Domyślnie testuje tylko Chromium (~2-3 min zamiast ~7 min)
-     - `pnpm test:e2e` - tylko Chromium (szybkie)
-     - `pnpm test:e2e:all` - wszystkie przeglądarki (przed commit)
-     - `pnpm test:e2e:fast` - tylko Chromium z line reporterem (najszybsze)
+     - `pnpm test:e2e` - tylko Chromium (szybkie, domyślne - używaj podczas codziennej pracy)
+     - `pnpm test:e2e:all` - wszystkie przeglądarki (wolne, ~7-9 min - przed commit/merge do main)
+     - `pnpm test:e2e:slow` - alias dla `test:e2e:all`
    - 📋 **Dokumentacja szybkiego testowania**: `docs/testing/FAST_TESTING_GUIDE.md`
    - 📍 Lokalizacja: `tests/e2e/`
    - 📋 Testy dostępne (COMPLETE LIST):
