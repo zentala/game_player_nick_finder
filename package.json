@@ -5,10 +5,17 @@
   "packageManager": "pnpm@8.15.0",
   "scripts": {
     "test:e2e": "playwright test",
+    "test:e2e:fast": "playwright test --project=chromium --reporter=line",
+    "test:e2e:all": "TEST_ALL_BROWSERS=true playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
-    "load:fixtures": "node scripts/load-fixtures.js"
+    "test:e2e:chromium": "playwright test --project=chromium",
+    "test:e2e:firefox": "playwright test --project=firefox",
+    "test:e2e:webkit": "playwright test --project=webkit",
+    "load:fixtures": "node scripts/load-fixtures.js",
+    "setup:test-users": "powershell -ExecutionPolicy Bypass -File setup_test_users.ps1",
+    "setup:test-users:unix": "bash setup_test_users.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

@@ -22,7 +22,9 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  // Use 'line' reporter for faster, simpler output during development
+  // Use 'html' reporter for detailed reports (can be enabled with --reporter=html)
+  reporter: process.env.CI ? 'html' : 'line',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -33,22 +35,34 @@ export default defineConfig({
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-  ],
+  /* 
+   * DEFAULT: Only Chromium for faster development iterations
+   * Use --project=firefox or --project=webkit to test other browsers
+   * Use --project=all to test all browsers (or set CI=true)
+   */
+  projects: process.env.CI || process.env.TEST_ALL_BROWSERS
+    ? [
+        // All browsers for CI or when explicitly requested
+        {
+          name: 'chromium',
+          use: { ...devices['Desktop Chrome'] },
+        },
+        {
+          name: 'firefox',
+          use: { ...devices['Desktop Firefox'] },
+        },
+        {
+          name: 'webkit',
+          use: { ...devices['Desktop Safari'] },
+        },
+      ]
+    : [
+        // Only Chromium for local development (faster)
+        {
+          name: 'chromium',
+          use: { ...devices['Desktop Chrome'] },
+        },
+      ],
 
   /* Run your local dev server before starting the tests */
   /* Note: Start Django server manually with: pipenv run python manage.py runserver */
